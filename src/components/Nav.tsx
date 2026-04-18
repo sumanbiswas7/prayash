@@ -30,14 +30,20 @@ export function Nav({ setPage, openLogin }: NavProps) {
           </div>
         </button>
         <nav className="nav-links">
-          {links.map(l => (
-            <button key={l.id} className={`nav-link ${pathname === l.path ? 'active' : ''}`} onClick={() => setPage(l.id)}>
+          {links.map((l) => (
+            <button
+              key={l.id}
+              className={`nav-link ${pathname === l.path ? 'active' : ''}`}
+              onClick={() => setPage(l.id)}
+            >
               {l.label}
             </button>
           ))}
         </nav>
         <div className="nav-spacer" />
-        <button className="btn btn-ghost btn-sm" onClick={openLogin}>Log in</button>
+        <button className="btn btn-ghost btn-sm" onClick={openLogin}>
+          Log in
+        </button>
         <button className="btn btn-accent btn-sm" onClick={() => setPage('register')}>
           Register <Icon.arrow />
         </button>

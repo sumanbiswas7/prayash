@@ -18,40 +18,93 @@ export function Gallery() {
     <div>
       <section style={{ padding: '64px 0 32px' }}>
         <div className="container">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 40, marginBottom: 32 }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-end',
+              gap: 40,
+              marginBottom: 32,
+            }}
+          >
             <div>
-              <div className="eyebrow" style={{ marginBottom: 14 }}>Gallery</div>
+              <div className="eyebrow" style={{ marginBottom: 14 }}>
+                Gallery
+              </div>
               <h1 className="display" style={{ fontSize: 'clamp(48px, 6vw, 80px)', margin: 0 }}>
-                Seven years of <span style={{ fontStyle: 'italic', color: 'var(--blue)', fontWeight: 400 }}>showing up.</span>
+                Seven years of{' '}
+                <span style={{ fontStyle: 'italic', color: 'var(--blue)', fontWeight: 400 }}>
+                  showing up.
+                </span>
               </h1>
               <p style={{ marginTop: 18, color: 'var(--ink-2)', maxWidth: 560, fontSize: 17 }}>
                 Every photo below is from a real day at a real school. We don't stage our work.
               </p>
             </div>
-            <div style={{ display: 'flex', gap: 4, padding: 4, background: 'var(--paper)', border: '1px solid var(--rule)', borderRadius: 999 }}>
-              {years.map(y => (
-                <button key={y} className="nav-link" onClick={() => setYear(y)} style={{
-                  background: year === y ? 'var(--ink)' : 'transparent',
-                  color: year === y ? 'var(--cream-2)' : 'var(--ink)',
-                }}>{y}</button>
+            <div
+              style={{
+                display: 'flex',
+                gap: 4,
+                padding: 4,
+                background: 'var(--paper)',
+                border: '1px solid var(--rule)',
+                borderRadius: 999,
+              }}
+            >
+              {years.map((y) => (
+                <button
+                  key={y}
+                  className="nav-link"
+                  onClick={() => setYear(y)}
+                  style={{
+                    background: year === y ? 'var(--ink)' : 'transparent',
+                    color: year === y ? 'var(--cream-2)' : 'var(--ink)',
+                  }}
+                >
+                  {y}
+                </button>
               ))}
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, gridAutoRows: 'minmax(200px, auto)' }}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: 14,
+              gridAutoRows: 'minmax(200px, auto)',
+            }}
+          >
             {grid.map((g, i) => (
-              <div key={`${year}-${i}`} className="ph hover-lift" style={{
-                gridColumn: g.span === 'col' ? 'span 2' : 'span 1',
-                aspectRatio: g.aspect,
-                background: `var(--${g.color}-tint)`,
-                borderColor: `var(--${g.color})`,
-              }}>
-                <span className="ph-label">PHOTO · {g.label} · {year}</span>
+              <div
+                key={`${year}-${i}`}
+                className="ph hover-lift"
+                style={{
+                  gridColumn: g.span === 'col' ? 'span 2' : 'span 1',
+                  aspectRatio: g.aspect,
+                  background: `var(--${g.color}-tint)`,
+                  borderColor: `var(--${g.color})`,
+                }}
+              >
+                <span className="ph-label">
+                  PHOTO · {g.label} · {year}
+                </span>
               </div>
             ))}
           </div>
 
-          <div style={{ marginTop: 48, padding: '32px 36px', background: 'var(--paper)', border: '1px solid var(--rule)', borderRadius: 'var(--radius-lg)', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 24 }}>
+          <div
+            style={{
+              marginTop: 48,
+              padding: '32px 36px',
+              background: 'var(--paper)',
+              border: '1px solid var(--rule)',
+              borderRadius: 'var(--radius-lg)',
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr 1fr 1fr',
+              gap: 24,
+            }}
+          >
             {[
               { n: String(year), l: 'Season' },
               { n: '320', l: 'Participants' },
@@ -59,8 +112,12 @@ export function Gallery() {
               { n: '146', l: 'Certificates printed' },
             ].map((s, i) => (
               <div key={i}>
-                <div className="eyebrow" style={{ marginBottom: 6 }}>{s.l}</div>
-                <div className="display" style={{ fontSize: 40, lineHeight: 1 }}>{s.n}</div>
+                <div className="eyebrow" style={{ marginBottom: 6 }}>
+                  {s.l}
+                </div>
+                <div className="display" style={{ fontSize: 40, lineHeight: 1 }}>
+                  {s.n}
+                </div>
               </div>
             ))}
           </div>
