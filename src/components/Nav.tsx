@@ -11,9 +11,8 @@ interface NavProps {
 
 const links: { id: Page; label: string; path: string }[] = [
   { id: 'home', label: 'Home', path: '/' },
-  { id: 'events', label: 'Events', path: '/events' },
-  { id: 'register', label: 'Register', path: '/register' },
-  { id: 'dashboard', label: 'Dashboard', path: '/dashboard' },
+  // { id: 'events', label: 'Events', path: '/events' },
+  // { id: 'dashboard', label: 'Dashboard', path: '/dashboard' },
   { id: 'gallery', label: 'Gallery', path: '/gallery' },
   { id: 'contact', label: 'Contact', path: '/contact' },
 ];
@@ -34,7 +33,7 @@ export function Nav({ setPage, openLogin }: NavProps) {
           <img src="/assets/logo.png" alt="Prayash" />
           <div className="nav__logo-text">
             <div className="en">Prayash</div>
-            <div className="bn">প্রয়াস · মানবকল্যাণ সংগঠন</div>
+            <div className="bn">মানবকল্যাণ সংগঠন</div>
           </div>
         </button>
         <nav className="nav__links">

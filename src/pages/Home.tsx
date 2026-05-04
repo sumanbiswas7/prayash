@@ -90,13 +90,9 @@ export function Home({ setPage }: HomeProps) {
                   'Quiz · কুইজ',
                   'Abriti · আবৃত্তি',
                   'Drawing · অঙ্কন',
-                  'Essay · প্রবন্ধ',
-                  'Singing · সঙ্গীত',
+                  'Golpo Lekha · গল্প লেখা',
+                  'Khobor Path · খবর পাঠ',
                   'Debate · বিতর্ক',
-                  'Spelling Bee',
-                  'Mental Math · মানসিক অঙ্ক',
-                  'Handwriting · হস্তাক্ষর',
-                  'Craft · হস্তশিল্প',
                 ].map((t, i) => (
                   <span key={`${rep}-${i}`} className="home-marquee__item">
                     <span className="display home-marquee__item-text">{t}</span>
@@ -114,11 +110,10 @@ export function Home({ setPage }: HomeProps) {
           <div className="section-head">
             <div>
               <div className="eyebrow home-stats__eyebrow">By the numbers</div>
-              <h2 className="display">Small org. Steady work.</h2>
+              <h2 className="display">Rooted locally. Growing steadily.</h2>
             </div>
             <p>
-              Prayash runs on volunteers, donated books, and a lot of local trust. Here's what the
-              last seven years look like.
+              Prayash runs on volunteers, donated books, and a lot of local trust. Here's what we've built so far.
             </p>
           </div>
           <div className="home-stats__grid">
@@ -139,11 +134,10 @@ export function Home({ setPage }: HomeProps) {
           <div className="section-head">
             <div>
               <div className="eyebrow home-events__eyebrow">Medha Pariksha 2026</div>
-              <h2 className="display">Ten events. Every kid welcome.</h2>
+              <h2 className="display">Events for every kid.</h2>
             </div>
             <p>
-              From quizzing to handwriting to singing — there's a stage for every kind of student.
-              Registration is free for students from our partner schools.
+              From quizzing to golpo lekha — there's a stage for every kind of student. Hosted by us, open to all.
             </p>
           </div>
           <div className="cols-3">
@@ -181,7 +175,7 @@ export function Home({ setPage }: HomeProps) {
           </div>
           <div className="home-events__more">
             <button className="btn btn-outline" onClick={() => setPage('events')}>
-              See all 10 events <Icon.arrow />
+              See all {PRAYASH_DATA.events.length} events <Icon.arrow />
             </button>
           </div>
         </div>
@@ -254,7 +248,7 @@ export function Home({ setPage }: HomeProps) {
               <h2 className="display">
                 From the people
                 <br />
-                we work with.
+                who love us.
               </h2>
             </div>
           </div>
@@ -308,10 +302,10 @@ export function Home({ setPage }: HomeProps) {
           <div className="card home-cta__strip">
             <div>
               <div className="display home-cta__title">
-                Medha Pariksha 2026 opens 20 September.
+                Medha Pariksha 2026 opens Soon!.
               </div>
               <div className="bn-display home-cta__subtitle">
-                প্রয়াস মেধা পরীক্ষা — ২০২৬ · রেজিস্ট্রেশন ২০শে সেপ্টেম্বর থেকে
+                প্রয়াস মেধা পরীক্ষা — ২০২৬ · রেজিস্ট্রেশন শীঘ্রই শুরু হবে
               </div>
             </div>
             <button className="btn btn-primary btn-lg" onClick={() => setPage('register')}>
@@ -341,7 +335,7 @@ function HeroCollage({ accent }: { accent: string }) {
       </div>
       <div className="hero-collage__float-card">
         <div className="eyebrow">Since 2019</div>
-        <div className="display hero-collage__float-card-number">1,240 books</div>
+        <div className="display hero-collage__float-card-number">500+ books</div>
         <div className="small muted hero-collage__float-card-sub">moved from shelves to students</div>
       </div>
     </div>
