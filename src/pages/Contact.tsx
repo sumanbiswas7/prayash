@@ -22,7 +22,7 @@ export function Contact() {
               style={{ '--gap': '18px' } as React.CSSProperties}
             >
               <ContactItem label="Office" value="Tehatta, Nadia · West Bengal 741160" />
-              <ContactItem label="Email" value="hello@prayash.org.in" />
+              <ContactItem label="Email" value="hello@proyash.org.in" />
               <ContactItem label="Phone" value="+91 98xxx xxxxx · 10am–7pm, Mon–Sat" />
               <ContactItem
                 label="Book pickup"

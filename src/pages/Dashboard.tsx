@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PRAYASH_DATA, Icon } from '../data';
+import { PROYASH_DATA, Icon } from '../data';
 import type { Certificate, Achievement, Page } from '../types';
 import './Dashboard.scss';
 
@@ -96,7 +96,7 @@ function MedalCase() {
         </div>
       </div>
       {[2025, 2024].map((year) => {
-        const items = PRAYASH_DATA.achievements.filter((a) => a.year === year);
+        const items = PROYASH_DATA.achievements.filter((a) => a.year === year);
         if (items.length === 0) return null;
         return (
           <div key={year} className="medals-year">
@@ -185,7 +185,7 @@ function Certificates({ onOpen }: { onOpen: (c: Certificate) => void }) {
         </button>
       </div>
       <div className="cols-3 certs-section__grid">
-        {PRAYASH_DATA.certificates.map((c) => (
+        {PROYASH_DATA.certificates.map((c) => (
           <button
             key={c.id}
             onClick={() => onOpen(c)}
@@ -225,7 +225,7 @@ function CertArt({ title, event, rank }: { title: string; event: string; rank: s
   return (
     <div className="cert-art">
       <div className="cert-art__top">
-        <img src="/assets/logo.png" className="cert-art__logo" alt="Prayash" />
+        <img src="/assets/logo.png" className="cert-art__logo" alt="Proyash" />
         <div className="bn-display cert-art__org">প্রয়াস মেধা পরীক্ষা</div>
         <div className="mono cert-art__year">{title.match(/\d{4}/)?.[0]}</div>
       </div>
@@ -243,7 +243,7 @@ function CertArt({ title, event, rank }: { title: string; event: string; rank: s
           {rank.charAt(0)}
         </div>
       )}
-      <div className="mono cert-art__footer-mono">— Prayash —</div>
+      <div className="mono cert-art__footer-mono">— Proyash —</div>
     </div>
   );
 }
@@ -266,7 +266,7 @@ function CertModal({ cert, onClose }: { cert: Certificate; onClose: () => void }
         <div className="cert-modal__preview">
           <div className="cert-modal__cert">
             <div className="cert-modal__cert-top">
-              <img src="/assets/logo.png" className="cert-modal__cert-logo" alt="Prayash" />
+              <img src="/assets/logo.png" className="cert-modal__cert-logo" alt="Proyash" />
               <div className="bn-display cert-modal__cert-org">
                 প্রয়াস মেধা পরীক্ষা — ২০২৫
               </div>
@@ -293,7 +293,7 @@ function CertModal({ cert, onClose }: { cert: Certificate; onClose: () => void }
           </div>
         </div>
         <div className="cert-modal__footer">
-          <div className="small muted">Verify at prayash.org.in/verify/{cert.id.toUpperCase()}</div>
+          <div className="small muted">Verify at proyash.org.in/verify/{cert.id.toUpperCase()}</div>
           <div className="cert-modal__footer-actions">
             <button className="btn btn-outline btn-sm">Share</button>
             <button className="btn btn-primary btn-sm">

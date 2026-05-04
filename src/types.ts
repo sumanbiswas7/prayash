@@ -1,6 +1,6 @@
 export type Page = 'home' | 'events' | 'register' | 'dashboard' | 'gallery' | 'contact';
 
-export interface PrayashEvent {
+export interface ProyashEvent {
   id: string;
   en: string;
   bn: string;

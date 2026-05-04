@@ -30,9 +30,9 @@ export function Nav({ setPage, openLogin }: NavProps) {
     <header className="nav">
       <div className="container nav__inner">
         <button className="nav__logo" onClick={() => navigate('home')}>
-          <img src="/assets/logo.png" alt="Prayash" />
+          <img src="/assets/logo.png" alt="Proyash" />
           <div className="nav__logo-text">
-            <div className="en">Prayash</div>
+            <div className="en">Proyash</div>
             <div className="bn">মানবকল্যাণ সংগঠন</div>
           </div>
         </button>

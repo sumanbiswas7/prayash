@@ -1,5 +1,5 @@
 import { useState, useEffect, Fragment } from 'react';
-import { PRAYASH_DATA, Icon } from '../data';
+import { PROYASH_DATA, Icon } from '../data';
 import type { Page } from '../types';
 import './Home.scss';
 
@@ -12,7 +12,7 @@ const heroes = [
     kicker: 'Our mission',
     enTitle: ['We keep books', 'moving.'],
     bnTitle: 'জ্ঞানের আলো · ছড়িয়ে দিই',
-    body: 'Prayash collects books from families who no longer need them and places them — carefully, by hand — into the hands of students who do.',
+    body: 'Proyash collects books from families who no longer need them and places them — carefully, by hand — into the hands of students who do.',
     cta: { label: 'Donate a book', page: 'contact' as Page },
     accent: 'red',
   },
@@ -113,12 +113,12 @@ export function Home({ setPage }: HomeProps) {
               <h2 className="display">Rooted locally. Growing steadily.</h2>
             </div>
             <p>
-              Prayash runs on volunteers, donated books, and a lot of local trust. Here's what we've
+              Proyash runs on volunteers, donated books, and a lot of local trust. Here's what we've
               built so far.
             </p>
           </div>
           <div className="home-stats__grid">
-            {PRAYASH_DATA.stats.map((s, i) => (
+            {PROYASH_DATA.stats.map((s, i) => (
               <div key={i} className="home-stats__item">
                 <div className="display home-stats__number">{s.n}</div>
                 <div className="home-stats__label">{s.l}</div>
@@ -143,7 +143,7 @@ export function Home({ setPage }: HomeProps) {
             </p>
           </div>
           <div className="cols-3">
-            {PRAYASH_DATA.events.slice(0, 6).map((e) => (
+            {PROYASH_DATA.events.slice(0, 6).map((e) => (
               <div
                 key={e.id}
                 className="card hover-lift home-events__card"
@@ -177,7 +177,7 @@ export function Home({ setPage }: HomeProps) {
           </div>
           <div className="home-events__more">
             <button className="btn btn-outline" onClick={() => setPage('events')}>
-              See all {PRAYASH_DATA.events.length} events <Icon.arrow />
+              See all {PROYASH_DATA.events.length} events <Icon.arrow />
             </button>
           </div>
         </div>
@@ -204,7 +204,7 @@ export function Home({ setPage }: HomeProps) {
                   afford their own.
                 </p>
                 <p>
-                  We host <em>Prayash Medha Pariksha</em>, a talent exam open to all — and our
+                  We host <em>Proyash Medha Pariksha</em>, a talent exam open to all — and our
                   Annual Function, a celebration of competitions across multiple disciplines with
                   prizes for the winners.
                 </p>
@@ -254,7 +254,7 @@ export function Home({ setPage }: HomeProps) {
             </div>
           </div>
           <div className="cols-3">
-            {PRAYASH_DATA.testimonials.map((t, i) => (
+            {PROYASH_DATA.testimonials.map((t, i) => (
               <div
                 key={i}
                 className="card"
@@ -330,7 +330,7 @@ function HeroCollage({ accent }: { accent: string }) {
         <img src="/assets/home-poster.jpg" alt="Student at last year's event" />
       </div>
       <div className="hero-collage__logo-circle">
-        <img src="/assets/logo.png" alt="Prayash" />
+        <img src="/assets/logo.png" alt="Proyash" />
       </div>
       <div className="hero-collage__float-card">
         <div className="eyebrow">Since 2019</div>

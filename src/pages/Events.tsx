@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PRAYASH_DATA, Icon } from '../data';
+import { PROYASH_DATA, Icon } from '../data';
 import type { Page } from '../types';
 import './Events.scss';
 
@@ -9,7 +9,7 @@ interface EventsProps {
 
 export function Events({ setPage }: EventsProps) {
   const [selected, setSelected] = useState('quiz');
-  const ev = PRAYASH_DATA.events.find((e) => e.id === selected)!;
+  const ev = PROYASH_DATA.events.find((e) => e.id === selected)!;
 
   return (
     <div>
@@ -51,7 +51,7 @@ export function Events({ setPage }: EventsProps) {
           <div>
             <div className="eyebrow events-list__eyebrow">All 10 events</div>
             <div className="stack" style={{ '--gap': '6px' } as React.CSSProperties}>
-              {PRAYASH_DATA.events.map((e) => (
+              {PROYASH_DATA.events.map((e) => (
                 <button
                   key={e.id}
                   onClick={() => setSelected(e.id)}

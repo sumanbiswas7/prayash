@@ -12,7 +12,7 @@ export function LoginModal({ onClose, setPage }: LoginModalProps) {
     <div className="login-modal__overlay" onClick={onClose}>
       <div className="login-modal__panel" onClick={(e) => e.stopPropagation()}>
         <div className="login-modal__header">
-          <img src="/assets/logo.png" className="login-modal__logo" alt="Prayash" />
+          <img src="/assets/logo.png" className="login-modal__logo" alt="Proyash" />
           <div className="display login-modal__title">Welcome back.</div>
           <div className="bn-display muted login-modal__subtitle">স্বাগতম</div>
         </div>

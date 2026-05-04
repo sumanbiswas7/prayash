@@ -12,9 +12,9 @@ export function Footer({ setPage }: FooterProps) {
         <div className="footer__grid">
           <div>
             <div className="footer__brand">
-              <img src="/assets/logo.png" className="footer__logo" alt="Prayash" />
+              <img src="/assets/logo.png" className="footer__logo" alt="Proyash" />
               <div>
-                <div className="footer__brand-name display">Prayash</div>
+                <div className="footer__brand-name display">Proyash</div>
                 <div className="footer__brand-tagline bn">আমরা থাকবো আগামীর স্বপ্নে</div>
               </div>
             </div>
@@ -65,14 +65,14 @@ export function Footer({ setPage }: FooterProps) {
             >
               <div>Tehatta, Nadia</div>
               <div>West Bengal, 741160</div>
-              <div>hello@prayash.org.in</div>
+              <div>hello@proyash.org.in</div>
               <div>+91 98xxx xxxxx</div>
             </div>
           </div>
         </div>
         <hr className="footer__divider" />
         <div className="footer__bottom">
-          <div>© 2026 Prayash Manab Kalyan Sangathan · Reg. S/2L/12489</div>
+          <div>© 2026 Proyash Manab Kalyan Sangathan · Reg. S/2L/12489</div>
           <div>Built with care in Nadia</div>
         </div>
       </div>

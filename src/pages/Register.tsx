@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PRAYASH_DATA, Icon } from '../data';
+import { PROYASH_DATA, Icon } from '../data';
 import type { Page } from '../types';
 import './Register.scss';
 
@@ -254,7 +254,7 @@ function Step2({ data, toggleEvent }: { data: FormData; toggleEvent: (id: string
       </p>
       <div className="mono step2__count">{data.events.length} of 4 selected</div>
       <div className="cols-2">
-        {PRAYASH_DATA.events.map((e) => {
+        {PROYASH_DATA.events.map((e) => {
           const on = data.events.includes(e.id);
           const disabled = !on && data.events.length >= 4;
           return (
@@ -306,7 +306,7 @@ function Step3({
   data: FormData;
   update: (k: keyof FormData, v: string) => void;
 }) {
-  const selectedEvents = PRAYASH_DATA.events.filter((e) => data.events.includes(e.id));
+  const selectedEvents = PROYASH_DATA.events.filter((e) => data.events.includes(e.id));
   return (
     <div>
       <div className="display step3__title">Review & submit</div>
@@ -351,7 +351,7 @@ function Step3({
       </Field>
       <div className="step3__consent">
         <strong>By submitting,</strong> you confirm the student is available on{' '}
-        <strong>Oct 10–11, 2026</strong> and you agree to Prayash using event photos for future
+        <strong>Oct 10–11, 2026</strong> and you agree to Proyash using event photos for future
         promotion (you can opt out in the dashboard).
       </div>
     </div>

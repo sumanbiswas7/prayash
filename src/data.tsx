@@ -3,13 +3,13 @@ import type {
   Achievement,
   Certificate,
   GalleryItem,
-  PrayashEvent,
+  ProyashEvent,
   Stat,
   Testimonial,
 } from './types';
 
-interface PrayashData {
-  events: PrayashEvent[];
+interface ProyashData {
+  events: ProyashEvent[];
   achievements: Achievement[];
   certificates: Certificate[];
   stats: Stat[];
@@ -17,7 +17,7 @@ interface PrayashData {
   gallery: GalleryItem[];
 }
 
-export const PRAYASH_DATA: PrayashData = {
+export const PROYASH_DATA: ProyashData = {
   events: [
     {
       id: 'quiz',
@@ -152,7 +152,7 @@ export const PRAYASH_DATA: PrayashData = {
   certificates: [
     {
       id: 'c1',
-      title: 'Prayash Medha Pariksha 2025',
+      title: 'Proyash Medha Pariksha 2025',
       bn: 'প্রয়াস মেধা পরীক্ষা — ২০২৫',
       event: 'Quiz',
       rank: '1st Place',
@@ -160,7 +160,7 @@ export const PRAYASH_DATA: PrayashData = {
     },
     {
       id: 'c2',
-      title: 'Prayash Medha Pariksha 2025',
+      title: 'Proyash Medha Pariksha 2025',
       bn: 'প্রয়াস মেধা পরীক্ষা — ২০২৫',
       event: 'Abriti',
       rank: '3rd Place',
@@ -168,7 +168,7 @@ export const PRAYASH_DATA: PrayashData = {
     },
     {
       id: 'c3',
-      title: 'Prayash Medha Pariksha 2024',
+      title: 'Proyash Medha Pariksha 2024',
       bn: 'প্রয়াস মেধা পরীক্ষা — ২০২৪',
       event: 'Essay Writing',
       rank: '1st Place',
@@ -176,7 +176,7 @@ export const PRAYASH_DATA: PrayashData = {
     },
     {
       id: 'c4',
-      title: 'Prayash Medha Pariksha 2024',
+      title: 'Proyash Medha Pariksha 2024',
       bn: 'প্রয়াস মেধা পরীক্ষা — ২০২৪',
       event: 'Drawing',
       rank: '2nd Place',
@@ -184,7 +184,7 @@ export const PRAYASH_DATA: PrayashData = {
     },
     {
       id: 'c5',
-      title: 'Prayash Medha Pariksha 2023',
+      title: 'Proyash Medha Pariksha 2023',
       bn: 'প্রয়াস মেধা পরীক্ষা — ২০২৩',
       event: 'Participation',
       rank: 'Participant',
