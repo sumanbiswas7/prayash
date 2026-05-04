@@ -11,16 +11,16 @@ const heroes = [
   {
     kicker: 'Our mission',
     enTitle: ['We keep books', 'moving.'],
-    bnTitle: 'আমরা থাকবো আগামীর স্বপ্নে',
+    bnTitle: 'জ্ঞানের আলো · ছড়িয়ে দিই',
     body: 'Prayash collects books from families who no longer need them and places them — carefully, by hand — into the hands of students who do.',
-    cta: { label: 'How it works', page: 'events' as Page },
+    cta: { label: 'Donate a book', page: 'contact' as Page },
     accent: 'red',
   },
   {
-    kicker: 'Medha Pariksha 2026',
+    kicker: 'Medha Pariksha',
     enTitle: ['Our annual festival', 'of merit.'],
-    bnTitle: 'প্রয়াস মেধা পরীক্ষা — ২০২৬',
-    body: 'Ten competitions. One weekend. Every child who walks in walks out with a certificate — and a reason to come back next year.',
+    bnTitle: 'প্রয়াস মেধা পরীক্ষা',
+    body: 'Competitions across categories. One day of excitement, learning, and pure fun for every young participant.',
     cta: { label: 'Register a student', page: 'register' as Page },
     accent: 'blue',
   },
@@ -28,7 +28,7 @@ const heroes = [
     kicker: 'Donate a book',
     enTitle: ['One book. A whole', 'school year.'],
     bnTitle: 'একটি বই · একটি বছর',
-    body: 'A textbook sitting on your shelf is a term of school for someone else. We collect, sort, and redistribute — no middlemen.',
+    body: 'A textbook sitting on your shelf is a term of school for someone else. We collect, sort, and redistribute.',
     cta: { label: 'Contact us', page: 'contact' as Page },
     accent: 'teal',
   },
@@ -71,7 +71,7 @@ export function Home({ setPage }: HomeProps) {
                 {hero.cta.label} <Icon.arrow />
               </button>
               <button className="btn btn-outline btn-lg" onClick={() => setPage('events')}>
-                See this year's events
+                Previous Years
               </button>
             </div>
           </div>
@@ -113,7 +113,8 @@ export function Home({ setPage }: HomeProps) {
               <h2 className="display">Rooted locally. Growing steadily.</h2>
             </div>
             <p>
-              Prayash runs on volunteers, donated books, and a lot of local trust. Here's what we've built so far.
+              Prayash runs on volunteers, donated books, and a lot of local trust. Here's what we've
+              built so far.
             </p>
           </div>
           <div className="home-stats__grid">
@@ -137,7 +138,8 @@ export function Home({ setPage }: HomeProps) {
               <h2 className="display">Events for every kid.</h2>
             </div>
             <p>
-              From quizzing to golpo lekha — there's a stage for every kind of student. Hosted by us, open to all.
+              From quizzing to golpo lekha — there's a stage for every kind of student. Hosted by
+              us, open to all.
             </p>
           </div>
           <div className="cols-3">
@@ -198,18 +200,17 @@ export function Home({ setPage }: HomeProps) {
               >
                 <p>
                   Families donate the books their children have outgrown. We sort them by subject
-                  and class, check condition, and carry them to 38 partner schools across Nadia.
+                  and class, and pass them on to qualified students who deserve them but can't
+                  afford their own.
                 </p>
                 <p>
-                  Every October we host <em>Prayash Medha Pariksha</em> — a festival of ten
-                  competitions where the prizes are, of course, more books.
+                  We host <em>Prayash Medha Pariksha</em>, a talent exam open to all — and our
+                  Annual Function, a celebration of competitions across multiple disciplines with
+                  prizes for the winners.
                 </p>
               </div>
               <div className="btn-row home-mission__actions">
-                <button
-                  className="btn home-mission__btn-donate"
-                  onClick={() => setPage('contact')}
-                >
+                <button className="btn home-mission__btn-donate" onClick={() => setPage('contact')}>
                   Donate books <Icon.arrow />
                 </button>
                 <button
@@ -301,16 +302,14 @@ export function Home({ setPage }: HomeProps) {
         <div className="container">
           <div className="card home-cta__strip">
             <div>
-              <div className="display home-cta__title">
-                Medha Pariksha 2026 opens Soon!.
-              </div>
+              <div className="display home-cta__title">Medha Pariksha 2026 opens Soon!.</div>
               <div className="bn-display home-cta__subtitle">
                 প্রয়াস মেধা পরীক্ষা — ২০২৬ · রেজিস্ট্রেশন শীঘ্রই শুরু হবে
               </div>
             </div>
-            <button className="btn btn-primary btn-lg" onClick={() => setPage('register')}>
+            {/* <button className="btn btn-primary btn-lg" onClick={() => setPage('register')}>
               Register now <Icon.arrow />
-            </button>
+            </button> */}
           </div>
         </div>
       </section>
@@ -336,7 +335,9 @@ function HeroCollage({ accent }: { accent: string }) {
       <div className="hero-collage__float-card">
         <div className="eyebrow">Since 2019</div>
         <div className="display hero-collage__float-card-number">500+ books</div>
-        <div className="small muted hero-collage__float-card-sub">moved from shelves to students</div>
+        <div className="small muted hero-collage__float-card-sub">
+          moved from shelves to students
+        </div>
       </div>
     </div>
   );
