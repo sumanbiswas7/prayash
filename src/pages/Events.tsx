@@ -19,15 +19,7 @@ export function Events({ setPage }: EventsProps) {
           borderBottom: '1px solid var(--rule)',
         }}
       >
-        <div
-          className="container"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1.5fr 1fr',
-            alignItems: 'flex-end',
-            gap: 40,
-          }}
-        >
+        <div className="container events-header-grid">
           <div>
             <div className="eyebrow" style={{ marginBottom: 14 }}>
               The annual festival
@@ -71,10 +63,7 @@ export function Events({ setPage }: EventsProps) {
       </section>
 
       <section style={{ padding: '48px 0 80px' }}>
-        <div
-          className="container"
-          style={{ display: 'grid', gridTemplateColumns: '340px 1fr', gap: 40 }}
-        >
+        <div className="container events-layout">
           <div>
             <div className="eyebrow" style={{ marginBottom: 14 }}>
               All 10 events
@@ -174,14 +163,7 @@ export function Events({ setPage }: EventsProps) {
                 </p>
               </div>
 
-              <div
-                style={{
-                  padding: '32px 36px',
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 1fr 1fr',
-                  gap: 32,
-                }}
-              >
+              <div className="event-detail-grid">
                 <Detail
                   label="Age groups"
                   value={
@@ -211,7 +193,7 @@ export function Events({ setPage }: EventsProps) {
                 <div className="eyebrow" style={{ marginBottom: 18 }}>
                   Prizes for each age group
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+                <div className="prize-grid">
                   <PrizeRow
                     rank="1st"
                     medal="Gold"
@@ -239,15 +221,7 @@ export function Events({ setPage }: EventsProps) {
 
               <hr className="hr" />
 
-              <div
-                style={{
-                  padding: '28px 36px',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  background: 'var(--cream-2)',
-                }}
-              >
+              <div className="event-reg-bar">
                 <div>
                   <div className="mono">Registration closes 5 Oct 2026</div>
                   <div className="small muted" style={{ marginTop: 4 }}>
@@ -281,12 +255,9 @@ export function Events({ setPage }: EventsProps) {
                 ].map((r, i, a) => (
                   <div
                     key={i}
+                    className="schedule-row"
                     style={{
-                      display: 'grid',
-                      gridTemplateColumns: '80px 80px 1fr',
-                      padding: '14px 24px',
                       borderBottom: i < a.length - 1 ? '1px solid var(--rule)' : 'none',
-                      alignItems: 'center',
                       background: i % 2 ? 'var(--cream-2)' : 'transparent',
                     }}
                   >

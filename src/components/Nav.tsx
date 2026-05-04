@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Icon } from '../data';
 import type { Page } from '../types';
@@ -18,11 +19,17 @@ const links: { id: Page; label: string; path: string }[] = [
 
 export function Nav({ setPage, openLogin }: NavProps) {
   const { pathname } = useLocation();
+  const [open, setOpen] = useState(false);
+
+  const navigate = (p: Page) => {
+    setPage(p);
+    setOpen(false);
+  };
 
   return (
     <header className="nav">
       <div className="container nav-inner">
-        <button className="nav-logo" onClick={() => setPage('home')} style={{ cursor: 'pointer' }}>
+        <button className="nav-logo" onClick={() => navigate('home')} style={{ cursor: 'pointer' }}>
           <img src="/assets/logo.png" alt="Prayash" />
           <div className="nav-logo-text">
             <div className="en">Prayash</div>
@@ -34,20 +41,67 @@ export function Nav({ setPage, openLogin }: NavProps) {
             <button
               key={l.id}
               className={`nav-link ${pathname === l.path ? 'active' : ''}`}
-              onClick={() => setPage(l.id)}
+              onClick={() => navigate(l.id)}
             >
               {l.label}
             </button>
           ))}
         </nav>
         <div className="nav-spacer" />
-        <button className="btn btn-ghost btn-sm" onClick={openLogin}>
-          Log in
-        </button>
-        <button className="btn btn-accent btn-sm" onClick={() => setPage('register')}>
-          Register <Icon.arrow />
+        <div className="nav-cta-desktop">
+          <button className="btn btn-ghost btn-sm" onClick={openLogin}>
+            Log in
+          </button>
+          <button className="btn btn-accent btn-sm" onClick={() => navigate('register')}>
+            Register <Icon.arrow />
+          </button>
+        </div>
+        <button
+          className="nav-hamburger btn btn-ghost btn-sm"
+          onClick={() => setOpen((v) => !v)}
+          aria-label="Toggle menu"
+        >
+          {open ? (
+            <Icon.close />
+          ) : (
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path
+                d="M3 5h14M3 10h14M3 15h14"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+              />
+            </svg>
+          )}
         </button>
       </div>
+      {open && (
+        <nav className="nav-mobile-menu">
+          {links.map((l) => (
+            <button
+              key={l.id}
+              className={`nav-mobile-link ${pathname === l.path ? 'active' : ''}`}
+              onClick={() => navigate(l.id)}
+            >
+              {l.label}
+            </button>
+          ))}
+          <div className="nav-mobile-actions">
+            <button
+              className="btn btn-ghost"
+              onClick={() => {
+                openLogin();
+                setOpen(false);
+              }}
+            >
+              Log in
+            </button>
+            <button className="btn btn-accent" onClick={() => navigate('register')}>
+              Register <Icon.arrow />
+            </button>
+          </div>
+        </nav>
+      )}
     </header>
   );
 }

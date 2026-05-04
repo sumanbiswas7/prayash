@@ -5,8 +5,7 @@ export function Contact() {
     <div>
       <section style={{ padding: '72px 0 80px' }}>
         <div
-          className="container"
-          style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 60 }}
+          className="container contact-layout"
         >
           <div>
             <div className="eyebrow" style={{ marginBottom: 14 }}>
@@ -48,7 +47,7 @@ export function Contact() {
               No long forms. Just what we need.
             </p>
             <div className="stack" style={{ '--gap': '16px' } as React.CSSProperties}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div className="cols-2" style={{ gap: 12 }}>
                 <input
                   placeholder="Your name"
                   style={{
@@ -111,15 +110,7 @@ export function Contact() {
 
 function ContactItem({ label, value }: { label: string; value: string }) {
   return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '100px 1fr',
-        gap: 20,
-        padding: '14px 0',
-        borderTop: '1px solid var(--rule)',
-      }}
-    >
+    <div className="contact-item-grid">
       <div className="mono">{label}</div>
       <div style={{ fontWeight: 500 }}>{value}</div>
     </div>

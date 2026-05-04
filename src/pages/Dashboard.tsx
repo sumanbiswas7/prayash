@@ -19,15 +19,7 @@ export function Dashboard({ setPage }: DashboardProps) {
           background: 'var(--cream-2)',
         }}
       >
-        <div
-          className="container"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1.4fr 1fr',
-            alignItems: 'center',
-            gap: 40,
-          }}
-        >
+        <div className="container dash-header-grid">
           <div>
             <div className="eyebrow" style={{ marginBottom: 14 }}>
               Student dashboard
@@ -59,7 +51,7 @@ export function Dashboard({ setPage }: DashboardProps) {
               </span>
             </div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10 }}>
+          <div className="mini-stats-grid">
             <MiniStat label="Events entered" n="7" sub="across 3 years" />
             <MiniStat label="Certificates" n="5" sub="all downloadable" />
             <MiniStat label="Books received" n="12" sub="from library" />
@@ -69,11 +61,11 @@ export function Dashboard({ setPage }: DashboardProps) {
 
       <section style={{ padding: '32px 0 80px' }}>
         <div className="container">
+          <div style={{ overflowX: 'auto', marginBottom: 28, paddingBottom: 2 }}>
           <div
             style={{
               display: 'flex',
               gap: 4,
-              marginBottom: 28,
               padding: 4,
               background: 'var(--paper)',
               border: '1px solid var(--rule)',
@@ -99,6 +91,7 @@ export function Dashboard({ setPage }: DashboardProps) {
                 {t.label}
               </button>
             ))}
+          </div>
           </div>
 
           {tab === 'medals' && <MedalCase />}
@@ -156,7 +149,7 @@ function MedalCase() {
                 {items.length} medal{items.length > 1 ? 's' : ''}
               </div>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
+            <div className="medals-grid">
               {items.map((a) => (
                 <MedalCard key={a.id} a={a} />
               ))}
@@ -287,7 +280,7 @@ function Certificates({ onOpen }: { onOpen: (c: Certificate) => void }) {
           Download all <Icon.dl />
         </button>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
+      <div className="cols-3" style={{ gap: 20 }}>
         {PRAYASH_DATA.certificates.map((c) => (
           <button
             key={c.id}
@@ -621,13 +614,9 @@ function Registrations({ setPage }: { setPage: (p: Page) => void }) {
         {regs.map((r, i, a) => (
           <div
             key={r.id}
+            className="reg-row"
             style={{
-              display: 'grid',
-              gridTemplateColumns: '100px 100px 1fr auto auto',
-              gap: 20,
-              padding: '20px 24px',
               borderBottom: i < a.length - 1 ? '1px solid var(--rule)' : 'none',
-              alignItems: 'center',
             }}
           >
             <div className="display" style={{ fontSize: 28 }}>
@@ -672,7 +661,7 @@ function Profile() {
           </p>
         </div>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+      <div className="profile-grid">
         <div className="card">
           <div className="eyebrow" style={{ marginBottom: 14 }}>
             Student
@@ -703,15 +692,7 @@ function Profile() {
 
 function ProfileRow({ k, v }: { k: string; v: string }) {
   return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '140px 1fr',
-        gap: 16,
-        padding: '10px 0',
-        borderBottom: '1px dashed var(--rule)',
-      }}
-    >
+    <div className="profile-kv">
       <div className="mono">{k}</div>
       <div style={{ fontWeight: 500 }}>{v}</div>
     </div>

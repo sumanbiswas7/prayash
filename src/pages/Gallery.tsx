@@ -18,15 +18,7 @@ export function Gallery() {
     <div>
       <section style={{ padding: '64px 0 32px' }}>
         <div className="container">
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'flex-end',
-              gap: 40,
-              marginBottom: 32,
-            }}
-          >
+          <div className="gallery-header">
             <div>
               <div className="eyebrow" style={{ marginBottom: 14 }}>
                 Gallery
@@ -67,20 +59,12 @@ export function Gallery() {
             </div>
           </div>
 
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gap: 14,
-              gridAutoRows: 'minmax(200px, auto)',
-            }}
-          >
+          <div className="gallery-photo-grid">
             {grid.map((g, i) => (
               <div
                 key={`${year}-${i}`}
-                className="ph hover-lift"
+                className={`ph hover-lift${g.span === 'col' ? ' gallery-wide' : ''}`}
                 style={{
-                  gridColumn: g.span === 'col' ? 'span 2' : 'span 1',
                   aspectRatio: g.aspect,
                   background: `var(--${g.color}-tint)`,
                   borderColor: `var(--${g.color})`,
@@ -94,15 +78,13 @@ export function Gallery() {
           </div>
 
           <div
+            className="gallery-stats-grid"
             style={{
               marginTop: 48,
               padding: '32px 36px',
               background: 'var(--paper)',
               border: '1px solid var(--rule)',
               borderRadius: 'var(--radius-lg)',
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr 1fr 1fr',
-              gap: 24,
             }}
           >
             {[

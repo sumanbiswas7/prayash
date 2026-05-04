@@ -44,16 +44,8 @@ export function Home({ setPage }: HomeProps) {
   return (
     <div>
       {/* HERO */}
-      <section style={{ paddingTop: 64, paddingBottom: 80 }}>
-        <div
-          className="container"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1.35fr 1fr',
-            gap: 60,
-            alignItems: 'center',
-          }}
-        >
+      <section style={{ paddingTop: 'clamp(20px, 4vw, 64px)', paddingBottom: 'clamp(28px, 5vw, 80px)' }}>
+        <div className="container hero-grid">
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28 }}>
               <span className="hero-kicker">{hero.kicker}</span>
@@ -90,7 +82,7 @@ export function Home({ setPage }: HomeProps) {
             >
               {hero.body}
             </p>
-            <div style={{ display: 'flex', gap: 12, marginTop: 32, alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 32, alignItems: 'center' }}>
               <button className="btn btn-primary btn-lg" onClick={() => setPage(hero.cta.page)}>
                 {hero.cta.label} <Icon.arrow />
               </button>
@@ -148,7 +140,7 @@ export function Home({ setPage }: HomeProps) {
       </div>
 
       {/* STATS */}
-      <section style={{ padding: '80px 0' }}>
+      <section style={{ padding: 'clamp(36px, 6vw, 80px) 0' }}>
         <div className="container">
           <div className="section-head">
             <div>
@@ -162,26 +154,13 @@ export function Home({ setPage }: HomeProps) {
               last seven years look like.
             </p>
           </div>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(4,1fr)',
-              gap: 0,
-              border: '1px solid var(--rule)',
-              borderRadius: 'var(--radius-lg)',
-              background: 'var(--paper)',
-              overflow: 'hidden',
-            }}
-          >
+          <div className="stats-grid">
             {PRAYASH_DATA.stats.map((s, i) => (
               <div
                 key={i}
-                style={{
-                  padding: '36px 28px',
-                  borderRight: i < 3 ? '1px solid var(--rule)' : 'none',
-                }}
+                style={{ padding: 'clamp(18px, 3vw, 36px) clamp(14px, 2.5vw, 28px)' }}
               >
-                <div className="display" style={{ fontSize: 56, lineHeight: 1 }}>
+                <div className="display" style={{ fontSize: 'clamp(36px, 5vw, 56px)', lineHeight: 1 }}>
                   {s.n}
                 </div>
                 <div style={{ marginTop: 14, fontWeight: 600 }}>{s.l}</div>
@@ -193,7 +172,7 @@ export function Home({ setPage }: HomeProps) {
       </section>
 
       {/* EVENTS PREVIEW */}
-      <section style={{ padding: '40px 0 80px' }}>
+      <section style={{ padding: 'clamp(24px, 3vw, 40px) 0 clamp(36px, 6vw, 80px)' }}>
         <div className="container">
           <div className="section-head">
             <div>
@@ -207,7 +186,7 @@ export function Home({ setPage }: HomeProps) {
               Registration is free for students from our partner schools.
             </p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+          <div className="cols-3">
             {PRAYASH_DATA.events.slice(0, 6).map((e) => (
               <div
                 key={e.id}
@@ -280,19 +259,18 @@ export function Home({ setPage }: HomeProps) {
       </section>
 
       {/* MISSION SPLIT */}
-      <section style={{ padding: '40px 0' }}>
+      <section style={{ padding: 'clamp(24px, 3vw, 40px) 0' }}>
         <div className="container">
           <div
+            className="mission-grid"
             style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
               background: 'var(--ink)',
               color: 'var(--cream-2)',
               borderRadius: 'var(--radius-lg)',
               overflow: 'hidden',
             }}
           >
-            <div style={{ padding: '56px 48px' }}>
+            <div style={{ padding: 'clamp(28px, 4vw, 56px) clamp(20px, 4vw, 48px)' }}>
               <div className="eyebrow" style={{ color: 'rgba(255,255,255,0.45)' }}>
                 What we do
               </div>
@@ -324,7 +302,7 @@ export function Home({ setPage }: HomeProps) {
                   competitions where the prizes are, of course, more books.
                 </p>
               </div>
-              <div style={{ display: 'flex', gap: 10, marginTop: 36 }}>
+              <div className="btn-row" style={{ marginTop: 36 }}>
                 <button
                   className="btn"
                   style={{ background: 'var(--cream-2)', color: 'var(--ink)' }}
@@ -341,7 +319,7 @@ export function Home({ setPage }: HomeProps) {
                 </button>
               </div>
             </div>
-            <div style={{ position: 'relative', background: 'var(--ink-2)' }}>
+            <div className="mission-photo-side" style={{ position: 'relative', background: 'var(--ink-2)', minHeight: 300 }}>
               <div
                 style={{
                   position: 'absolute',
@@ -414,7 +392,7 @@ export function Home({ setPage }: HomeProps) {
       </section>
 
       {/* TESTIMONIALS */}
-      <section style={{ padding: '80px 0' }}>
+      <section style={{ padding: 'clamp(36px, 6vw, 80px) 0' }}>
         <div className="container">
           <div className="section-head">
             <div>
@@ -428,7 +406,7 @@ export function Home({ setPage }: HomeProps) {
               </h2>
             </div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+          <div className="cols-3">
             {PRAYASH_DATA.testimonials.map((t, i) => (
               <div
                 key={i}
@@ -495,17 +473,13 @@ export function Home({ setPage }: HomeProps) {
       </section>
 
       {/* CTA STRIP */}
-      <section style={{ padding: '40px 0 40px' }}>
+      <section style={{ padding: 'clamp(24px, 3vw, 40px) 0' }}>
         <div className="container">
           <div
-            className="card"
+            className="card cta-strip"
             style={{
               background: 'var(--yellow-tint)',
               border: '1px solid var(--yellow)',
-              display: 'grid',
-              gridTemplateColumns: '1fr auto',
-              alignItems: 'center',
-              gap: 24,
               padding: '32px 40px',
             }}
           >
@@ -551,7 +525,7 @@ function HeroCollage({ accent }: { accent: string }) {
             width: '100%',
             height: '100%',
             objectFit: 'cover',
-            borderRadius: 'calc(var(--radius-lg) - 4px)',
+            borderRadius: 'calc(var(--radius-lg) - 8px)',
           }}
         />
         {/* <span className="ph-label">PHOTO · Student at last year's event</span> */}
@@ -578,6 +552,7 @@ function HeroCollage({ accent }: { accent: string }) {
         />
       </div>
       <div
+        className="hero-float-card"
         style={{
           position: 'absolute',
           bottom: 20,
@@ -601,14 +576,15 @@ function HeroCollage({ accent }: { accent: string }) {
       <div
         style={{
           position: 'absolute',
-          bottom: 60,
-          right: 10,
+          bottom: 45,
+          right: 30,
           background: 'var(--ink)',
           color: 'var(--cream-2)',
           borderRadius: 999,
           padding: '10px 16px',
           fontSize: 12,
-          display: 'flex',
+          // display: 'flex',
+          display: 'none',
           alignItems: 'center',
           gap: 8,
           fontWeight: 600,

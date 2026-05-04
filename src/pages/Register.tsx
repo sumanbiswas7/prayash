@@ -82,14 +82,7 @@ export function Register({ setPage }: RegisterProps) {
           </button>
         </div>
 
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: 8,
-            marginBottom: 32,
-          }}
-        >
+        <div className="steps-grid">
           {(['Student', 'Events', 'Review', 'Done'] as const).map((label, i) => {
             const n = i + 1;
             const done = step > n;
@@ -148,18 +141,7 @@ export function Register({ setPage }: RegisterProps) {
               {step === 2 && <Step2 data={data} toggleEvent={toggleEvent} />}
               {step === 3 && <Step3 data={data} update={update} />}
             </div>
-            <div
-              style={{
-                padding: '18px 36px',
-                borderTop: '1px solid var(--rule)',
-                background: 'var(--cream-2)',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                borderBottomLeftRadius: 'var(--radius-lg)',
-                borderBottomRightRadius: 'var(--radius-lg)',
-              }}
-            >
+            <div className="reg-footer-bar">
               <button
                 className="btn btn-ghost"
                 onClick={() => setStep((s) => Math.max(1, s - 1))}
@@ -233,7 +215,7 @@ function Step1({
       <p className="muted" style={{ marginTop: 0, marginBottom: 28 }}>
         Basic details. Guardian contact so we can reach you with venue updates.
       </p>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+      <div className="form-grid">
         <Field label="Student's full name" bn="ছাত্রের নাম" col={2}>
           <input
             style={inputStyle}
@@ -319,7 +301,7 @@ function Step2({ data, toggleEvent }: { data: FormData; toggleEvent: (id: string
       <div className="mono" style={{ marginBottom: 24 }}>
         {data.events.length} of 4 selected
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+      <div className="cols-2">
         {PRAYASH_DATA.events.map((e) => {
           const on = data.events.includes(e.id);
           const disabled = !on && data.events.length >= 4;
@@ -394,7 +376,7 @@ function Step3({
       <p className="muted" style={{ marginTop: 0, marginBottom: 24 }}>
         Check everything below. You'll get a confirmation on WhatsApp within a day.
       </p>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 24 }}>
+      <div className="cols-2" style={{ marginBottom: 24 }}>
         <ReviewRow label="Student" value={`${data.student || '—'} · ${data.klass || ''}`} />
         <ReviewRow label="School" value={data.school || '—'} />
         <ReviewRow label="Guardian" value={data.guardian || '—'} />
@@ -540,7 +522,7 @@ function SuccessCard({ data, setPage }: { data: FormData; setPage: (p: Page) => 
           <div className="mono">Contact</div>
           <div style={{ fontWeight: 500 }}>{data.phone || '—'}</div>
         </div>
-        <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginTop: 32 }}>
+        <div className="btn-row" style={{ justifyContent: 'center', marginTop: 32 }}>
           <button className="btn btn-primary" onClick={() => setPage('dashboard')}>
             Go to dashboard <Icon.arrow />
           </button>

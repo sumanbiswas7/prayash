@@ -9,12 +9,7 @@ export function Footer({ setPage }: FooterProps) {
     <footer className="footer">
       <div className="container">
         <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1.4fr 1fr 1fr 1fr',
-            gap: 40,
-            alignItems: 'start',
-          }}
+          className="footer-grid"
         >
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 18 }}>
@@ -103,7 +98,8 @@ export function Footer({ setPage }: FooterProps) {
           }}
         />
         <div
-          style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, opacity: 0.55 }}
+          className="footer-bottom"
+          style={{ fontSize: 12, opacity: 0.55 }}
         >
           <div>© 2026 Prayash Manab Kalyan Sangathan · Reg. S/2L/12489</div>
           <div>Built with care in Nadia</div>
