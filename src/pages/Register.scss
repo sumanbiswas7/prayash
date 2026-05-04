@@ -1,0 +1,400 @@
+$bp-mobile: 768px;
+$bp-small: 480px;
+
+/* ===== Register page wrapper ===== */
+
+.register {
+  padding: 56px 0 80px;
+}
+
+.register__container {
+  max-width: 960px;
+}
+
+/* ===== Page header ===== */
+
+.register__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 32px;
+}
+
+.register__eyebrow {
+  margin-bottom: 14px;
+}
+
+.register__title {
+  font-size: 56px;
+  margin: 0;
+}
+
+.register__title-accent {
+  font-style: italic;
+  color: var(--red);
+  font-weight: 400;
+}
+
+/* ===== Steps grid ===== */
+
+.register__steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 32px;
+}
+
+.register__step {
+  padding: 14px 16px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  &--active {
+    background: var(--ink);
+    color: var(--cream-2);
+    border: 1px solid var(--ink);
+  }
+
+  &--done {
+    background: var(--green-tint);
+    color: var(--green);
+    border: 1px solid var(--green);
+  }
+
+  &--pending {
+    background: var(--paper);
+    color: var(--ink-3);
+    border: 1px solid var(--rule);
+  }
+}
+
+.register__step-circle {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 700;
+
+  &--active {
+    background: var(--cream-2);
+    color: var(--ink);
+  }
+
+  &--done {
+    background: var(--green);
+    color: white;
+  }
+
+  &--pending {
+    background: var(--cream-3);
+    color: var(--ink-3);
+  }
+}
+
+.register__step-num {
+  opacity: 0.7;
+}
+
+.register__step-label {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* ===== Form card ===== */
+
+.register__form-card {
+  padding: 0;
+}
+
+.register__form-body {
+  padding: 32px 36px;
+}
+
+.register__footer-bar {
+  padding: 18px 36px;
+  border-top: 1px solid var(--rule);
+  background: var(--cream-2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom-left-radius: var(--radius-lg);
+  border-bottom-right-radius: var(--radius-lg);
+}
+
+.register__back-btn {
+  &--disabled {
+    opacity: 0.3;
+  }
+}
+
+.register__next-btn {
+  &--disabled {
+    opacity: 0.4;
+  }
+}
+
+/* ===== Step 1 form ===== */
+
+.step1__title {
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+
+.step1__desc {
+  margin-top: 0;
+  margin-bottom: 28px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  font-size: 15px;
+}
+
+.form-input--textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.form-field__label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.form-field__label-text {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.form-field__label-bn {
+  margin-left: 8px;
+}
+
+.form-field__hint {
+  margin-top: 6px;
+}
+
+/* ===== Step 2 event picker ===== */
+
+.step2__title {
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+
+.step2__desc {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.step2__count {
+  margin-bottom: 24px;
+}
+
+.step2__event-btn {
+  text-align: left;
+  padding: 18px 20px;
+  border-radius: 14px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  transition: all 0.15s ease;
+
+  &--disabled {
+    opacity: 0.4;
+  }
+}
+
+.step2__event-check {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  color: white;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.step2__event-body {
+  flex: 1;
+}
+
+.step2__event-name {
+  font-weight: 600;
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.step2__event-meta {
+  margin-top: 2px;
+}
+
+.step2__event-bn {
+  font-weight: 500;
+}
+
+/* ===== Step 3 review ===== */
+
+.step3__title {
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+
+.step3__desc {
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+.step3__summary {
+  margin-bottom: 24px;
+}
+
+.step3__events-eyebrow {
+  margin-bottom: 12px;
+}
+
+.step3__selected-events {
+  margin-bottom: 28px;
+}
+
+.step3__event-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--cream-2);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+}
+
+.step3__event-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+
+.step3__event-en {
+  font-weight: 600;
+}
+
+.step3__event-duration {
+  margin-left: auto;
+}
+
+.step3__consent {
+  margin-top: 28px;
+  padding: 16px 20px;
+  background: var(--yellow-tint);
+  border: 1px solid var(--yellow);
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+/* ===== Review rows ===== */
+
+.review-row__eyebrow {
+  margin-bottom: 4px;
+}
+
+.review-row__value {
+  font-weight: 500;
+}
+
+/* ===== Success card ===== */
+
+.success-card {
+  padding: 0;
+  overflow: hidden;
+  text-align: center;
+}
+
+.success-card__body {
+  padding: 60px 40px 40px;
+  background: linear-gradient(180deg, var(--green-tint), var(--paper));
+}
+
+.success-card__icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 24px;
+  border-radius: 50%;
+  background: var(--green);
+  color: white;
+  display: grid;
+  place-items: center;
+}
+
+.success-card__eyebrow {
+  margin-bottom: 8px;
+}
+
+.success-card__title {
+  font-size: 44px;
+  margin: 0;
+}
+
+.success-card__bn {
+  font-size: 20px;
+  margin-top: 10px;
+  color: var(--ink-2);
+}
+
+.success-card__details {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  padding: 18px 24px;
+  margin: 32px auto 0;
+  max-width: 440px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px 20px;
+  text-align: left;
+}
+
+.success-card__detail-value {
+  font-weight: 600;
+}
+
+.success-card__actions {
+  justify-content: center;
+  margin-top: 32px;
+}
+
+/* ===== Media queries ===== */
+
+@media (max-width: $bp-mobile) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .register__steps {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .register__footer-bar {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px 20px;
+    text-align: center;
+  }
+}
+
+@media (max-width: $bp-small) {
+  .register__steps {
+    grid-template-columns: 1fr 1fr;
+  }
+}

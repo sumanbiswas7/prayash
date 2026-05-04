@@ -1,0 +1,315 @@
+$bp-mobile: 768px;
+
+/* ===== Events header ===== */
+
+.events-hero {
+  padding: 72px 0 40px;
+  background: var(--cream-2);
+  border-bottom: 1px solid var(--rule);
+}
+
+.events-hero__grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  align-items: flex-end;
+  gap: 40px;
+}
+
+.events-hero__eyebrow {
+  margin-bottom: 14px;
+}
+
+.events-hero__title {
+  font-size: clamp(48px, 6vw, 80px);
+  margin: 0;
+}
+
+.events-hero__title-accent {
+  color: var(--red);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.events-hero__bn {
+  font-size: 22px;
+  margin-top: 14px;
+  color: var(--ink-2);
+}
+
+.events-hero__info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.events-hero__info-card {
+  padding: 18px 20px;
+}
+
+.events-hero__info-eyebrow {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.events-hero__info-title {
+  font-size: 26px;
+  margin-top: 6px;
+}
+
+.events-hero__info-where-title {
+  font-size: 22px;
+  margin-top: 6px;
+  line-height: 1.1;
+}
+
+.events-hero__info-sub {
+  margin-top: 4px;
+}
+
+/* ===== Events layout ===== */
+
+.events-body {
+  padding: 48px 0 80px;
+}
+
+.events-layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 40px;
+}
+
+/* ===== Event list sidebar ===== */
+
+.events-list__eyebrow {
+  margin-bottom: 14px;
+}
+
+.events-list__item {
+  width: 100%;
+  text-align: left;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid var(--rule);
+
+  &--selected {
+    background: var(--ink);
+    color: var(--cream-2);
+    border-color: var(--ink);
+  }
+
+  &--default {
+    background: var(--paper);
+    color: var(--ink);
+  }
+}
+
+.events-list__item-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.events-list__item-body {
+  flex: 1;
+}
+
+.events-list__item-en {
+  font-weight: 600;
+}
+
+.events-list__item-bn {
+  margin-top: 2px;
+}
+
+/* ===== Event detail panel ===== */
+
+.events-detail__card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.events-detail__header {
+  padding: 32px 36px;
+}
+
+.events-detail__header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.events-detail__bn {
+  font-size: 28px;
+}
+
+.events-detail__title {
+  font-size: 56px;
+  margin: 6px 0 0;
+}
+
+.events-detail__chip {
+  background: white;
+}
+
+.events-detail__desc {
+  font-size: 18px;
+  color: var(--ink-2);
+  margin-top: 18px;
+  margin-bottom: 0;
+  max-width: 640px;
+}
+
+/* ===== Event detail grid (Age groups / Duration / Format) ===== */
+
+.events-detail__info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 32px;
+  padding: 32px 36px;
+}
+
+.events-detail__info-eyebrow {
+  margin-bottom: 8px;
+}
+
+.events-detail__slot {
+  font-weight: 500;
+}
+
+.events-detail__duration {
+  font-size: 22px;
+}
+
+/* ===== Prizes section ===== */
+
+.events-prizes {
+  padding: 28px 36px;
+}
+
+.events-prizes__eyebrow {
+  margin-bottom: 18px;
+}
+
+.events-prizes__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.events-prizes__note {
+  margin-top: 14px;
+}
+
+.events-prize-row {
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  background: var(--paper);
+}
+
+.events-prize-row__medal {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: white;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  flex-shrink: 0;
+  box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.15);
+}
+
+.events-prize-row__name {
+  font-weight: 600;
+}
+
+/* ===== Registration bar ===== */
+
+.events-reg-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28px 36px;
+  background: var(--cream-2);
+}
+
+.events-reg-bar__note {
+  margin-top: 4px;
+}
+
+/* ===== Schedule ===== */
+
+.events-schedule {
+  margin-top: 36px;
+}
+
+.events-schedule__eyebrow {
+  margin-bottom: 14px;
+}
+
+.events-schedule__card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.events-schedule__row {
+  display: grid;
+  grid-template-columns: 80px 80px 1fr;
+  padding: 14px 24px;
+  align-items: center;
+}
+
+.events-schedule__time {
+  font-size: 18px;
+}
+
+/* ===== Media queries ===== */
+
+@media (max-width: 1024px) {
+  .events-layout {
+    grid-template-columns: 280px 1fr;
+    gap: 28px;
+  }
+}
+
+@media (max-width: $bp-mobile) {
+  .events-hero__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .events-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .events-detail__info-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px 16px;
+  }
+
+  .events-prizes__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .events-reg-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px 16px;
+  }
+
+  .events-schedule__row {
+    grid-template-columns: 50px 64px 1fr;
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+}

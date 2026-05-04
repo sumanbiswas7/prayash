@@ -1,5 +1,6 @@
 import { Icon } from '../data';
 import type { Page } from '../types';
+import './LoginModal.scss';
 
 interface LoginModalProps {
   onClose: () => void;
@@ -8,103 +9,35 @@ interface LoginModalProps {
 
 export function LoginModal({ onClose, setPage }: LoginModalProps) {
   return (
-    <div
-      onClick={onClose}
-      style={{
-        position: 'fixed',
-        inset: 0,
-        background: 'rgba(31,27,22,0.72)',
-        zIndex: 100,
-        display: 'grid',
-        placeItems: 'center',
-        padding: 24,
-        backdropFilter: 'blur(4px)',
-      }}
-    >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        style={{
-          background: 'var(--paper)',
-          borderRadius: 'var(--radius-lg)',
-          width: '100%',
-          maxWidth: 440,
-          overflow: 'hidden',
-        }}
-      >
-        <div
-          style={{
-            padding: '36px 36px 28px',
-            textAlign: 'center',
-            background: 'linear-gradient(180deg, var(--cream-2), var(--paper))',
-            borderBottom: '1px solid var(--rule)',
-          }}
-        >
-          <img
-            src="/assets/logo.png"
-            style={{
-              width: 56,
-              height: 56,
-              borderRadius: '50%',
-              border: '1.5px solid var(--ink)',
-              marginBottom: 12,
-            }}
-          />
-          <div className="display" style={{ fontSize: 28 }}>
-            Welcome back.
-          </div>
-          <div className="bn-display muted" style={{ fontSize: 15, marginTop: 4 }}>
-            স্বাগতম
-          </div>
+    <div className="login-modal__overlay" onClick={onClose}>
+      <div className="login-modal__panel" onClick={(e) => e.stopPropagation()}>
+        <div className="login-modal__header">
+          <img src="/assets/logo.png" className="login-modal__logo" alt="Prayash" />
+          <div className="display login-modal__title">Welcome back.</div>
+          <div className="bn-display muted login-modal__subtitle">স্বাগতম</div>
         </div>
-        <div style={{ padding: '28px 36px' }}>
+        <div className="login-modal__body">
           <div className="stack" style={{ '--gap': '14px' } as React.CSSProperties}>
             <div>
-              <label style={{ fontSize: 13, fontWeight: 600, display: 'block', marginBottom: 6 }}>
-                Email
-              </label>
+              <label className="login-modal__label">Email</label>
               <input
                 defaultValue="moynak@example.com"
-                style={{
-                  width: '100%',
-                  padding: '12px 14px',
-                  borderRadius: 10,
-                  border: '1px solid var(--rule)',
-                  background: 'var(--paper)',
-                  fontSize: 15,
-                }}
+                className="login-modal__input"
               />
             </div>
             <div>
-              <label
-                style={{
-                  fontSize: 13,
-                  fontWeight: 600,
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  marginBottom: 6,
-                }}
-              >
+              <label className="login-modal__label-row">
                 <span>Password</span>
-                <a className="small" style={{ color: 'var(--blue)', cursor: 'pointer' }}>
-                  Forgot?
-                </a>
+                <a className="small login-modal__forgot">Forgot?</a>
               </label>
               <input
                 type="password"
                 defaultValue="••••••••"
-                style={{
-                  width: '100%',
-                  padding: '12px 14px',
-                  borderRadius: 10,
-                  border: '1px solid var(--rule)',
-                  background: 'var(--paper)',
-                  fontSize: 15,
-                }}
+                className="login-modal__input"
               />
             </div>
             <button
-              className="btn btn-primary btn-lg"
-              style={{ justifyContent: 'center', marginTop: 8 }}
+              className="btn btn-primary btn-lg login-modal__submit"
               onClick={() => {
                 onClose();
                 setPage('dashboard');
@@ -113,10 +46,10 @@ export function LoginModal({ onClose, setPage }: LoginModalProps) {
               Log in <Icon.arrow />
             </button>
           </div>
-          <div style={{ textAlign: 'center', marginTop: 18 }} className="small muted">
+          <div className="small muted login-modal__footer">
             New here?{' '}
             <a
-              style={{ color: 'var(--ink)', fontWeight: 600, cursor: 'pointer' }}
+              className="login-modal__register-link"
               onClick={() => {
                 onClose();
                 setPage('register');

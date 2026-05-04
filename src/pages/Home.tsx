@@ -1,6 +1,7 @@
 import { useState, useEffect, Fragment } from 'react';
 import { PRAYASH_DATA, Icon } from '../data';
 import type { Page } from '../types';
+import './Home.scss';
 
 interface HomeProps {
   setPage: (p: Page) => void;
@@ -44,45 +45,28 @@ export function Home({ setPage }: HomeProps) {
   return (
     <div>
       {/* HERO */}
-      <section style={{ paddingTop: 'clamp(20px, 4vw, 64px)', paddingBottom: 'clamp(28px, 5vw, 80px)' }}>
-        <div className="container hero-grid">
+      <section className="home-hero">
+        <div className="container home-hero__grid">
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28 }}>
+            <div className="home-hero__kicker-row">
               <span className="hero-kicker">{hero.kicker}</span>
-              <span style={{ flex: 1, height: 1, background: 'var(--rule-2)', maxWidth: 120 }} />
-              <div style={{ display: 'flex', gap: 6 }}>
+              <span className="home-hero__kicker-line" />
+              <div className="home-hero__kicker-dots">
                 {heroes.map((_, i) => (
                   <span key={i} className={`rotdot ${i === h ? 'active' : ''}`} />
                 ))}
               </div>
             </div>
-            <h1 className="display" style={{ fontSize: 'clamp(48px, 6.5vw, 92px)', margin: 0 }}>
+            <h1 className="display home-hero__title">
               {hero.enTitle[0]}
               <br />
-              <span
-                style={{ color: `var(--${hero.accent})`, fontStyle: 'italic', fontWeight: 400 }}
-              >
+              <span className="home-hero__title-accent" style={{ color: `var(--${hero.accent})` }}>
                 {hero.enTitle[1]}
               </span>
             </h1>
-            <div
-              className="bn-display"
-              style={{ fontSize: 22, marginTop: 18, color: 'var(--ink-2)' }}
-            >
-              {hero.bnTitle}
-            </div>
-            <p
-              style={{
-                maxWidth: 520,
-                fontSize: 17,
-                lineHeight: 1.6,
-                color: 'var(--ink-2)',
-                marginTop: 24,
-              }}
-            >
-              {hero.body}
-            </p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 32, alignItems: 'center' }}>
+            <div className="bn-display home-hero__bn">{hero.bnTitle}</div>
+            <p className="home-hero__body">{hero.body}</p>
+            <div className="home-hero__actions">
               <button className="btn btn-primary btn-lg" onClick={() => setPage(hero.cta.page)}>
                 {hero.cta.label} <Icon.arrow />
               </button>
@@ -96,15 +80,7 @@ export function Home({ setPage }: HomeProps) {
       </section>
 
       {/* MARQUEE */}
-      <div
-        className="marquee"
-        style={{
-          borderTop: '1px solid var(--rule)',
-          borderBottom: '1px solid var(--rule)',
-          background: 'var(--cream-2)',
-          padding: '18px 0',
-        }}
-      >
+      <div className="marquee home-marquee">
         <div className="marquee-track">
           {Array(2)
             .fill(0)
@@ -122,16 +98,9 @@ export function Home({ setPage }: HomeProps) {
                   'Handwriting · হস্তাক্ষর',
                   'Craft · হস্তশিল্প',
                 ].map((t, i) => (
-                  <span
-                    key={`${rep}-${i}`}
-                    style={{ display: 'inline-flex', alignItems: 'center', gap: 24 }}
-                  >
-                    <span className="display" style={{ fontSize: 22 }}>
-                      {t}
-                    </span>
-                    <span
-                      style={{ width: 6, height: 6, borderRadius: 999, background: 'var(--ink-4)' }}
-                    />
+                  <span key={`${rep}-${i}`} className="home-marquee__item">
+                    <span className="display home-marquee__item-text">{t}</span>
+                    <span className="home-marquee__dot" />
                   </span>
                 ))}
               </Fragment>
@@ -140,13 +109,11 @@ export function Home({ setPage }: HomeProps) {
       </div>
 
       {/* STATS */}
-      <section style={{ padding: 'clamp(36px, 6vw, 80px) 0' }}>
+      <section className="home-stats">
         <div className="container">
           <div className="section-head">
             <div>
-              <div className="eyebrow" style={{ marginBottom: 14 }}>
-                By the numbers
-              </div>
+              <div className="eyebrow home-stats__eyebrow">By the numbers</div>
               <h2 className="display">Small org. Steady work.</h2>
             </div>
             <p>
@@ -154,16 +121,11 @@ export function Home({ setPage }: HomeProps) {
               last seven years look like.
             </p>
           </div>
-          <div className="stats-grid">
+          <div className="home-stats__grid">
             {PRAYASH_DATA.stats.map((s, i) => (
-              <div
-                key={i}
-                style={{ padding: 'clamp(18px, 3vw, 36px) clamp(14px, 2.5vw, 28px)' }}
-              >
-                <div className="display" style={{ fontSize: 'clamp(36px, 5vw, 56px)', lineHeight: 1 }}>
-                  {s.n}
-                </div>
-                <div style={{ marginTop: 14, fontWeight: 600 }}>{s.l}</div>
+              <div key={i} className="home-stats__item">
+                <div className="display home-stats__number">{s.n}</div>
+                <div className="home-stats__label">{s.l}</div>
                 <div className="bn small muted">{s.bn}</div>
               </div>
             ))}
@@ -172,13 +134,11 @@ export function Home({ setPage }: HomeProps) {
       </section>
 
       {/* EVENTS PREVIEW */}
-      <section style={{ padding: 'clamp(24px, 3vw, 40px) 0 clamp(36px, 6vw, 80px)' }}>
+      <section className="home-events">
         <div className="container">
           <div className="section-head">
             <div>
-              <div className="eyebrow" style={{ marginBottom: 14 }}>
-                Medha Pariksha 2026
-              </div>
+              <div className="eyebrow home-events__eyebrow">Medha Pariksha 2026</div>
               <h2 className="display">Ten events. Every kid welcome.</h2>
             </div>
             <p>
@@ -190,28 +150,18 @@ export function Home({ setPage }: HomeProps) {
             {PRAYASH_DATA.events.slice(0, 6).map((e) => (
               <div
                 key={e.id}
-                className="card hover-lift"
-                style={{ padding: 0, overflow: 'hidden', cursor: 'pointer' }}
+                className="card hover-lift home-events__card"
                 onClick={() => setPage('events')}
               >
-                <div
-                  style={{
-                    padding: '22px 22px 18px',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'flex-start',
-                  }}
-                >
+                <div className="home-events__card-header">
                   <div>
                     <div
-                      className="bn-display"
-                      style={{ fontSize: 20, color: `var(--${e.color})` }}
+                      className="bn-display home-events__card-bn"
+                      style={{ color: `var(--${e.color})` }}
                     >
                       {e.bn}
                     </div>
-                    <div className="display" style={{ fontSize: 28, marginTop: 2 }}>
-                      {e.en}
-                    </div>
+                    <div className="display home-events__card-en">{e.en}</div>
                   </div>
                   <span
                     className="chip"
@@ -220,29 +170,8 @@ export function Home({ setPage }: HomeProps) {
                     <span className="chip-dot" /> open
                   </span>
                 </div>
-                <div
-                  style={{
-                    padding: '0 22px 20px',
-                    color: 'var(--ink-2)',
-                    fontSize: 14,
-                    minHeight: 52,
-                  }}
-                >
-                  {e.desc}
-                </div>
-                <div
-                  style={{
-                    padding: '14px 22px',
-                    borderTop: '1px solid var(--rule)',
-                    display: 'flex',
-                    gap: 14,
-                    fontSize: 12,
-                    color: 'var(--ink-3)',
-                    fontFamily: 'var(--mono)',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.06em',
-                  }}
-                >
+                <div className="home-events__card-desc">{e.desc}</div>
+                <div className="home-events__card-footer">
                   <span>{e.slots.length} age groups</span>
                   <span>·</span>
                   <span>{e.duration}</span>
@@ -250,7 +179,7 @@ export function Home({ setPage }: HomeProps) {
               </div>
             ))}
           </div>
-          <div style={{ textAlign: 'center', marginTop: 32 }}>
+          <div className="home-events__more">
             <button className="btn btn-outline" onClick={() => setPage('events')}>
               See all 10 events <Icon.arrow />
             </button>
@@ -259,131 +188,56 @@ export function Home({ setPage }: HomeProps) {
       </section>
 
       {/* MISSION SPLIT */}
-      <section style={{ padding: 'clamp(24px, 3vw, 40px) 0' }}>
+      <section className="home-mission">
         <div className="container">
-          <div
-            className="mission-grid"
-            style={{
-              background: 'var(--ink)',
-              color: 'var(--cream-2)',
-              borderRadius: 'var(--radius-lg)',
-              overflow: 'hidden',
-            }}
-          >
-            <div style={{ padding: 'clamp(28px, 4vw, 56px) clamp(20px, 4vw, 48px)' }}>
-              <div className="eyebrow" style={{ color: 'rgba(255,255,255,0.45)' }}>
-                What we do
-              </div>
-              <h2 className="display" style={{ fontSize: 48, marginTop: 16 }}>
+          <div className="home-mission__grid">
+            <div className="home-mission__text">
+              <div className="eyebrow home-mission__eyebrow">What we do</div>
+              <h2 className="display home-mission__title">
                 A library
                 <br />
-                <span style={{ color: 'var(--yellow)', fontStyle: 'italic', fontWeight: 400 }}>
-                  without a building.
-                </span>
+                <span className="home-mission__title-italic">without a building.</span>
               </h2>
               <div
-                className="stack"
-                style={
-                  {
-                    '--gap': '18px',
-                    marginTop: 32,
-                    maxWidth: 440,
-                    fontSize: 15,
-                    opacity: 0.82,
-                  } as React.CSSProperties
-                }
+                className="stack home-mission__stack"
+                style={{ '--gap': '18px' } as React.CSSProperties}
               >
-                <p style={{ margin: 0 }}>
+                <p>
                   Families donate the books their children have outgrown. We sort them by subject
                   and class, check condition, and carry them to 38 partner schools across Nadia.
                 </p>
-                <p style={{ margin: 0 }}>
+                <p>
                   Every October we host <em>Prayash Medha Pariksha</em> — a festival of ten
                   competitions where the prizes are, of course, more books.
                 </p>
               </div>
-              <div className="btn-row" style={{ marginTop: 36 }}>
+              <div className="btn-row home-mission__actions">
                 <button
-                  className="btn"
-                  style={{ background: 'var(--cream-2)', color: 'var(--ink)' }}
+                  className="btn home-mission__btn-donate"
                   onClick={() => setPage('contact')}
                 >
                   Donate books <Icon.arrow />
                 </button>
                 <button
-                  className="btn btn-ghost"
-                  style={{ color: 'var(--cream-2)', border: '1px solid rgba(255,255,255,0.2)' }}
+                  className="btn btn-ghost home-mission__btn-gallery"
                   onClick={() => setPage('gallery')}
                 >
                   See our work
                 </button>
               </div>
             </div>
-            <div className="mission-photo-side" style={{ position: 'relative', background: 'var(--ink-2)', minHeight: 300 }}>
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 24,
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 1fr',
-                  gridTemplateRows: '1fr 1fr',
-                  gap: 10,
-                }}
-              >
-                <div
-                  className="ph ph-wide"
-                  style={{
-                    gridColumn: 'span 2',
-                    background: 'rgba(255,255,255,0.05)',
-                    borderColor: 'rgba(255,255,255,0.1)',
-                  }}
-                >
-                  <span
-                    className="ph-label"
-                    style={{
-                      background: 'rgba(255,253,247,0.15)',
-                      color: 'var(--cream-2)',
-                      border: 'none',
-                    }}
-                  >
+            <div className="home-mission__photos">
+              <div className="home-mission__photo-inner">
+                <div className="ph ph-wide home-mission__ph-wide">
+                  <span className="ph-label home-mission__ph-label">
                     PHOTO · Book sorting day, Tehatta
                   </span>
                 </div>
-                <div
-                  className="ph"
-                  style={{
-                    background: 'rgba(255,255,255,0.05)',
-                    borderColor: 'rgba(255,255,255,0.1)',
-                  }}
-                >
-                  <span
-                    className="ph-label"
-                    style={{
-                      background: 'rgba(255,253,247,0.15)',
-                      color: 'var(--cream-2)',
-                      border: 'none',
-                    }}
-                  >
-                    PHOTO
-                  </span>
+                <div className="ph home-mission__ph">
+                  <span className="ph-label home-mission__ph-label">PHOTO</span>
                 </div>
-                <div
-                  className="ph"
-                  style={{
-                    background: 'rgba(255,255,255,0.05)',
-                    borderColor: 'rgba(255,255,255,0.1)',
-                  }}
-                >
-                  <span
-                    className="ph-label"
-                    style={{
-                      background: 'rgba(255,253,247,0.15)',
-                      color: 'var(--cream-2)',
-                      border: 'none',
-                    }}
-                  >
-                    PHOTO
-                  </span>
+                <div className="ph home-mission__ph">
+                  <span className="ph-label home-mission__ph-label">PHOTO</span>
                 </div>
               </div>
             </div>
@@ -392,13 +246,11 @@ export function Home({ setPage }: HomeProps) {
       </section>
 
       {/* TESTIMONIALS */}
-      <section style={{ padding: 'clamp(36px, 6vw, 80px) 0' }}>
+      <section className="home-testimonials">
         <div className="container">
           <div className="section-head">
             <div>
-              <div className="eyebrow" style={{ marginBottom: 14 }}>
-                Voices
-              </div>
+              <div className="eyebrow home-testimonials__eyebrow">Voices</div>
               <h2 className="display">
                 From the people
                 <br />
@@ -418,42 +270,20 @@ export function Home({ setPage }: HomeProps) {
                 }}
               >
                 <div
-                  className="display"
-                  style={{
-                    fontSize: 56,
-                    lineHeight: 0.5,
-                    color: `var(--${t.tone})`,
-                    marginBottom: 8,
-                  }}
+                  className="display home-testimonials__card-quote"
+                  style={{ color: `var(--${t.tone})` }}
                 >
                   "
                 </div>
-                <p style={{ fontSize: 17, lineHeight: 1.5, margin: 0 }}>{t.q}</p>
+                <p className="home-testimonials__card-text">{t.q}</p>
                 <hr
-                  style={{
-                    border: 0,
-                    borderTop: `1px dashed var(--${t.tone})`,
-                    opacity: 0.5,
-                    margin: '24px 0 16px',
-                  }}
+                  className="home-testimonials__card-hr"
+                  style={{ borderTop: `1px dashed var(--${t.tone})` }}
                 />
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div className="home-testimonials__card-author">
                   <div
-                    className="ph ph-sq"
-                    style={{
-                      width: 44,
-                      height: 44,
-                      flexShrink: 0,
-                      borderRadius: '50%',
-                      padding: 0,
-                      background: `var(--${t.tone})`,
-                      color: 'white',
-                      display: 'grid',
-                      placeItems: 'center',
-                      fontSize: 14,
-                      fontWeight: 700,
-                      border: 'none',
-                    }}
+                    className="home-testimonials__avatar"
+                    style={{ background: `var(--${t.tone})` }}
                   >
                     {t.who
                       .split(' ')
@@ -462,7 +292,7 @@ export function Home({ setPage }: HomeProps) {
                       .join('')}
                   </div>
                   <div>
-                    <div style={{ fontWeight: 600, fontSize: 14 }}>{t.who}</div>
+                    <div className="home-testimonials__author-name">{t.who}</div>
                     <div className="small muted">{t.where}</div>
                   </div>
                 </div>
@@ -473,24 +303,14 @@ export function Home({ setPage }: HomeProps) {
       </section>
 
       {/* CTA STRIP */}
-      <section style={{ padding: 'clamp(24px, 3vw, 40px) 0' }}>
+      <section className="home-cta">
         <div className="container">
-          <div
-            className="card cta-strip"
-            style={{
-              background: 'var(--yellow-tint)',
-              border: '1px solid var(--yellow)',
-              padding: '32px 40px',
-            }}
-          >
+          <div className="card home-cta__strip">
             <div>
-              <div className="display" style={{ fontSize: 34 }}>
+              <div className="display home-cta__title">
                 Medha Pariksha 2026 opens 20 September.
               </div>
-              <div
-                className="bn-display"
-                style={{ fontSize: 18, marginTop: 6, color: 'var(--ink-2)' }}
-              >
+              <div className="bn-display home-cta__subtitle">
                 প্রয়াস মেধা পরীক্ষা — ২০২৬ · রেজিস্ট্রেশন ২০শে সেপ্টেম্বর থেকে
               </div>
             </div>
@@ -506,93 +326,23 @@ export function Home({ setPage }: HomeProps) {
 
 function HeroCollage({ accent }: { accent: string }) {
   return (
-    <div style={{ position: 'relative', aspectRatio: '4/5' }}>
+    <div className="hero-collage">
       <div
+        className="hero-collage__main"
         style={{
-          position: 'absolute',
-          inset: '0 10% 15% 0',
           background: `var(--${accent}-tint)`,
-          borderRadius: 'var(--radius-lg)',
           border: `1px solid var(--${accent})`,
-          overflow: 'hidden',
-          padding: 10,
         }}
       >
-        <img
-          src="/assets/home-poster.jpg"
-          alt="Student at last year's event"
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            borderRadius: 'calc(var(--radius-lg) - 8px)',
-          }}
-        />
-        {/* <span className="ph-label">PHOTO · Student at last year's event</span> */}
+        <img src="/assets/home-poster.jpg" alt="Student at last year's event" />
       </div>
-      <div
-        style={{
-          position: 'absolute',
-          top: -10,
-          right: -10,
-          width: 120,
-          height: 120,
-          background: 'white',
-          borderRadius: '50%',
-          padding: 5,
-          border: '2px solid var(--ink)',
-          boxShadow: 'var(--shadow-md)',
-          display: 'grid',
-          placeItems: 'center',
-        }}
-      >
-        <img
-          src="/assets/logo.png"
-          style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-        />
+      <div className="hero-collage__logo-circle">
+        <img src="/assets/logo.png" alt="Prayash" />
       </div>
-      <div
-        className="hero-float-card"
-        style={{
-          position: 'absolute',
-          bottom: 20,
-          left: -20,
-          background: 'var(--paper)',
-          border: '1px solid var(--rule)',
-          borderRadius: 14,
-          padding: '14px 18px',
-          boxShadow: 'var(--shadow-md)',
-          minWidth: 200,
-        }}
-      >
+      <div className="hero-collage__float-card">
         <div className="eyebrow">Since 2019</div>
-        <div className="display" style={{ fontSize: 32, marginTop: 4 }}>
-          1,240 books
-        </div>
-        <div className="small muted" style={{ marginTop: 2 }}>
-          moved from shelves to students
-        </div>
-      </div>
-      <div
-        style={{
-          position: 'absolute',
-          bottom: 45,
-          right: 30,
-          background: 'var(--ink)',
-          color: 'var(--cream-2)',
-          borderRadius: 999,
-          padding: '10px 16px',
-          fontSize: 12,
-          // display: 'flex',
-          display: 'none',
-          alignItems: 'center',
-          gap: 8,
-          fontWeight: 600,
-          boxShadow: 'var(--shadow-md)',
-        }}
-      >
-        <span style={{ width: 8, height: 8, borderRadius: 999, background: 'var(--green)' }} />
-        Registration open
+        <div className="display hero-collage__float-card-number">1,240 books</div>
+        <div className="small muted hero-collage__float-card-sub">moved from shelves to students</div>
       </div>
     </div>
   );

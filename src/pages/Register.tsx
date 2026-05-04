@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { PRAYASH_DATA, Icon } from '../data';
 import type { Page } from '../types';
+import './Register.scss';
 
 interface RegisterProps {
   setPage: (p: Page) => void;
@@ -17,15 +18,6 @@ interface FormData {
   address: string;
   notes: string;
 }
-
-const inputStyle: React.CSSProperties = {
-  width: '100%',
-  padding: '12px 14px',
-  borderRadius: 10,
-  border: '1px solid var(--rule)',
-  background: 'var(--paper)',
-  fontSize: 15,
-};
 
 export function Register({ setPage }: RegisterProps) {
   const [step, setStep] = useState(1);
@@ -55,26 +47,17 @@ export function Register({ setPage }: RegisterProps) {
   }[step as 1 | 2 | 3];
 
   return (
-    <div style={{ padding: '56px 0 80px' }}>
-      <div className="container" style={{ maxWidth: 960 }}>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-end',
-            marginBottom: 32,
-          }}
-        >
+    <div className="register">
+      <div className="container register__container">
+        <div className="register__header">
           <div>
-            <div className="eyebrow" style={{ marginBottom: 14 }}>
+            <div className="eyebrow register__eyebrow">
               Medha Pariksha 2026 · Registration
             </div>
-            <h1 className="display" style={{ fontSize: 56, margin: 0 }}>
+            <h1 className="display register__title">
               Let's get you
               <br />
-              <span style={{ fontStyle: 'italic', color: 'var(--red)', fontWeight: 400 }}>
-                on the stage.
-              </span>
+              <span className="register__title-accent">on the stage.</span>
             </h1>
           </div>
           <button className="btn btn-ghost btn-sm" onClick={() => setPage('home')}>
@@ -82,50 +65,29 @@ export function Register({ setPage }: RegisterProps) {
           </button>
         </div>
 
-        <div className="steps-grid">
+        <div className="register__steps">
           {(['Student', 'Events', 'Review', 'Done'] as const).map((label, i) => {
             const n = i + 1;
             const done = step > n;
             const active = step === n;
+            const stepClass = active
+              ? 'register__step--active'
+              : done
+                ? 'register__step--done'
+                : 'register__step--pending';
+            const circleClass = active
+              ? 'register__step-circle--active'
+              : done
+                ? 'register__step-circle--done'
+                : 'register__step-circle--pending';
             return (
-              <div
-                key={label}
-                style={{
-                  padding: '14px 16px',
-                  borderRadius: 12,
-                  background: active ? 'var(--ink)' : done ? 'var(--green-tint)' : 'var(--paper)',
-                  color: active ? 'var(--cream-2)' : done ? 'var(--green)' : 'var(--ink-3)',
-                  border:
-                    '1px solid ' + (active ? 'var(--ink)' : done ? 'var(--green)' : 'var(--rule)'),
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 12,
-                }}
-              >
-                <div
-                  style={{
-                    width: 26,
-                    height: 26,
-                    borderRadius: '50%',
-                    display: 'grid',
-                    placeItems: 'center',
-                    fontSize: 13,
-                    fontWeight: 700,
-                    background: active
-                      ? 'var(--cream-2)'
-                      : done
-                        ? 'var(--green)'
-                        : 'var(--cream-3)',
-                    color: active ? 'var(--ink)' : done ? 'white' : 'var(--ink-3)',
-                  }}
-                >
+              <div key={label} className={`register__step ${stepClass}`}>
+                <div className={`register__step-circle ${circleClass}`}>
                   {done ? <Icon.check /> : n}
                 </div>
                 <div>
-                  <div className="mono" style={{ color: 'inherit', opacity: 0.7 }}>
-                    Step {n}
-                  </div>
-                  <div style={{ fontWeight: 600, fontSize: 14 }}>{label}</div>
+                  <div className="mono register__step-num">Step {n}</div>
+                  <div className="register__step-label">{label}</div>
                 </div>
               </div>
             );
@@ -135,15 +97,15 @@ export function Register({ setPage }: RegisterProps) {
         {step === 4 ? (
           <SuccessCard data={data} setPage={setPage} />
         ) : (
-          <div className="card" style={{ padding: 0 }}>
-            <div style={{ padding: '32px 36px' }}>
+          <div className="card register__form-card">
+            <div className="register__form-body">
               {step === 1 && <Step1 data={data} update={update} />}
               {step === 2 && <Step2 data={data} toggleEvent={toggleEvent} />}
               {step === 3 && <Step3 data={data} update={update} />}
             </div>
-            <div className="reg-footer-bar">
+            <div className="register__footer-bar">
               <button
-                className="btn btn-ghost"
+                className={`btn btn-ghost ${step === 1 ? 'register__back-btn--disabled' : ''}`}
                 onClick={() => setStep((s) => Math.max(1, s - 1))}
                 disabled={step === 1}
                 style={{ opacity: step === 1 ? 0.3 : 1 }}
@@ -182,19 +144,15 @@ function Field({
 }) {
   return (
     <div style={{ gridColumn: `span ${col}` }}>
-      <label style={{ display: 'block', marginBottom: 8 }}>
-        <span style={{ fontWeight: 600, fontSize: 14 }}>{label}</span>
+      <label className="form-field__label">
+        <span className="form-field__label-text">{label}</span>
         {bn && (
-          <span className="bn small muted" style={{ marginLeft: 8 }}>
-            {bn}
-          </span>
+          <span className="bn small muted form-field__label-bn">{bn}</span>
         )}
       </label>
       {children}
       {hint && (
-        <div className="small muted" style={{ marginTop: 6 }}>
-          {hint}
-        </div>
+        <div className="small muted form-field__hint">{hint}</div>
       )}
     </div>
   );
@@ -209,16 +167,14 @@ function Step1({
 }) {
   return (
     <div>
-      <div className="display" style={{ fontSize: 28, marginBottom: 6 }}>
-        Tell us about the student
-      </div>
-      <p className="muted" style={{ marginTop: 0, marginBottom: 28 }}>
+      <div className="display step1__title">Tell us about the student</div>
+      <p className="muted step1__desc">
         Basic details. Guardian contact so we can reach you with venue updates.
       </p>
       <div className="form-grid">
         <Field label="Student's full name" bn="ছাত্রের নাম" col={2}>
           <input
-            style={inputStyle}
+            className="form-input"
             value={data.student}
             onChange={(e) => update('student', e.target.value)}
             placeholder="e.g. Moynak Biswas"
@@ -226,7 +182,7 @@ function Step1({
         </Field>
         <Field label="Class / Standard" bn="শ্রেণী">
           <select
-            style={inputStyle}
+            className="form-input"
             value={data.klass}
             onChange={(e) => update('klass', e.target.value)}
           >
@@ -253,7 +209,7 @@ function Step1({
         </Field>
         <Field label="School" bn="বিদ্যালয়">
           <input
-            style={inputStyle}
+            className="form-input"
             value={data.school}
             onChange={(e) => update('school', e.target.value)}
             placeholder="Name of school"
@@ -261,7 +217,7 @@ function Step1({
         </Field>
         <Field label="Guardian's name" bn="অভিভাবক">
           <input
-            style={inputStyle}
+            className="form-input"
             value={data.guardian}
             onChange={(e) => update('guardian', e.target.value)}
             placeholder="Parent or guardian"
@@ -269,7 +225,7 @@ function Step1({
         </Field>
         <Field label="Phone (WhatsApp)" bn="মোবাইল" hint="We'll send venue details here.">
           <input
-            style={inputStyle}
+            className="form-input"
             value={data.phone}
             onChange={(e) => update('phone', e.target.value)}
             placeholder="+91 98xxx xxxxx"
@@ -277,7 +233,7 @@ function Step1({
         </Field>
         <Field label="Email (optional)" bn="ইমেইল" col={2}>
           <input
-            style={inputStyle}
+            className="form-input"
             value={data.email}
             onChange={(e) => update('email', e.target.value)}
             placeholder="for certificates download link"
@@ -291,16 +247,12 @@ function Step1({
 function Step2({ data, toggleEvent }: { data: FormData; toggleEvent: (id: string) => void }) {
   return (
     <div>
-      <div className="display" style={{ fontSize: 28, marginBottom: 6 }}>
-        Pick events
-      </div>
-      <p className="muted" style={{ marginTop: 0, marginBottom: 8 }}>
+      <div className="display step2__title">Pick events</div>
+      <p className="muted step2__desc">
         A student can enter up to 4 events. Appropriate age group is selected automatically based on
         the class you chose.
       </p>
-      <div className="mono" style={{ marginBottom: 24 }}>
-        {data.events.length} of 4 selected
-      </div>
+      <div className="mono step2__count">{data.events.length} of 4 selected</div>
       <div className="cols-2">
         {PRAYASH_DATA.events.map((e) => {
           const on = data.events.includes(e.id);
@@ -310,45 +262,32 @@ function Step2({ data, toggleEvent }: { data: FormData; toggleEvent: (id: string
               key={e.id}
               disabled={disabled}
               onClick={() => toggleEvent(e.id)}
+              className={`step2__event-btn ${disabled ? 'step2__event-btn--disabled' : ''}`}
               style={{
-                textAlign: 'left',
-                padding: '18px 20px',
-                borderRadius: 14,
                 background: on ? `var(--${e.color}-tint)` : 'var(--paper)',
                 border: `1.5px solid ${on ? `var(--${e.color})` : 'var(--rule)'}`,
-                display: 'flex',
-                gap: 16,
-                alignItems: 'center',
-                opacity: disabled ? 0.4 : 1,
-                transition: 'all .15s ease',
               }}
             >
               <div
+                className="step2__event-check"
                 style={{
-                  width: 24,
-                  height: 24,
-                  borderRadius: 6,
                   border: `1.5px solid ${on ? `var(--${e.color})` : 'var(--rule-2)'}`,
                   background: on ? `var(--${e.color})` : 'transparent',
-                  color: 'white',
-                  display: 'grid',
-                  placeItems: 'center',
-                  flexShrink: 0,
                 }}
               >
                 {on && <Icon.check />}
               </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 600, display: 'flex', gap: 8, alignItems: 'baseline' }}>
+              <div className="step2__event-body">
+                <div className="step2__event-name">
                   {e.en}{' '}
                   <span
-                    className="bn small"
-                    style={{ color: `var(--${e.color})`, fontWeight: 500 }}
+                    className="bn small step2__event-bn"
+                    style={{ color: `var(--${e.color})` }}
                   >
                     {e.bn}
                   </span>
                 </div>
-                <div className="small muted" style={{ marginTop: 2 }}>
+                <div className="small muted step2__event-meta">
                   {e.format} · {e.duration}
                 </div>
               </div>
@@ -370,51 +309,30 @@ function Step3({
   const selectedEvents = PRAYASH_DATA.events.filter((e) => data.events.includes(e.id));
   return (
     <div>
-      <div className="display" style={{ fontSize: 28, marginBottom: 6 }}>
-        Review & submit
-      </div>
-      <p className="muted" style={{ marginTop: 0, marginBottom: 24 }}>
+      <div className="display step3__title">Review & submit</div>
+      <p className="muted step3__desc">
         Check everything below. You'll get a confirmation on WhatsApp within a day.
       </p>
-      <div className="cols-2" style={{ marginBottom: 24 }}>
+      <div className="cols-2 step3__summary">
         <ReviewRow label="Student" value={`${data.student || '—'} · ${data.klass || ''}`} />
         <ReviewRow label="School" value={data.school || '—'} />
         <ReviewRow label="Guardian" value={data.guardian || '—'} />
         <ReviewRow label="Phone" value={data.phone || '—'} />
       </div>
-      <div className="eyebrow" style={{ marginBottom: 12 }}>
-        Events selected
-      </div>
-      <div className="stack" style={{ '--gap': '6px', marginBottom: 28 } as React.CSSProperties}>
+      <div className="eyebrow step3__events-eyebrow">Events selected</div>
+      <div className="stack step3__selected-events" style={{ '--gap': '6px' } as React.CSSProperties}>
         {selectedEvents.length === 0 ? (
           <div className="muted small">No events selected — go back to step 2.</div>
         ) : (
           selectedEvents.map((e) => (
-            <div
-              key={e.id}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 12,
-                padding: '10px 14px',
-                background: 'var(--cream-2)',
-                border: '1px solid var(--rule)',
-                borderRadius: 10,
-              }}
-            >
+            <div key={e.id} className="step3__event-row">
               <span
-                style={{
-                  width: 10,
-                  height: 10,
-                  borderRadius: 999,
-                  background: `var(--${e.color})`,
-                }}
+                className="step3__event-dot"
+                style={{ background: `var(--${e.color})` }}
               />
-              <div style={{ fontWeight: 600 }}>{e.en}</div>
+              <div className="step3__event-en">{e.en}</div>
               <div className="bn small muted">{e.bn}</div>
-              <div style={{ marginLeft: 'auto' }} className="mono">
-                {e.duration}
-              </div>
+              <div className="mono step3__event-duration">{e.duration}</div>
             </div>
           ))
         )}
@@ -425,22 +343,13 @@ function Step3({
         hint="Allergies, accessibility needs, language preference."
       >
         <textarea
-          style={{ ...inputStyle, minHeight: 100, resize: 'vertical' }}
+          className="form-input form-input--textarea"
           value={data.notes}
           onChange={(e) => update('notes', e.target.value)}
           placeholder="Optional notes"
         />
       </Field>
-      <div
-        style={{
-          marginTop: 28,
-          padding: '16px 20px',
-          background: 'var(--yellow-tint)',
-          border: '1px solid var(--yellow)',
-          borderRadius: 10,
-          fontSize: 14,
-        }}
-      >
+      <div className="step3__consent">
         <strong>By submitting,</strong> you confirm the student is available on{' '}
         <strong>Oct 10–11, 2026</strong> and you agree to Prayash using event photos for future
         promotion (you can opt out in the dashboard).
@@ -452,10 +361,8 @@ function Step3({
 function ReviewRow({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <div className="eyebrow" style={{ marginBottom: 4 }}>
-        {label}
-      </div>
-      <div style={{ fontWeight: 500 }}>{value}</div>
+      <div className="eyebrow review-row__eyebrow">{label}</div>
+      <div className="review-row__value">{value}</div>
     </div>
   );
 }
@@ -463,25 +370,9 @@ function ReviewRow({ label, value }: { label: string; value: string }) {
 function SuccessCard({ data, setPage }: { data: FormData; setPage: (p: Page) => void }) {
   const [id] = useState(() => Math.floor(Math.random() * 9000 + 1000));
   return (
-    <div className="card" style={{ padding: 0, overflow: 'hidden', textAlign: 'center' }}>
-      <div
-        style={{
-          padding: '60px 40px 40px',
-          background: 'linear-gradient(180deg, var(--green-tint), var(--paper))',
-        }}
-      >
-        <div
-          style={{
-            width: 72,
-            height: 72,
-            margin: '0 auto 24px',
-            borderRadius: '50%',
-            background: 'var(--green)',
-            color: 'white',
-            display: 'grid',
-            placeItems: 'center',
-          }}
-        >
+    <div className="card success-card">
+      <div className="success-card__body">
+        <div className="success-card__icon">
           <svg width="32" height="32" viewBox="0 0 16 16" fill="none">
             <path
               d="M3 8.5 6.5 12 13 5"
@@ -492,37 +383,20 @@ function SuccessCard({ data, setPage }: { data: FormData; setPage: (p: Page) => 
             />
           </svg>
         </div>
-        <div className="eyebrow" style={{ marginBottom: 8 }}>
-          Registration received
-        </div>
-        <h2 className="display" style={{ fontSize: 44, margin: 0 }}>
-          See you on Oct 10.
-        </h2>
-        <div className="bn-display" style={{ fontSize: 20, marginTop: 10, color: 'var(--ink-2)' }}>
+        <div className="eyebrow success-card__eyebrow">Registration received</div>
+        <h2 className="display success-card__title">See you on Oct 10.</h2>
+        <div className="bn-display success-card__bn">
           ধন্যবাদ · {data.student || 'ছাত্র'}
         </div>
-        <div
-          style={{
-            background: 'var(--paper)',
-            border: '1px solid var(--rule)',
-            borderRadius: 12,
-            padding: '18px 24px',
-            margin: '32px auto 0',
-            maxWidth: 440,
-            display: 'grid',
-            gridTemplateColumns: 'auto 1fr',
-            gap: '8px 20px',
-            textAlign: 'left',
-          }}
-        >
+        <div className="success-card__details">
           <div className="mono">ID</div>
-          <div style={{ fontWeight: 600 }}>PRY-2026-{id}</div>
+          <div className="success-card__detail-value">PRY-2026-{id}</div>
           <div className="mono">Events</div>
-          <div style={{ fontWeight: 500 }}>{data.events.length} selected</div>
+          <div className="success-card__detail-value">{data.events.length} selected</div>
           <div className="mono">Contact</div>
-          <div style={{ fontWeight: 500 }}>{data.phone || '—'}</div>
+          <div className="success-card__detail-value">{data.phone || '—'}</div>
         </div>
-        <div className="btn-row" style={{ justifyContent: 'center', marginTop: 32 }}>
+        <div className="btn-row success-card__actions">
           <button className="btn btn-primary" onClick={() => setPage('dashboard')}>
             Go to dashboard <Icon.arrow />
           </button>

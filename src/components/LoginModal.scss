@@ -1,0 +1,91 @@
+.login-modal__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(31, 27, 22, 0.72);
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  backdrop-filter: blur(4px);
+}
+
+.login-modal__panel {
+  background: var(--paper);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 440px;
+  overflow: hidden;
+}
+
+.login-modal__header {
+  padding: 36px 36px 28px;
+  text-align: center;
+  background: linear-gradient(180deg, var(--cream-2), var(--paper));
+  border-bottom: 1px solid var(--rule);
+}
+
+.login-modal__logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink);
+  margin-bottom: 12px;
+}
+
+.login-modal__title {
+  font-size: 28px;
+}
+
+.login-modal__subtitle {
+  font-size: 15px;
+  margin-top: 4px;
+}
+
+.login-modal__body {
+  padding: 28px 36px;
+}
+
+.login-modal__label {
+  font-size: 13px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.login-modal__label-row {
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.login-modal__forgot {
+  color: var(--blue);
+  cursor: pointer;
+}
+
+.login-modal__input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  font-size: 15px;
+}
+
+.login-modal__submit {
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.login-modal__footer {
+  text-align: center;
+  margin-top: 18px;
+}
+
+.login-modal__register-link {
+  color: var(--ink);
+  font-weight: 600;
+  cursor: pointer;
+}

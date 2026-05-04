@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import './Gallery.scss';
 
 export function Gallery() {
   const years = [2025, 2024, 2023, 2022];
@@ -16,42 +17,25 @@ export function Gallery() {
 
   return (
     <div>
-      <section style={{ padding: '64px 0 32px' }}>
+      <section className="gallery-section">
         <div className="container">
           <div className="gallery-header">
             <div>
-              <div className="eyebrow" style={{ marginBottom: 14 }}>
-                Gallery
-              </div>
-              <h1 className="display" style={{ fontSize: 'clamp(48px, 6vw, 80px)', margin: 0 }}>
+              <div className="eyebrow gallery-header__eyebrow">Gallery</div>
+              <h1 className="display gallery-header__title">
                 Seven years of{' '}
-                <span style={{ fontStyle: 'italic', color: 'var(--blue)', fontWeight: 400 }}>
-                  showing up.
-                </span>
+                <span className="gallery-header__title-accent">showing up.</span>
               </h1>
-              <p style={{ marginTop: 18, color: 'var(--ink-2)', maxWidth: 560, fontSize: 17 }}>
+              <p className="gallery-header__desc">
                 Every photo below is from a real day at a real school. We don't stage our work.
               </p>
             </div>
-            <div
-              style={{
-                display: 'flex',
-                gap: 4,
-                padding: 4,
-                background: 'var(--paper)',
-                border: '1px solid var(--rule)',
-                borderRadius: 999,
-              }}
-            >
+            <div className="gallery-year-picker">
               {years.map((y) => (
                 <button
                   key={y}
-                  className="nav-link"
+                  className={`gallery-year-picker__btn ${year === y ? 'gallery-year-picker__btn--active' : 'gallery-year-picker__btn--inactive'}`}
                   onClick={() => setYear(y)}
-                  style={{
-                    background: year === y ? 'var(--ink)' : 'transparent',
-                    color: year === y ? 'var(--cream-2)' : 'var(--ink)',
-                  }}
                 >
                   {y}
                 </button>
@@ -77,31 +61,20 @@ export function Gallery() {
             ))}
           </div>
 
-          <div
-            className="gallery-stats-grid"
-            style={{
-              marginTop: 48,
-              padding: '32px 36px',
-              background: 'var(--paper)',
-              border: '1px solid var(--rule)',
-              borderRadius: 'var(--radius-lg)',
-            }}
-          >
-            {[
-              { n: String(year), l: 'Season' },
-              { n: '320', l: 'Participants' },
-              { n: '11', l: 'Volunteers' },
-              { n: '146', l: 'Certificates printed' },
-            ].map((s, i) => (
-              <div key={i}>
-                <div className="eyebrow" style={{ marginBottom: 6 }}>
-                  {s.l}
+          <div className="gallery-stats">
+            <div className="gallery-stats__grid">
+              {[
+                { n: String(year), l: 'Season' },
+                { n: '320', l: 'Participants' },
+                { n: '11', l: 'Volunteers' },
+                { n: '146', l: 'Certificates printed' },
+              ].map((s, i) => (
+                <div key={i}>
+                  <div className="eyebrow gallery-stats__eyebrow">{s.l}</div>
+                  <div className="display gallery-stats__n">{s.n}</div>
                 </div>
-                <div className="display" style={{ fontSize: 40, lineHeight: 1 }}>
-                  {s.n}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>

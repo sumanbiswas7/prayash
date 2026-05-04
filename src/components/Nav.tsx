@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Icon } from '../data';
 import type { Page } from '../types';
+import './Nav.scss';
 
 interface NavProps {
   setPage: (p: Page) => void;
@@ -28,27 +29,27 @@ export function Nav({ setPage, openLogin }: NavProps) {
 
   return (
     <header className="nav">
-      <div className="container nav-inner">
-        <button className="nav-logo" onClick={() => navigate('home')} style={{ cursor: 'pointer' }}>
+      <div className="container nav__inner">
+        <button className="nav__logo" onClick={() => navigate('home')}>
           <img src="/assets/logo.png" alt="Prayash" />
-          <div className="nav-logo-text">
+          <div className="nav__logo-text">
             <div className="en">Prayash</div>
             <div className="bn">প্রয়াস · মানবকল্যাণ সংগঠন</div>
           </div>
         </button>
-        <nav className="nav-links">
+        <nav className="nav__links">
           {links.map((l) => (
             <button
               key={l.id}
-              className={`nav-link ${pathname === l.path ? 'active' : ''}`}
+              className={`nav__link ${pathname === l.path ? 'active' : ''}`}
               onClick={() => navigate(l.id)}
             >
               {l.label}
             </button>
           ))}
         </nav>
-        <div className="nav-spacer" />
-        <div className="nav-cta-desktop">
+        <div className="nav__spacer" />
+        <div className="nav__cta">
           <button className="btn btn-ghost btn-sm" onClick={openLogin}>
             Log in
           </button>
@@ -57,7 +58,7 @@ export function Nav({ setPage, openLogin }: NavProps) {
           </button>
         </div>
         <button
-          className="nav-hamburger btn btn-ghost btn-sm"
+          className="nav__hamburger btn btn-ghost btn-sm"
           onClick={() => setOpen((v) => !v)}
           aria-label="Toggle menu"
         >
@@ -76,17 +77,17 @@ export function Nav({ setPage, openLogin }: NavProps) {
         </button>
       </div>
       {open && (
-        <nav className="nav-mobile-menu">
+        <nav className="nav__mobile-menu">
           {links.map((l) => (
             <button
               key={l.id}
-              className={`nav-mobile-link ${pathname === l.path ? 'active' : ''}`}
+              className={`nav__mobile-link ${pathname === l.path ? 'active' : ''}`}
               onClick={() => navigate(l.id)}
             >
               {l.label}
             </button>
           ))}
-          <div className="nav-mobile-actions">
+          <div className="nav__mobile-actions">
             <button
               className="btn btn-ghost"
               onClick={() => {

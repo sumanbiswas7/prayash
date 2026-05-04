@@ -1,33 +1,25 @@
 import { Icon } from '../data';
+import './Contact.scss';
 
 export function Contact() {
   return (
     <div>
-      <section style={{ padding: '72px 0 80px' }}>
-        <div
-          className="container contact-layout"
-        >
+      <section className="contact-section">
+        <div className="container contact-layout">
           <div>
-            <div className="eyebrow" style={{ marginBottom: 14 }}>
-              Contact
-            </div>
-            <h1
-              className="display"
-              style={{ fontSize: 'clamp(44px, 5.5vw, 72px)', margin: 0, lineHeight: 1 }}
-            >
+            <div className="eyebrow contact-layout__eyebrow">Contact</div>
+            <h1 className="display contact-layout__title">
               We read every
               <br />
-              <span style={{ fontStyle: 'italic', color: 'var(--teal)', fontWeight: 400 }}>
-                message.
-              </span>
+              <span className="contact-layout__title-accent">message.</span>
             </h1>
-            <p style={{ marginTop: 20, color: 'var(--ink-2)', fontSize: 17, maxWidth: 460 }}>
+            <p className="contact-layout__desc">
               For book donations, school partnerships, volunteering, or media — write to us. We
               usually reply within two days.
             </p>
             <div
-              className="stack"
-              style={{ '--gap': '18px', marginTop: 40 } as React.CSSProperties}
+              className="stack contact-layout__items"
+              style={{ '--gap': '18px' } as React.CSSProperties}
             >
               <ContactItem label="Office" value="Tehatta, Nadia · West Bengal 741160" />
               <ContactItem label="Email" value="hello@prayash.org.in" />
@@ -39,45 +31,21 @@ export function Contact() {
             </div>
           </div>
 
-          <div className="card" style={{ padding: 32 }}>
-            <div className="display" style={{ fontSize: 24, marginBottom: 4 }}>
-              Drop us a line.
-            </div>
-            <p className="small muted" style={{ marginTop: 0, marginBottom: 24 }}>
-              No long forms. Just what we need.
-            </p>
+          <div className="card contact-form">
+            <div className="display contact-form__title">Drop us a line.</div>
+            <p className="small muted contact-form__desc">No long forms. Just what we need.</p>
             <div className="stack" style={{ '--gap': '16px' } as React.CSSProperties}>
-              <div className="cols-2" style={{ gap: 12 }}>
+              <div className="cols-2 contact-form__input-row">
                 <input
                   placeholder="Your name"
-                  style={{
-                    padding: '12px 14px',
-                    borderRadius: 10,
-                    border: '1px solid var(--rule)',
-                    background: 'var(--paper)',
-                    fontSize: 15,
-                  }}
+                  className="contact-form__input"
                 />
                 <input
                   placeholder="Phone or email"
-                  style={{
-                    padding: '12px 14px',
-                    borderRadius: 10,
-                    border: '1px solid var(--rule)',
-                    background: 'var(--paper)',
-                    fontSize: 15,
-                  }}
+                  className="contact-form__input"
                 />
               </div>
-              <select
-                style={{
-                  padding: '12px 14px',
-                  borderRadius: 10,
-                  border: '1px solid var(--rule)',
-                  background: 'var(--paper)',
-                  fontSize: 15,
-                }}
-              >
+              <select className="contact-form__select">
                 <option>What's this about?</option>
                 <option>Donating books</option>
                 <option>Volunteering</option>
@@ -87,17 +55,9 @@ export function Contact() {
               </select>
               <textarea
                 placeholder="Tell us more…"
-                style={{
-                  padding: '12px 14px',
-                  borderRadius: 10,
-                  border: '1px solid var(--rule)',
-                  background: 'var(--paper)',
-                  fontSize: 15,
-                  minHeight: 130,
-                  resize: 'vertical',
-                }}
+                className="contact-form__textarea"
               />
-              <button className="btn btn-primary btn-lg" style={{ justifyContent: 'center' }}>
+              <button className="btn btn-primary btn-lg contact-form__submit">
                 Send message <Icon.arrow />
               </button>
             </div>
@@ -112,7 +72,7 @@ function ContactItem({ label, value }: { label: string; value: string }) {
   return (
     <div className="contact-item-grid">
       <div className="mono">{label}</div>
-      <div style={{ fontWeight: 500 }}>{value}</div>
+      <div className="contact-item__value">{value}</div>
     </div>
   );
 }

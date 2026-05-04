@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { PRAYASH_DATA, Icon } from '../data';
 import type { Page } from '../types';
+import './Events.scss';
 
 interface EventsProps {
   setPage: (p: Page) => void;
@@ -12,95 +13,59 @@ export function Events({ setPage }: EventsProps) {
 
   return (
     <div>
-      <section
-        style={{
-          padding: '72px 0 40px',
-          background: 'var(--cream-2)',
-          borderBottom: '1px solid var(--rule)',
-        }}
-      >
-        <div className="container events-header-grid">
+      <section className="events-hero">
+        <div className="container events-hero__grid">
           <div>
-            <div className="eyebrow" style={{ marginBottom: 14 }}>
-              The annual festival
-            </div>
-            <h1 className="display" style={{ fontSize: 'clamp(48px, 6vw, 80px)', margin: 0 }}>
+            <div className="eyebrow events-hero__eyebrow">The annual festival</div>
+            <h1 className="display events-hero__title">
               Medha Pariksha{' '}
-              <span style={{ color: 'var(--red)', fontStyle: 'italic', fontWeight: 400 }}>
-                2026.
-              </span>
+              <span className="events-hero__title-accent">2026.</span>
             </h1>
-            <div
-              className="bn-display"
-              style={{ fontSize: 22, marginTop: 14, color: 'var(--ink-2)' }}
-            >
+            <div className="bn-display events-hero__bn">
               প্রয়াস মেধা পরীক্ষা — ২০২৬
             </div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-            <div className="card" style={{ padding: '18px 20px' }}>
-              <div className="eyebrow">
+          <div className="events-hero__info-grid">
+            <div className="card events-hero__info-card">
+              <div className="eyebrow events-hero__info-eyebrow">
                 <Icon.cal /> When
               </div>
-              <div className="display" style={{ fontSize: 26, marginTop: 6 }}>
-                10–11 Oct 2026
-              </div>
+              <div className="display events-hero__info-title">10–11 Oct 2026</div>
               <div className="small muted">Saturday & Sunday</div>
             </div>
-            <div className="card" style={{ padding: '18px 20px' }}>
-              <div className="eyebrow">
+            <div className="card events-hero__info-card">
+              <div className="eyebrow events-hero__info-eyebrow">
                 <Icon.pin /> Where
               </div>
-              <div className="display" style={{ fontSize: 22, marginTop: 6, lineHeight: 1.1 }}>
+              <div className="display events-hero__info-where-title">
                 Tehatta Sridham Chandra Balika Vidyalaya
               </div>
-              <div className="small muted" style={{ marginTop: 4 }}>
-                Tehatta, Nadia
-              </div>
+              <div className="small muted events-hero__info-sub">Tehatta, Nadia</div>
             </div>
           </div>
         </div>
       </section>
 
-      <section style={{ padding: '48px 0 80px' }}>
+      <section className="events-body">
         <div className="container events-layout">
           <div>
-            <div className="eyebrow" style={{ marginBottom: 14 }}>
-              All 10 events
-            </div>
+            <div className="eyebrow events-list__eyebrow">All 10 events</div>
             <div className="stack" style={{ '--gap': '6px' } as React.CSSProperties}>
               {PRAYASH_DATA.events.map((e) => (
                 <button
                   key={e.id}
                   onClick={() => setSelected(e.id)}
-                  className="hover-lift"
-                  style={{
-                    width: '100%',
-                    textAlign: 'left',
-                    background: selected === e.id ? 'var(--ink)' : 'var(--paper)',
-                    color: selected === e.id ? 'var(--cream-2)' : 'var(--ink)',
-                    border: '1px solid ' + (selected === e.id ? 'var(--ink)' : 'var(--rule)'),
-                    borderRadius: 12,
-                    padding: '14px 16px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 14,
-                  }}
+                  className={`hover-lift events-list__item ${selected === e.id ? 'events-list__item--selected' : 'events-list__item--default'}`}
                 >
                   <span
-                    style={{
-                      width: 10,
-                      height: 10,
-                      borderRadius: 999,
-                      background: `var(--${e.color})`,
-                      flexShrink: 0,
-                    }}
+                    className="events-list__item-dot"
+                    style={{ background: `var(--${e.color})` }}
                   />
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 600 }}>{e.en}</div>
+                  <div className="events-list__item-body">
+                    <div className="events-list__item-en">{e.en}</div>
                     <div
-                      className="bn small"
-                      style={{ opacity: selected === e.id ? 0.7 : 0.6, marginTop: 2 }}
+                      className={`bn small events-list__item-bn`}
+                      style={{ opacity: selected === e.id ? 0.7 : 0.6 }}
                     >
                       {e.bn}
                     </div>
@@ -112,37 +77,29 @@ export function Events({ setPage }: EventsProps) {
           </div>
 
           <div>
-            <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+            <div
+              className="card events-detail__card"
+            >
               <div
+                className="events-detail__header"
                 style={{
                   background: `var(--${ev.color}-tint)`,
                   borderBottom: `1px solid var(--${ev.color})`,
-                  padding: '32px 36px',
                 }}
               >
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'flex-start',
-                    gap: 20,
-                  }}
-                >
+                <div className="events-detail__header-inner">
                   <div>
                     <div
-                      className="bn-display"
-                      style={{ fontSize: 28, color: `var(--${ev.color})` }}
+                      className="bn-display events-detail__bn"
+                      style={{ color: `var(--${ev.color})` }}
                     >
                       {ev.bn}
                     </div>
-                    <h2 className="display" style={{ fontSize: 56, margin: '6px 0 0' }}>
-                      {ev.en}
-                    </h2>
+                    <h2 className="display events-detail__title">{ev.en}</h2>
                   </div>
                   <div
-                    className="chip"
+                    className="chip events-detail__chip"
                     style={{
-                      background: 'white',
                       color: `var(--${ev.color})`,
                       border: `1px solid var(--${ev.color})`,
                     }}
@@ -150,26 +107,16 @@ export function Events({ setPage }: EventsProps) {
                     <span className="chip-dot" /> Registration open
                   </div>
                 </div>
-                <p
-                  style={{
-                    fontSize: 18,
-                    color: 'var(--ink-2)',
-                    marginTop: 18,
-                    marginBottom: 0,
-                    maxWidth: 640,
-                  }}
-                >
-                  {ev.desc}
-                </p>
+                <p className="events-detail__desc">{ev.desc}</p>
               </div>
 
-              <div className="event-detail-grid">
+              <div className="events-detail__info-grid">
                 <Detail
                   label="Age groups"
                   value={
                     <div className="stack" style={{ '--gap': '4px' } as React.CSSProperties}>
                       {ev.slots.map((s, i) => (
-                        <div key={i} style={{ fontWeight: 500 }}>
+                        <div key={i} className="events-detail__slot">
                           {s}
                         </div>
                       ))}
@@ -179,9 +126,7 @@ export function Events({ setPage }: EventsProps) {
                 <Detail
                   label="Duration"
                   value={
-                    <span className="display" style={{ fontSize: 22 }}>
-                      {ev.duration}
-                    </span>
+                    <span className="display events-detail__duration">{ev.duration}</span>
                   }
                 />
                 <Detail label="Format" value={<span>{ev.format}</span>} />
@@ -189,11 +134,9 @@ export function Events({ setPage }: EventsProps) {
 
               <hr className="hr" />
 
-              <div style={{ padding: '28px 36px' }}>
-                <div className="eyebrow" style={{ marginBottom: 18 }}>
-                  Prizes for each age group
-                </div>
-                <div className="prize-grid">
+              <div className="events-prizes">
+                <div className="eyebrow events-prizes__eyebrow">Prizes for each age group</div>
+                <div className="events-prizes__grid">
                   <PrizeRow
                     rank="1st"
                     medal="Gold"
@@ -213,7 +156,7 @@ export function Events({ setPage }: EventsProps) {
                     prize="Medal + ₹500 book voucher + certificate"
                   />
                 </div>
-                <div className="small muted" style={{ marginTop: 14 }}>
+                <div className="small muted events-prizes__note">
                   Every participant receives a certificate and a book of their choice from our
                   library.
                 </div>
@@ -221,10 +164,10 @@ export function Events({ setPage }: EventsProps) {
 
               <hr className="hr" />
 
-              <div className="event-reg-bar">
+              <div className="events-reg-bar">
                 <div>
                   <div className="mono">Registration closes 5 Oct 2026</div>
-                  <div className="small muted" style={{ marginTop: 4 }}>
+                  <div className="small muted events-reg-bar__note">
                     Free for students from partner schools. ₹50 for others — waived on request.
                   </div>
                 </div>
@@ -234,11 +177,9 @@ export function Events({ setPage }: EventsProps) {
               </div>
             </div>
 
-            <div style={{ marginTop: 36 }}>
-              <div className="eyebrow" style={{ marginBottom: 14 }}>
-                Weekend schedule · Oct 10–11
-              </div>
-              <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+            <div className="events-schedule">
+              <div className="eyebrow events-schedule__eyebrow">Weekend schedule · Oct 10–11</div>
+              <div className="card events-schedule__card">
                 {[
                   { time: '08:00', title: 'Gates open · registration desk', day: 'Sat' },
                   { time: '09:30', title: 'Opening ceremony · Bengali anthem', day: 'Sat' },
@@ -255,16 +196,14 @@ export function Events({ setPage }: EventsProps) {
                 ].map((r, i, a) => (
                   <div
                     key={i}
-                    className="schedule-row"
+                    className="events-schedule__row"
                     style={{
                       borderBottom: i < a.length - 1 ? '1px solid var(--rule)' : 'none',
                       background: i % 2 ? 'var(--cream-2)' : 'transparent',
                     }}
                   >
                     <div className="mono">{r.day}</div>
-                    <div className="display" style={{ fontSize: 18 }}>
-                      {r.time}
-                    </div>
+                    <div className="display events-schedule__time">{r.time}</div>
                     <div>{r.title}</div>
                   </div>
                 ))}
@@ -280,9 +219,7 @@ export function Events({ setPage }: EventsProps) {
 function Detail({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div>
-      <div className="eyebrow" style={{ marginBottom: 8 }}>
-        {label}
-      </div>
+      <div className="eyebrow events-detail__info-eyebrow">{label}</div>
       <div>{value}</div>
     </div>
   );
@@ -300,35 +237,15 @@ function PrizeRow({
   prize: string;
 }) {
   return (
-    <div
-      style={{
-        border: '1px solid var(--rule)',
-        borderRadius: 12,
-        padding: '14px 16px',
-        display: 'flex',
-        gap: 14,
-        alignItems: 'center',
-        background: 'var(--paper)',
-      }}
-    >
+    <div className="events-prize-row">
       <div
-        style={{
-          width: 44,
-          height: 44,
-          borderRadius: '50%',
-          background: `var(--${color})`,
-          color: 'white',
-          display: 'grid',
-          placeItems: 'center',
-          fontWeight: 700,
-          flexShrink: 0,
-          boxShadow: 'inset 0 -4px 0 rgba(0,0,0,0.15)',
-        }}
+        className="events-prize-row__medal"
+        style={{ background: `var(--${color})` }}
       >
         {rank}
       </div>
       <div>
-        <div style={{ fontWeight: 600 }}>{medal}</div>
+        <div className="events-prize-row__name">{medal}</div>
         <div className="small muted">{prize}</div>
       </div>
     </div>
