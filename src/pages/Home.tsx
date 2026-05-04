@@ -15,6 +15,7 @@ const heroes = [
     body: 'Proyash collects books from families who no longer need them and places them — carefully, by hand — into the hands of students who do.',
     cta: { label: 'Donate a book', page: 'contact' as Page },
     accent: 'red',
+    image: '/assets/home-poster.webp',
   },
   {
     kicker: 'Medha Pariksha',
@@ -23,6 +24,7 @@ const heroes = [
     body: 'Competitions across categories. One day of excitement, learning, and pure fun for every young participant.',
     cta: { label: 'Register a student', page: 'register' as Page },
     accent: 'blue',
+    image: '/assets/gallery 2025/stage 3 1.png',
   },
   {
     kicker: 'Donate a book',
@@ -31,6 +33,7 @@ const heroes = [
     body: 'A textbook sitting on your shelf is a term of school for someone else. We collect, sort, and redistribute.',
     cta: { label: 'Contact us', page: 'contact' as Page },
     accent: 'teal',
+    image: '/assets/gallery 2025/prize distribution 2 1.png',
   },
 ];
 
@@ -75,7 +78,7 @@ export function Home({ setPage }: HomeProps) {
               </button>
             </div>
           </div>
-          <HeroCollage accent={hero.accent} />
+          <HeroCollage accent={hero.accent} images={heroes.map((h) => h.image)} activeIndex={h} />
         </div>
       </section>
 
@@ -222,19 +225,10 @@ export function Home({ setPage }: HomeProps) {
               </div>
             </div>
             <div className="home-mission__photos">
-              <div className="home-mission__photo-inner">
-                <div className="ph ph-wide home-mission__ph-wide">
-                  <span className="ph-label home-mission__ph-label">
-                    PHOTO · Book sorting day, Tehatta
-                  </span>
-                </div>
-                <div className="ph home-mission__ph">
-                  <span className="ph-label home-mission__ph-label">PHOTO</span>
-                </div>
-                <div className="ph home-mission__ph">
-                  <span className="ph-label home-mission__ph-label">PHOTO</span>
-                </div>
-              </div>
+              <img
+                src="/assets/gallery 2025/gadhadhar sir 1.png"
+                alt="Proyash volunteers at work"
+              />
             </div>
           </div>
         </div>
@@ -317,7 +311,7 @@ export function Home({ setPage }: HomeProps) {
   );
 }
 
-function HeroCollage({ accent }: { accent: string }) {
+function HeroCollage({ accent, images, activeIndex }: { accent: string; images: string[]; activeIndex: number }) {
   return (
     <div className="hero-collage">
       <div
@@ -327,7 +321,14 @@ function HeroCollage({ accent }: { accent: string }) {
           border: `1px solid var(--${accent})`,
         }}
       >
-        <img src="/assets/home-poster.jpg" alt="Student at last year's event" />
+        {images.map((src, i) => (
+          <img
+            key={src}
+            src={src}
+            alt="Proyash event"
+            className={`hero-collage__img${i === activeIndex ? ' hero-collage__img--active' : ''}`}
+          />
+        ))}
       </div>
       <div className="hero-collage__logo-circle">
         <img src="/assets/logo.png" alt="Proyash" />
