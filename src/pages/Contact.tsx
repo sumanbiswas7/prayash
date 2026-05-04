@@ -9,25 +9,21 @@ export function Contact() {
           <div>
             <div className="eyebrow contact-layout__eyebrow">Contact</div>
             <h1 className="display contact-layout__title">
-              We read every
+              Have something
               <br />
-              <span className="contact-layout__title-accent">message.</span>
+              <span className="contact-layout__title-accent">to say?</span>
             </h1>
             <p className="contact-layout__desc">
-              For book donations, school partnerships, volunteering, or media — write to us. We
-              usually reply within two days.
+              Have a question or just want to reach out? Feel free to contact us and we'll get back
+              to you as soon as possible.
             </p>
             <div
               className="stack contact-layout__items"
               style={{ '--gap': '18px' } as React.CSSProperties}
             >
-              <ContactItem label="Office" value="Tehatta, Nadia · West Bengal 741160" />
-              <ContactItem label="Email" value="hello@proyash.org.in" />
-              <ContactItem label="Phone" value="+91 98xxx xxxxx · 10am–7pm, Mon–Sat" />
-              <ContactItem
-                label="Book pickup"
-                value="For donations within Nadia, we come to you."
-              />
+              <ContactItem label="Location" value="Tehatta, Nadia · West Bengal 741160" />
+              <ContactItem label="Email" value="proyaastehatta@gmail.com" />
+              <ContactItem label="Phone" value="+91 98xxx xxxxx" />
             </div>
           </div>
 
@@ -45,14 +41,6 @@ export function Contact() {
                   className="contact-form__input"
                 />
               </div>
-              <select className="contact-form__select">
-                <option>What's this about?</option>
-                <option>Donating books</option>
-                <option>Volunteering</option>
-                <option>School partnership</option>
-                <option>Event question</option>
-                <option>Other</option>
-              </select>
               <textarea
                 placeholder="Tell us more…"
                 className="contact-form__textarea"

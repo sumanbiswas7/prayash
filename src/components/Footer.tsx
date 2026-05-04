@@ -26,11 +26,11 @@ export function Footer({ setPage }: FooterProps) {
           <div>
             <div className="footer__col-heading">Explore</div>
             <div className="stack" style={{ '--gap': '10px' } as React.CSSProperties}>
-              <div>
+              {/* <div>
                 <a onClick={() => setPage('events')} className="footer__nav-link">
                   Events
                 </a>
-              </div>
+              </div> */}
               <div>
                 <a onClick={() => setPage('register')} className="footer__nav-link">
                   Register
@@ -41,20 +41,18 @@ export function Footer({ setPage }: FooterProps) {
                   Gallery
                 </a>
               </div>
-              <div>
+              {/* <div>
                 <a onClick={() => setPage('dashboard')} className="footer__nav-link">
                   Dashboard
                 </a>
-              </div>
+              </div> */}
             </div>
           </div>
           <div>
             <div className="footer__col-heading">Get involved</div>
             <div className="stack" style={{ '--gap': '10px' } as React.CSSProperties}>
               <div>Donate books</div>
-              <div>Volunteer</div>
-              <div>Partner schools</div>
-              <div>Mentor programme</div>
+              <div>Send us a message</div>
             </div>
           </div>
           <div>
@@ -65,15 +63,22 @@ export function Footer({ setPage }: FooterProps) {
             >
               <div>Tehatta, Nadia</div>
               <div>West Bengal, 741160</div>
-              <div>hello@proyash.org.in</div>
+              <div>proyaastehatta@gmail.com</div>
               <div>+91 98xxx xxxxx</div>
             </div>
           </div>
         </div>
         <hr className="footer__divider" />
         <div className="footer__bottom">
-          <div>© 2026 Proyash Manab Kalyan Sangathan · Reg. S/2L/12489</div>
-          <div>Built with care in Nadia</div>
+          <div>© 2026 Proyash</div>
+          <a
+            href="https://sumanx.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="footer__developer"
+          >
+            Crafted by Suman Biswas
+          </a>
         </div>
       </div>
     </footer>
