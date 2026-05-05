@@ -38,6 +38,8 @@ function EyeIcon({ open }: { open: boolean }) {
 export function Register({ setPage }: RegisterProps) {
   const [step, setStep] = useState(1);
   const [registrationId, setRegistrationId] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const [data, setData] = useState<FormData>({
     studentName: '',
     studentNameBn: '',
@@ -58,9 +60,24 @@ export function Register({ setPage }: RegisterProps) {
     3: true,
   } as Record<number, boolean>)[step];
 
-  const handleSubmit = () => {
-    setRegistrationId(`PRY-2026-${Math.floor(Math.random() * 9000 + 1000)}`);
-    setStep(4);
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    setSubmitError('');
+    try {
+      const res = await fetch(import.meta.env.VITE_LAMBDA_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'register', ...data }),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.ok) throw new Error(json.error || 'Registration failed');
+      setRegistrationId(json.registrationId);
+      setStep(4);
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : 'Something went wrong');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -118,11 +135,12 @@ export function Register({ setPage }: RegisterProps) {
               {step === 2 && <Step2 data={data} update={update} />}
               {step === 3 && <Step3 data={data} update={update} />}
             </div>
+            {submitError && <p className="register__submit-error">{submitError}</p>}
             <div className="register__footer-bar">
               <button
                 className="btn btn-ghost"
                 onClick={() => setStep((s) => Math.max(1, s - 1))}
-                disabled={step === 1}
+                disabled={step === 1 || submitting}
                 style={{ opacity: step === 1 ? 0.3 : 1 }}
               >
                 ← Back
@@ -131,10 +149,10 @@ export function Register({ setPage }: RegisterProps) {
               <button
                 className="btn btn-primary"
                 onClick={step === 3 ? handleSubmit : () => setStep((s) => s + 1)}
-                disabled={!canAdvance}
-                style={{ opacity: canAdvance ? 1 : 0.4 }}
+                disabled={!canAdvance || submitting}
+                style={{ opacity: canAdvance && !submitting ? 1 : 0.4 }}
               >
-                {step === 3 ? 'Submit registration' : 'Continue'} <Icon.arrow />
+                {step === 3 ? (submitting ? 'Submitting…' : 'Submit registration') : 'Continue'} <Icon.arrow />
               </button>
             </div>
           </div>
