@@ -13,6 +13,8 @@ interface FormData {
   studentNameBn: string;
   klass: string;
   school: string;
+  dob: string;
+  address: string;
   guardianName: string;
   phone: string;
   email: string;
@@ -47,6 +49,8 @@ export function Register({ setPage, onRegister }: RegisterProps) {
     studentNameBn: '',
     klass: '',
     school: '',
+    dob: '',
+    address: '',
     guardianName: '',
     phone: '',
     email: '',
@@ -57,7 +61,7 @@ export function Register({ setPage, onRegister }: RegisterProps) {
   const update = (k: keyof FormData, v: string) => setData((d) => ({ ...d, [k]: v }));
 
   const canAdvance = ({
-    1: !!(data.studentName && data.klass && data.school),
+    1: !!(data.studentName && data.klass && data.school && data.dob && data.address),
     2: !!(data.phone.length >= 10 && emailVerified && data.password.length >= 6),
     3: true,
   } as Record<number, boolean>)[step];
@@ -80,6 +84,8 @@ export function Register({ setPage, onRegister }: RegisterProps) {
         studentNameBn: data.studentNameBn,
         klass: data.klass,
         school: data.school,
+        dob: data.dob,
+        address: data.address,
         guardianName: data.guardianName,
         phone: data.phone,
         email: data.email,
@@ -256,12 +262,23 @@ function Step1({
             placeholder="Name of school"
           />
         </Field>
-        <Field label="Guardian's name" bn="অভিভাবক" col={2}>
+        <Field label="Date of birth" bn="জন্ম তারিখ" required>
+          <DobPicker value={data.dob} onChange={(v) => update('dob', v)} />
+        </Field>
+        <Field label="Guardian's name" bn="অভিভাবক">
           <input
             className="form-input"
             value={data.guardianName}
             onChange={(e) => update('guardianName', e.target.value)}
             placeholder="Parent or guardian"
+          />
+        </Field>
+        <Field label="Address" bn="ঠিকানা" col={2} required>
+          <input
+            className="form-input"
+            value={data.address}
+            onChange={(e) => update('address', e.target.value)}
+            placeholder="Village, Block, District, PIN"
           />
         </Field>
       </div>
@@ -425,9 +442,11 @@ function Step3({
       </p>
       <div className="cols-2 step3__summary">
         <ReviewRow label="Student" value={`${data.studentName} · ${data.klass}`} />
-        <ReviewRow label="Bengali name" value={data.studentNameBn} />
+        <ReviewRow label="Bengali name" value={data.studentNameBn || '—'} />
+        <ReviewRow label="Date of birth" value={data.dob || '—'} />
         <ReviewRow label="School" value={data.school || '—'} />
         <ReviewRow label="Guardian" value={data.guardianName || '—'} />
+        <ReviewRow label="Address" value={data.address || '—'} />
         <ReviewRow label="Phone" value={data.phone ? `+91 ${data.phone}` : '—'} />
         <ReviewRow label="Email" value={data.email || '—'} />
       </div>
@@ -444,8 +463,96 @@ function Step3({
       </Field>
       <div className="step3__consent">
         <strong>Almost there!</strong> We're so excited to have you join us. Can't wait to see you there!
+        <span className="step3__privacy"> Your information is used only within Proyash and will never be shared with anyone.</span>
       </div>
     </div>
+  );
+}
+
+const MONTHS = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December',
+];
+
+function DobPicker({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const parts = value ? value.split('-') : ['', '', ''];
+  const [year, setYear] = useState(parts[0]);
+  const [month, setMonth] = useState(parts[1]);
+  const [day, setDay] = useState(parts[2]);
+
+  const daysInMonth = month && year ? new Date(parseInt(year), parseInt(month), 0).getDate() : 31;
+
+  const notify = (y: string, m: string, d: string) => {
+    if (y && m && d) onChange(`${y}-${m}-${d}`);
+    else onChange('');
+  };
+
+  const handleMonth = (m: string) => {
+    setMonth(m);
+    // reset day if it exceeds days in the new month
+    const max = m && year ? new Date(parseInt(year), parseInt(m), 0).getDate() : 31;
+    const clampedDay = day && parseInt(day) > max ? '' : day;
+    if (clampedDay !== day) setDay(clampedDay);
+    notify(year, m, clampedDay);
+  };
+
+  const handleDay = (d: string) => {
+    setDay(d);
+    notify(year, month, d);
+  };
+
+  const handleYear = (y: string) => {
+    setYear(y);
+    // re-check day validity for Feb in leap years
+    const max = month && y ? new Date(parseInt(y), parseInt(month), 0).getDate() : 31;
+    const clampedDay = day && parseInt(day) > max ? '' : day;
+    if (clampedDay !== day) setDay(clampedDay);
+    notify(y, month, clampedDay);
+  };
+
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 25 }, (_, i) => currentYear - 5 - i);
+
+  return (
+    <div className="dob-picker">
+      <div className="dob-picker__segment">
+        <select className="dob-picker__select" value={month} onChange={(e) => handleMonth(e.target.value)}>
+          <option value="">Month</option>
+          {MONTHS.map((name, i) => {
+            const val = String(i + 1).padStart(2, '0');
+            return <option key={val} value={val}>{name}</option>;
+          })}
+        </select>
+        <ChevronDown />
+      </div>
+      <div className="dob-picker__segment dob-picker__segment--sm">
+        <select className="dob-picker__select" value={day} onChange={(e) => handleDay(e.target.value)}>
+          <option value="">Day</option>
+          {Array.from({ length: daysInMonth }, (_, i) => {
+            const val = String(i + 1).padStart(2, '0');
+            return <option key={val} value={val}>{i + 1}</option>;
+          })}
+        </select>
+        <ChevronDown />
+      </div>
+      <div className="dob-picker__segment dob-picker__segment--sm">
+        <select className="dob-picker__select" value={year} onChange={(e) => handleYear(e.target.value)}>
+          <option value="">Year</option>
+          {years.map((yr) => (
+            <option key={yr} value={String(yr)}>{yr}</option>
+          ))}
+        </select>
+        <ChevronDown />
+      </div>
+    </div>
+  );
+}
+
+function ChevronDown() {
+  return (
+    <svg className="dob-picker__chevron" width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <path d="M3 5l4 4 4-4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
 

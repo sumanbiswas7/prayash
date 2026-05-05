@@ -34,9 +34,12 @@ function studentPayload(user) {
     studentNameBn: user.studentNameBn ?? '',
     klass: user.klass,
     school: user.school,
+    dob: user.dob ?? '',
+    address: user.address ?? '',
     guardianName: user.guardianName ?? '',
     phone: user.phone,
     email: user.email,
+    createdAt: user.createdAt ? user.createdAt.toISOString() : null,
   };
 }
 
@@ -75,8 +78,8 @@ export const handler = async (event) => {
   }
 
   if (body.type === 'register') {
-    const { studentName, studentNameBn, klass, school, guardianName, phone, email, password, notes } = body;
-    if (!studentName || !klass || !school || !phone || !email || !password) {
+    const { studentName, studentNameBn, klass, school, dob, address, guardianName, phone, email, password, notes } = body;
+    if (!studentName || !klass || !school || !dob || !address || !phone || !email || !password) {
       return { statusCode: 400, body: JSON.stringify({ error: 'Missing required fields' }) };
     }
 
@@ -103,6 +106,8 @@ export const handler = async (event) => {
         studentNameBn: studentNameBn || null,
         klass,
         school,
+        dob,
+        address,
         guardianName: guardianName || null,
         phone,
         email,

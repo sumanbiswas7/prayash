@@ -7,6 +7,8 @@ export const students = pgTable('students', {
   studentNameBn: text('student_name_bn'),
   klass: text('klass').notNull(),
   school: text('school').notNull(),
+  dob: text('dob').notNull(),
+  address: text('address').notNull(),
   guardianName: text('guardian_name'),
   phone: text('phone').notNull(),
   email: text('email').notNull(),

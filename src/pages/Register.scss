@@ -191,6 +191,53 @@ $bp-small: 480px;
   margin-top: 6px;
 }
 
+/* ===== DOB picker ===== */
+
+.dob-picker {
+  display: flex;
+  gap: 8px;
+
+  &__segment {
+    position: relative;
+    flex: 1;
+
+    &--sm {
+      flex: 0 0 90px;
+    }
+  }
+
+  &__select {
+    width: 100%;
+    padding: 12px 36px 12px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    font-size: 15px;
+    color: var(--ink);
+    appearance: none;
+    cursor: pointer;
+    transition: border-color 0.12s;
+
+    &:focus {
+      outline: none;
+      border-color: var(--ink-3);
+    }
+
+    option[value=''] {
+      color: var(--ink-4);
+    }
+  }
+
+  &__chevron {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ink-4);
+    pointer-events: none;
+  }
+}
+
 /* ===== Class pill picker ===== */
 
 .class-picker {
@@ -336,6 +383,13 @@ $bp-small: 480px;
   border: 1px solid var(--yellow);
   border-radius: 10px;
   font-size: 14px;
+}
+
+.step3__privacy {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--ink-3);
 }
 
 /* ===== Review rows ===== */

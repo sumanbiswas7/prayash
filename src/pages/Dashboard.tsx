@@ -14,6 +14,14 @@ export function Dashboard({ setPage, user }: DashboardProps) {
 
   const firstName = user?.studentName?.split(' ')[0] ?? 'there';
 
+  const age = user?.dob
+    ? Math.floor((Date.now() - new Date(user.dob).getTime()) / (365.25 * 24 * 60 * 60 * 1000))
+    : null;
+
+  const memberSince = user?.createdAt
+    ? new Date(user.createdAt).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })
+    : null;
+
   return (
     <div>
       <section className="dash-hero">
@@ -39,11 +47,11 @@ export function Dashboard({ setPage, user }: DashboardProps) {
               )}
             </div>
           </div>
-          {/* <div className="dash-mini-stats">
-            <MiniStat label="Events entered" n="—" sub="coming soon" />
-            <MiniStat label="Certificates" n="—" sub="coming soon" />
-            <MiniStat label="Books received" n="—" sub="coming soon" />
-          </div> */}
+          <div className="dash-mini-stats">
+            <MiniStat label="Age" n={age !== null ? String(age) : '—'} sub="years old" />
+            <MiniStat label="Class" n={user?.klass?.replace('Class ', '') ?? '—'} sub="current standard" />
+            <MiniStat label="Member since" n={memberSince ?? '—'} sub="registration date" />
+          </div>
         </div>
       </section>
 
@@ -370,6 +378,7 @@ function Profile({ user }: { user: Student | null }) {
           <div className="stack" style={{ '--gap': '12px' } as React.CSSProperties}>
             <ProfileRow k="Full name" v={user?.studentName ?? '—'} />
             <ProfileRow k="Bengali name" v={user?.studentNameBn || '—'} />
+            <ProfileRow k="Date of birth" v={user?.dob || '—'} />
             <ProfileRow k="Class" v={user?.klass ?? '—'} />
             <ProfileRow k="School" v={user?.school ?? '—'} />
           </div>
@@ -380,6 +389,7 @@ function Profile({ user }: { user: Student | null }) {
             <ProfileRow k="Guardian" v={user?.guardianName || '—'} />
             <ProfileRow k="Phone" v={user?.phone ? `+91 ${user.phone}` : '—'} />
             <ProfileRow k="Email" v={user?.email ?? '—'} />
+            <ProfileRow k="Address" v={user?.address || '—'} />
           </div>
         </div>
       </div>

@@ -6,9 +6,12 @@ export interface Student {
   studentNameBn: string;
   klass: string;
   school: string;
+  dob: string;
+  address: string;
   guardianName: string;
   phone: string;
   email: string;
+  createdAt: string | null;
 }
 
 export interface ProyashEvent {
