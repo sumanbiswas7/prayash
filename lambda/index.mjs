@@ -100,7 +100,7 @@ export const handler = async (event) => {
 
     try {
       const { db, end } = getDb();
-      await db.insert(students).values({
+      const [student] = await db.insert(students).values({
         registrationId,
         studentName,
         studentNameBn: studentNameBn || null,
@@ -113,8 +113,27 @@ export const handler = async (event) => {
         email,
         passwordHash,
         notes: notes || null,
-      });
+      }).returning();
       await end();
+
+      const studentData = studentPayload(student);
+
+      await resend.emails.send({
+        from: 'Proyash <proyash@sumanx.com>',
+        to: email,
+        subject: `Thanks for registering, ${studentName}!`,
+        text: `Hi ${studentName},\n\nThanks for registering. Go ahead and participate in the events!\n\nYour ID: ${registrationId}\n\n— Proyash Team`,
+        html: `
+          <div style="font-family:sans-serif;max-width:480px;margin:auto;padding:32px;">
+            <p>Hi <strong>${studentName}</strong>,</p>
+            <p>Thanks for registering as a student for Proyash. Go ahead and participate in the events!</p>
+            <p style="color:#888;font-size:14px;">Your ID: <strong style="color:#333;">${registrationId}</strong></p>
+            <p style="color:#888;font-size:14px;">— Proyash Team</p>
+          </div>
+        `,
+      });
+
+      return { statusCode: 200, body: JSON.stringify({ ok: true, registrationId, student: studentData }) };
     } catch (err) {
       if (err?.cause?.code === '23505') {
         return { statusCode: 409, body: JSON.stringify({ error: 'An account with this email already exists' }) };
@@ -122,23 +141,6 @@ export const handler = async (event) => {
       console.error('DB insert failed:', err);
       return { statusCode: 500, body: JSON.stringify({ error: 'Registration failed' }) };
     }
-
-    await resend.emails.send({
-      from: 'Proyash <proyash@sumanx.com>',
-      to: email,
-      subject: `Thanks for registering, ${studentName}!`,
-      text: `Hi ${studentName},\n\nThanks for registering. Go ahead and participate in the events!\n\nYour ID: ${registrationId}\n\n— Proyash Team`,
-      html: `
-        <div style="font-family:sans-serif;max-width:480px;margin:auto;padding:32px;">
-          <p>Hi <strong>${studentName}</strong>,</p>
-          <p>Thanks for registering as a student for Proyash. Go ahead and participate in the events!</p>
-          <p style="color:#888;font-size:14px;">Your ID: <strong style="color:#333;">${registrationId}</strong></p>
-          <p style="color:#888;font-size:14px;">— Proyash Team</p>
-        </div>
-      `,
-    });
-
-    return { statusCode: 200, body: JSON.stringify({ ok: true, registrationId }) };
   }
 
   if (body.type === 'login') {
