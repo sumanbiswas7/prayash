@@ -1,16 +1,15 @@
 import { useState } from 'react';
 import { PROYASH_DATA, Icon } from '../data';
 import { DobPicker } from '../components/DobPicker';
-import type { Certificate, Achievement, Page, Student } from '../types';
+import type { Certificate, Achievement, Student } from '../types';
 import './Dashboard.scss';
 
 interface DashboardProps {
-  setPage: (p: Page) => void;
   user: Student | null;
   onUpdate: (s: Student) => void;
 }
 
-export function Dashboard({ setPage, user, onUpdate }: DashboardProps) {
+export function Dashboard({ user, onUpdate }: DashboardProps) {
   const [tab, setTab] = useState('regs');
   const [activeCert, setActiveCert] = useState<Certificate | null>(null);
 
@@ -76,7 +75,7 @@ export function Dashboard({ setPage, user, onUpdate }: DashboardProps) {
 
           {tab === 'medals' && <MedalCase />}
           {tab === 'certs' && <Certificates onOpen={setActiveCert} />}
-          {tab === 'regs' && <Registrations setPage={setPage} />}
+          {tab === 'regs' && <Registrations />}
           {tab === 'profile' && <Profile user={user} onUpdate={onUpdate} />}
         </div>
       </section>
@@ -289,71 +288,28 @@ function CertModal({ cert, onClose }: { cert: Certificate; onClose: () => void }
   );
 }
 
-function Registrations({ setPage }: { setPage: (p: Page) => void }) {
-  const regs = [
-    {
-      id: 'PRY-2026-4812',
-      year: 2026,
-      events: ['Quiz', 'Abriti', 'Essay'],
-      status: 'Confirmed',
-      color: 'green',
-    },
-    {
-      id: 'PRY-2025-2198',
-      year: 2025,
-      events: ['Quiz', 'Abriti', 'Drawing'],
-      status: 'Completed',
-      color: 'blue',
-    },
-    {
-      id: 'PRY-2024-1067',
-      year: 2024,
-      events: ['Essay', 'Drawing'],
-      status: 'Completed',
-      color: 'blue',
-    },
-    {
-      id: 'PRY-2023-0214',
-      year: 2023,
-      events: ['Handwriting'],
-      status: 'Completed',
-      color: 'blue',
-    },
-  ];
+function Registrations() {
   return (
     <div>
       <div className="section-head">
         <div>
-          <h2 className="display regs-section__title">Your registrations.</h2>
-          <p className="regs-section__desc">Current and past festivals.</p>
+          <h2 className="display regs-section__title">Your competitions.</h2>
+          <p className="regs-section__desc">
+            All the competitions you participated in. Click Register to join the upcoming ones!
+          </p>
         </div>
-        <button className="btn btn-primary" onClick={() => setPage('register')}>
-          New registration <Icon.plus />
+        <button className="btn btn-primary" disabled style={{ opacity: 0.45, cursor: 'not-allowed' }}>
+          Register <Icon.plus />
         </button>
       </div>
-      <div className="card regs-table">
-        {regs.map((r, i, a) => (
-          <div
-            key={r.id}
-            className="reg-row"
-            style={{ borderBottom: i < a.length - 1 ? '1px solid var(--rule)' : 'none' }}
-          >
-            <div className="display reg-row__year">{r.year}</div>
-            <div className="mono">{r.id}</div>
-            <div className="reg-row__events">
-              {r.events.map((e) => (
-                <span key={e} className="chip">{e}</span>
-              ))}
-            </div>
-            <span
-              className="chip"
-              style={{ background: `var(--${r.color}-tint)`, color: `var(--${r.color})` }}
-            >
-              <span className="chip-dot" /> {r.status}
-            </span>
-            <button className="btn btn-ghost btn-sm">View →</button>
-          </div>
-        ))}
+      <div className="card regs-table" style={{ textAlign: 'center', padding: '40px 24px' }}>
+        <div className="eyebrow">Competition history</div>
+        <div className="display" style={{ fontSize: '28px', marginTop: '8px' }}>
+          Opening Soon
+        </div>
+        <p className="muted" style={{ margin: '10px 0 0' }}>
+          We’ll add the participation list and status details here.
+        </p>
       </div>
     </div>
   );

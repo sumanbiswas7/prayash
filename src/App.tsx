@@ -47,7 +47,7 @@ export default function App() {
         <Route path="/" element={<Home setPage={go} />} />
         <Route path="/events" element={<Events setPage={go} />} />
         <Route path="/register" element={<Register setPage={go} onRegister={(student) => saveUser(student)} />} />
-        <Route path="/dashboard" element={<Dashboard setPage={go} user={user} onUpdate={saveUser} />} />
+        <Route path="/dashboard" element={<Dashboard user={user} onUpdate={saveUser} />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/auth" element={<Auth setPage={go} onLogin={(student) => saveUser(student)} />} />
