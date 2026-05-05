@@ -40,6 +40,7 @@ export function Register({ setPage }: RegisterProps) {
   const [registrationId, setRegistrationId] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
+  const [emailVerified, setEmailVerified] = useState(false);
   const [data, setData] = useState<FormData>({
     studentName: '',
     studentNameBn: '',
@@ -56,7 +57,7 @@ export function Register({ setPage }: RegisterProps) {
 
   const canAdvance = ({
     1: !!(data.studentName && data.klass && data.school),
-    2: !!(data.phone.length >= 10 && data.email.includes('@') && data.password.length >= 6),
+    2: !!(data.phone.length >= 10 && emailVerified && data.password.length >= 6),
     3: true,
   } as Record<number, boolean>)[step];
 
@@ -132,7 +133,7 @@ export function Register({ setPage }: RegisterProps) {
           <div className="card register__form-card">
             <div className="register__form-body">
               {step === 1 && <Step1 data={data} update={update} />}
-              {step === 2 && <Step2 data={data} update={update} />}
+              {step === 2 && <Step2 data={data} update={update} emailVerified={emailVerified} setEmailVerified={setEmailVerified} />}
               {step === 3 && <Step3 data={data} update={update} />}
             </div>
             {submitError && <p className="register__submit-error">{submitError}</p>}
@@ -260,11 +261,62 @@ function Step1({
 function Step2({
   data,
   update,
+  emailVerified,
+  setEmailVerified,
 }: {
   data: FormData;
   update: (k: keyof FormData, v: string) => void;
+  emailVerified: boolean;
+  setEmailVerified: (v: boolean) => void;
 }) {
   const [showPw, setShowPw] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpCode, setOtpCode] = useState('');
+  const [otpInput, setOtpInput] = useState('');
+  const [otpSending, setOtpSending] = useState(false);
+  const [otpError, setOtpError] = useState('');
+
+  const handleEmailChange = (val: string) => {
+    update('email', val);
+    setEmailVerified(false);
+    setOtpSent(false);
+    setOtpInput('');
+    setOtpCode('');
+    setOtpError('');
+  };
+
+  const sendOtp = async () => {
+    setOtpSending(true);
+    setOtpError('');
+    const code = String(Math.floor(1000 + Math.random() * 9000));
+    setOtpCode(code);
+    try {
+      const res = await fetch(import.meta.env.VITE_LAMBDA_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'otp', email: data.email, code, recipientName: data.studentName }),
+      });
+      if (!res.ok) throw new Error();
+      setOtpSent(true);
+    } catch {
+      setOtpError('Failed to send code. Try again.');
+    } finally {
+      setOtpSending(false);
+    }
+  };
+
+  const handleOtpInput = (val: string) => {
+    setOtpInput(val);
+    if (val.length === 4) {
+      if (val === otpCode) {
+        setEmailVerified(true);
+        setOtpError('');
+      } else {
+        setEmailVerified(false);
+        setOtpError('Incorrect code, try again.');
+      }
+    }
+  };
 
   return (
     <div>
@@ -285,20 +337,43 @@ function Step2({
             />
           </div>
         </Field>
-        <Field
-          label="Email"
-          bn="ইমেইল"
-          col={2}
-          hint="A verification link will be sent to this address after registration."
-          required
-        >
-          <input
-            className="form-input"
-            type="email"
-            value={data.email}
-            onChange={(e) => update('email', e.target.value)}
-            placeholder="your@email.com"
-          />
+        <Field label="Email" bn="ইমেইল" col={2} required>
+          <div className="otp-row">
+            <input
+              className="form-input"
+              type="email"
+              value={data.email}
+              onChange={(e) => handleEmailChange(e.target.value)}
+              placeholder="your@email.com"
+              disabled={emailVerified}
+            />
+            {emailVerified ? (
+              <span className="otp-verified-badge">✓ Verified</span>
+            ) : (
+              <button
+                type="button"
+                className="btn btn-outline btn-sm otp-send-btn"
+                onClick={sendOtp}
+                disabled={!data.email.includes('@') || otpSending}
+              >
+                {otpSending ? 'Sending…' : otpSent ? 'Resend' : 'Send code'}
+              </button>
+            )}
+          </div>
+          {otpSent && !emailVerified && (
+            <div className="otp-verify-row">
+              <input
+                className="form-input otp-input"
+                value={otpInput}
+                onChange={(e) => handleOtpInput(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                placeholder="0000"
+                inputMode="numeric"
+                maxLength={4}
+                autoFocus
+              />
+            </div>
+          )}
+          {otpError && <div className="otp-error">{otpError}</div>}
         </Field>
         <Field label="Password" bn="পাসওয়ার্ড" col={2} hint="At least 6 characters." required>
           <div className="password-wrapper">
