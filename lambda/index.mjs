@@ -237,6 +237,36 @@ export const handler = async (event) => {
     return { statusCode: 200, body: JSON.stringify({ ok: true, student: studentPayload(user) }) };
   }
 
+  if (body.type === 'update-profile') {
+    const { registrationId, studentName, studentNameBn, klass, school, dob, address, guardianName } = body;
+    if (!registrationId || !studentName || !klass || !school || !dob || !address) {
+      return { statusCode: 400, body: JSON.stringify({ error: 'Missing required fields' }) };
+    }
+    try {
+      const { db, end } = getDb();
+      const rows = await db.update(students)
+        .set({
+          studentName,
+          studentNameBn: studentNameBn || null,
+          klass,
+          school,
+          dob,
+          address,
+          guardianName: guardianName || null,
+        })
+        .where(eq(students.registrationId, registrationId))
+        .returning();
+      await end();
+      if (!rows.length) {
+        return { statusCode: 404, body: JSON.stringify({ error: 'Student not found' }) };
+      }
+      return { statusCode: 200, body: JSON.stringify({ ok: true, student: studentPayload(rows[0]) }) };
+    } catch (err) {
+      console.error('Update failed:', err);
+      return { statusCode: 500, body: JSON.stringify({ error: 'Update failed' }) };
+    }
+  }
+
   // Contact form
   const { name, contact, message } = body;
   if (!name || !contact || !message) {

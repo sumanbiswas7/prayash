@@ -563,6 +563,52 @@ $bp-small: 480px;
   font-weight: 500;
 }
 
+/* ===== Profile edit ===== */
+
+.profile-input {
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  font-size: 14px;
+  margin-top: 6px;
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--ink-3);
+  }
+}
+
+.profile-field__label {
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+.profile-class-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.profile-edit-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.profile-error {
+  color: var(--red);
+  font-size: 14px;
+  margin-top: 12px;
+}
+
 /* ===== Media queries ===== */
 
 @media (max-width: 1024px) {

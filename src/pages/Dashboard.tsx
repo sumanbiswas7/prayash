@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { PROYASH_DATA, Icon } from '../data';
+import { DobPicker } from '../components/DobPicker';
 import type { Certificate, Achievement, Page, Student } from '../types';
 import './Dashboard.scss';
 
 interface DashboardProps {
   setPage: (p: Page) => void;
   user: Student | null;
+  onUpdate: (s: Student) => void;
 }
 
-export function Dashboard({ setPage, user }: DashboardProps) {
+export function Dashboard({ setPage, user, onUpdate }: DashboardProps) {
   const [tab, setTab] = useState('regs');
   const [activeCert, setActiveCert] = useState<Certificate | null>(null);
 
@@ -79,7 +81,7 @@ export function Dashboard({ setPage, user }: DashboardProps) {
           {tab === 'medals' && <MedalCase />}
           {tab === 'certs' && <Certificates onOpen={setActiveCert} />}
           {tab === 'regs' && <Registrations setPage={setPage} />}
-          {tab === 'profile' && <Profile user={user} />}
+          {tab === 'profile' && <Profile user={user} onUpdate={onUpdate} />}
         </div>
       </section>
 
@@ -361,7 +363,56 @@ function Registrations({ setPage }: { setPage: (p: Page) => void }) {
   );
 }
 
-function Profile({ user }: { user: Student | null }) {
+function Profile({ user, onUpdate }: { user: Student | null; onUpdate: (s: Student) => void }) {
+  const [editing, setEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  const [form, setForm] = useState({
+    studentName: '',
+    studentNameBn: '',
+    klass: '',
+    school: '',
+    dob: '',
+    address: '',
+    guardianName: '',
+  });
+
+  const startEdit = () => {
+    setForm({
+      studentName: user?.studentName ?? '',
+      studentNameBn: user?.studentNameBn ?? '',
+      klass: user?.klass ?? '',
+      school: user?.school ?? '',
+      dob: user?.dob ?? '',
+      address: user?.address ?? '',
+      guardianName: user?.guardianName ?? '',
+    });
+    setError('');
+    setEditing(true);
+  };
+
+  const handleSave = async () => {
+    setSaving(true);
+    setError('');
+    try {
+      const res = await fetch(import.meta.env.VITE_LAMBDA_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'update-profile', registrationId: user?.registrationId, ...form }),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.ok) throw new Error(json.error || 'Update failed');
+      onUpdate({ ...user!, ...json.student });
+      setEditing(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const set = (k: keyof typeof form, v: string) => setForm((f) => ({ ...f, [k]: v }));
+
   return (
     <div>
       <div className="section-head">
@@ -371,28 +422,107 @@ function Profile({ user }: { user: Student | null }) {
             Keep your details current so certificates print correctly.
           </p>
         </div>
+        {!editing && (
+          <button className="btn btn-outline btn-sm" onClick={startEdit}>
+            Edit
+          </button>
+        )}
       </div>
-      <div className="profile-grid">
-        <div className="card">
-          <div className="eyebrow profile-card__eyebrow">Student</div>
-          <div className="stack" style={{ '--gap': '12px' } as React.CSSProperties}>
-            <ProfileRow k="Full name" v={user?.studentName ?? '—'} />
-            <ProfileRow k="Bengali name" v={user?.studentNameBn || '—'} />
-            <ProfileRow k="Date of birth" v={user?.dob || '—'} />
-            <ProfileRow k="Class" v={user?.klass ?? '—'} />
-            <ProfileRow k="School" v={user?.school ?? '—'} />
+
+      {editing ? (
+        <div>
+          <div className="profile-grid">
+            <div className="card">
+              <div className="eyebrow profile-card__eyebrow">Student</div>
+              <div className="stack" style={{ '--gap': '14px' } as React.CSSProperties}>
+                <ProfileField label="Full name">
+                  <input className="profile-input" value={form.studentName} onChange={(e) => set('studentName', e.target.value)} />
+                </ProfileField>
+                <ProfileField label="Bengali name">
+                  <input className="profile-input bn" value={form.studentNameBn} onChange={(e) => set('studentNameBn', e.target.value)} />
+                </ProfileField>
+                <ProfileField label="Date of birth">
+                  <DobPicker value={form.dob} onChange={(v) => set('dob', v)} />
+                </ProfileField>
+                <ProfileField label="Class">
+                  <div className="profile-class-picker">
+                    {['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'].map((c) => (
+                      <button
+                        key={c}
+                        type="button"
+                        className={`class-pill${form.klass === `Class ${c}` ? ' class-pill--active' : ''}`}
+                        onClick={() => set('klass', `Class ${c}`)}
+                      >
+                        {c}
+                      </button>
+                    ))}
+                  </div>
+                </ProfileField>
+                <ProfileField label="School">
+                  <input className="profile-input" value={form.school} onChange={(e) => set('school', e.target.value)} />
+                </ProfileField>
+              </div>
+            </div>
+            <div className="card">
+              <div className="eyebrow profile-card__eyebrow">Contact</div>
+              <div className="stack" style={{ '--gap': '14px' } as React.CSSProperties}>
+                <ProfileField label="Guardian">
+                  <input className="profile-input" value={form.guardianName} onChange={(e) => set('guardianName', e.target.value)} />
+                </ProfileField>
+                <ProfileField label="Phone">
+                  <input className="profile-input" value={user?.phone ? `+91 ${user.phone}` : '—'} disabled />
+                </ProfileField>
+                <ProfileField label="Email">
+                  <input className="profile-input" value={user?.email ?? '—'} disabled />
+                </ProfileField>
+                <ProfileField label="Address">
+                  <input className="profile-input" value={form.address} onChange={(e) => set('address', e.target.value)} />
+                </ProfileField>
+              </div>
+            </div>
+          </div>
+          {error && <p className="profile-error">{error}</p>}
+          <div className="profile-edit-actions">
+            <button className="btn btn-primary" onClick={handleSave} disabled={saving}>
+              {saving ? 'Saving…' : 'Save changes'}
+            </button>
+            <button className="btn btn-ghost" onClick={() => setEditing(false)} disabled={saving}>
+              Cancel
+            </button>
           </div>
         </div>
-        <div className="card">
-          <div className="eyebrow profile-card__eyebrow">Contact</div>
-          <div className="stack" style={{ '--gap': '12px' } as React.CSSProperties}>
-            <ProfileRow k="Guardian" v={user?.guardianName || '—'} />
-            <ProfileRow k="Phone" v={user?.phone ? `+91 ${user.phone}` : '—'} />
-            <ProfileRow k="Email" v={user?.email ?? '—'} />
-            <ProfileRow k="Address" v={user?.address || '—'} />
+      ) : (
+        <div className="profile-grid">
+          <div className="card">
+            <div className="eyebrow profile-card__eyebrow">Student</div>
+            <div className="stack" style={{ '--gap': '12px' } as React.CSSProperties}>
+              <ProfileRow k="Full name" v={user?.studentName ?? '—'} />
+              <ProfileRow k="Bengali name" v={user?.studentNameBn || '—'} />
+              <ProfileRow k="Date of birth" v={user?.dob || '—'} />
+              <ProfileRow k="Class" v={user?.klass ?? '—'} />
+              <ProfileRow k="School" v={user?.school ?? '—'} />
+            </div>
+          </div>
+          <div className="card">
+            <div className="eyebrow profile-card__eyebrow">Contact</div>
+            <div className="stack" style={{ '--gap': '12px' } as React.CSSProperties}>
+              <ProfileRow k="Guardian" v={user?.guardianName || '—'} />
+              <ProfileRow k="Phone" v={user?.phone ? `+91 ${user.phone}` : '—'} />
+              <ProfileRow k="Email" v={user?.email ?? '—'} />
+              <ProfileRow k="Address" v={user?.address || '—'} />
+            </div>
           </div>
         </div>
-      </div>
+      )}
+    </div>
+  );
+}
+
+function ProfileField({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <div className="mono profile-field__label">{label}</div>
+      {children}
     </div>
   );
 }
