@@ -6,17 +6,61 @@ import './LoginModal.scss';
 interface LoginModalProps {
   onClose: () => void;
   setPage: (p: Page) => void;
+  onLogin: (name: string, registrationId: string) => void;
 }
 
-export function LoginModal({ onClose, setPage }: LoginModalProps) {
+export function LoginModal({ onClose, setPage, onLogin }: LoginModalProps) {
   const [tab, setTab] = useState<'password' | 'magic'>('magic');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [magicSent, setMagicSent] = useState(false);
 
   const switchTab = (t: 'password' | 'magic') => {
     setTab(t);
     setMagicSent(false);
+    setError('');
+  };
+
+  const handlePasswordLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    try {
+      const res = await fetch(import.meta.env.VITE_LAMBDA_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'login', email, password }),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.ok) throw new Error(json.error || 'Login failed');
+      onLogin(json.name, json.registrationId);
+      onClose();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleMagicLink = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const res = await fetch(import.meta.env.VITE_LAMBDA_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'magic-link-send', email, origin: window.location.origin }),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.ok) throw new Error(json.error || 'Failed to send link');
+      setMagicSent(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -45,11 +89,7 @@ export function LoginModal({ onClose, setPage }: LoginModalProps) {
 
         <div className="login-modal__body">
           {tab === 'password' ? (
-            <form
-              className="stack"
-              style={{ '--gap': '14px' } as React.CSSProperties}
-              onSubmit={(e) => { e.preventDefault(); onClose(); setPage('dashboard'); }}
-            >
+            <form className="stack" style={{ '--gap': '14px' } as React.CSSProperties} onSubmit={handlePasswordLogin}>
               <div>
                 <label className="login-modal__label">Email</label>
                 <input
@@ -64,7 +104,6 @@ export function LoginModal({ onClose, setPage }: LoginModalProps) {
               <div>
                 <label className="login-modal__label-row">
                   <span>Password</span>
-                  <a className="small login-modal__forgot">Forgot?</a>
                 </label>
                 <input
                   type="password"
@@ -75,8 +114,14 @@ export function LoginModal({ onClose, setPage }: LoginModalProps) {
                   required
                 />
               </div>
-              <button type="submit" className="btn btn-primary btn-lg login-modal__submit">
-                Log in <Icon.arrow />
+              {error && <p className="login-modal__error">{error}</p>}
+              <button
+                type="submit"
+                className="btn btn-primary btn-lg login-modal__submit"
+                disabled={loading}
+                style={{ opacity: loading ? 0.6 : 1 }}
+              >
+                {loading ? 'Logging in…' : 'Log in'} <Icon.arrow />
               </button>
             </form>
           ) : magicSent ? (
@@ -100,13 +145,15 @@ export function LoginModal({ onClose, setPage }: LoginModalProps) {
                   placeholder="your@email.com"
                 />
               </div>
+              {error && <p className="login-modal__error">{error}</p>}
               <button
                 type="button"
                 className="btn btn-primary btn-lg login-modal__submit"
-                onClick={() => setMagicSent(true)}
-                disabled={!email.includes('@')}
+                onClick={handleMagicLink}
+                disabled={!email.includes('@') || loading}
+                style={{ opacity: !email.includes('@') || loading ? 0.6 : 1 }}
               >
-                Send magic link <Icon.arrow />
+                {loading ? 'Sending…' : 'Login'} <Icon.arrow />
               </button>
             </div>
           )}

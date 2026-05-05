@@ -5,6 +5,7 @@ import './Register.scss';
 
 interface RegisterProps {
   setPage: (p: Page) => void;
+  onRegister?: (name: string, registrationId: string) => void;
 }
 
 interface FormData {
@@ -35,7 +36,7 @@ function EyeIcon({ open }: { open: boolean }) {
   );
 }
 
-export function Register({ setPage }: RegisterProps) {
+export function Register({ setPage, onRegister }: RegisterProps) {
   const [step, setStep] = useState(1);
   const [registrationId, setRegistrationId] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -73,6 +74,7 @@ export function Register({ setPage }: RegisterProps) {
       const json = await res.json();
       if (!res.ok || !json.ok) throw new Error(json.error || 'Registration failed');
       setRegistrationId(json.registrationId);
+      onRegister?.(data.studentName, json.registrationId);
       setStep(4);
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : 'Something went wrong');

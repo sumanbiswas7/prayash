@@ -76,6 +76,24 @@ $bp-mobile: 768px;
   flex: 1;
 }
 
+.nav__avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--cream-2);
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  transition: opacity 0.15s;
+
+  &:hover { opacity: 0.8; }
+}
+
 .nav__cta {
   display: flex;
   align-items: center;
@@ -131,6 +149,64 @@ $bp-mobile: 768px;
   .btn {
     flex: 1;
     justify-content: center;
+  }
+}
+
+.logout-modal__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(31, 27, 22, 0.55);
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  backdrop-filter: blur(6px);
+}
+
+.logout-modal__panel {
+  background: var(--paper);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 360px;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(31, 27, 22, 0.18);
+}
+
+.logout-modal__top {
+  padding: 32px 32px 24px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.logout-modal__title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.logout-modal__desc {
+  margin: 0;
+  font-size: 14px;
+}
+
+.logout-modal__actions {
+  padding: 20px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .btn {
+    justify-content: center;
+  }
+}
+
+.logout-modal__confirm {
+  background: color-mix(in srgb, var(--red) 12%, transparent);
+  color: var(--red);
+  border: 1px solid color-mix(in srgb, var(--red) 25%, transparent);
+  justify-content: center;
+
+  &:hover {
+    background: color-mix(in srgb, var(--red) 20%, transparent);
   }
 }
 

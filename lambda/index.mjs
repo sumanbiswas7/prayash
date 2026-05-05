@@ -1,7 +1,8 @@
 import { Resend } from 'resend';
-import { scryptSync, randomBytes } from 'crypto';
+import { scryptSync, randomBytes, createHmac } from 'crypto';
 import postgres from 'postgres';
 import { drizzle } from 'drizzle-orm/postgres-js';
+import { eq } from 'drizzle-orm';
 import { registrations } from './schema.mjs';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -66,6 +67,18 @@ export const handler = async (event) => {
       return { statusCode: 400, body: JSON.stringify({ error: 'Missing required fields' }) };
     }
 
+    try {
+      const { db, end } = getDb();
+      const existing = await db.select({ id: registrations.id }).from(registrations).where(eq(registrations.email, email)).limit(1);
+      await end();
+      if (existing.length > 0) {
+        return { statusCode: 409, body: JSON.stringify({ error: 'An account with this email already exists' }) };
+      }
+    } catch (err) {
+      console.error('DB check failed:', err);
+      return { statusCode: 500, body: JSON.stringify({ error: 'Registration failed' }) };
+    }
+
     const registrationId = generateRegistrationId();
     const passwordHash = hashPassword(password);
 
@@ -85,6 +98,9 @@ export const handler = async (event) => {
       });
       await end();
     } catch (err) {
+      if (err?.cause?.code === '23505') {
+        return { statusCode: 409, body: JSON.stringify({ error: 'An account with this email already exists' }) };
+      }
       console.error('DB insert failed:', err);
       return { statusCode: 500, body: JSON.stringify({ error: 'Registration failed' }) };
     }
@@ -105,6 +121,102 @@ export const handler = async (event) => {
     });
 
     return { statusCode: 200, body: JSON.stringify({ ok: true, registrationId }) };
+  }
+
+  if (body.type === 'login') {
+    const { email, password } = body;
+    if (!email || !password) {
+      return { statusCode: 400, body: JSON.stringify({ error: 'Missing fields' }) };
+    }
+    let user;
+    try {
+      const { db, end } = getDb();
+      const rows = await db.select().from(registrations).where(eq(registrations.email, email)).limit(1);
+      await end();
+      user = rows[0];
+    } catch (err) {
+      console.error('DB query failed:', err);
+      return { statusCode: 500, body: JSON.stringify({ error: 'Login failed' }) };
+    }
+    if (!user) {
+      return { statusCode: 401, body: JSON.stringify({ error: 'Invalid email or password' }) };
+    }
+    const [salt, hash] = user.passwordHash.split(':');
+    const inputHash = scryptSync(password, salt, 64).toString('hex');
+    if (inputHash !== hash) {
+      return { statusCode: 401, body: JSON.stringify({ error: 'Invalid email or password' }) };
+    }
+    return { statusCode: 200, body: JSON.stringify({ ok: true, name: user.studentName, registrationId: user.registrationId }) };
+  }
+
+  if (body.type === 'magic-link-send') {
+    const { email, origin } = body;
+    if (!email) {
+      return { statusCode: 400, body: JSON.stringify({ error: 'Missing email' }) };
+    }
+    let user;
+    try {
+      const { db, end } = getDb();
+      const rows = await db.select().from(registrations).where(eq(registrations.email, email)).limit(1);
+      await end();
+      user = rows[0];
+    } catch (err) {
+      console.error('DB query failed:', err);
+      return { statusCode: 500, body: JSON.stringify({ error: 'Failed to send magic link' }) };
+    }
+    if (user) {
+      const expires = Date.now() + 15 * 60 * 1000;
+      const payload = `${email}|${expires}`;
+      const sig = createHmac('sha256', process.env.MAGIC_SECRET || 'dev-secret').update(payload).digest('hex');
+      const token = Buffer.from(JSON.stringify({ email, expires, sig })).toString('base64url');
+      const link = `${origin}/auth?token=${token}`;
+      await resend.emails.send({
+        from: 'Proyash <proyash@sumanx.com>',
+        to: email,
+        subject: 'Your Proyash sign-in link',
+        text: `Hi ${user.studentName},\n\nClick this link to sign in:\n\n${link}\n\nExpires in 15 minutes.\n\n— Proyash Team`,
+        html: `
+          <div style="font-family:sans-serif;max-width:480px;margin:auto;padding:32px;">
+            <p>Hi <strong>${user.studentName}</strong>,</p>
+            <p>Click below to sign in — no password needed.</p>
+            <a href="${link}" style="display:inline-block;background:#1f1b16;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;margin:12px 0;">Sign in to Proyash</a>
+            <p style="color:#888;font-size:14px;margin-top:20px;">Expires in 15 minutes. If you didn't request this, ignore this email.</p>
+            <p style="color:#888;font-size:14px;">— Proyash Team</p>
+          </div>
+        `,
+      });
+    }
+    return { statusCode: 200, body: JSON.stringify({ ok: true }) };
+  }
+
+  if (body.type === 'magic-link-verify') {
+    const { token } = body;
+    if (!token) {
+      return { statusCode: 400, body: JSON.stringify({ error: 'Missing token' }) };
+    }
+    let email, expires, sig;
+    try {
+      ({ email, expires, sig } = JSON.parse(Buffer.from(token, 'base64url').toString()));
+    } catch {
+      return { statusCode: 401, body: JSON.stringify({ error: 'Invalid token' }) };
+    }
+    const expectedSig = createHmac('sha256', process.env.MAGIC_SECRET || 'dev-secret').update(`${email}|${expires}`).digest('hex');
+    if (sig !== expectedSig || Date.now() > expires) {
+      return { statusCode: 401, body: JSON.stringify({ error: 'Link expired or invalid' }) };
+    }
+    let user;
+    try {
+      const { db, end } = getDb();
+      const rows = await db.select().from(registrations).where(eq(registrations.email, email)).limit(1);
+      await end();
+      user = rows[0];
+    } catch (err) {
+      return { statusCode: 500, body: JSON.stringify({ error: 'Login failed' }) };
+    }
+    if (!user) {
+      return { statusCode: 401, body: JSON.stringify({ error: 'No account found for this email' }) };
+    }
+    return { statusCode: 200, body: JSON.stringify({ ok: true, name: user.studentName, registrationId: user.registrationId }) };
   }
 
   // Contact form

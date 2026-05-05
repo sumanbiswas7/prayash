@@ -7,6 +7,8 @@ import './Nav.scss';
 interface NavProps {
   setPage: (p: Page) => void;
   openLogin: () => void;
+  user: { name: string; registrationId: string } | null;
+  onLogout: () => void;
 }
 
 const links: { id: Page; label: string; path: string }[] = [
@@ -17,16 +19,24 @@ const links: { id: Page; label: string; path: string }[] = [
   { id: 'contact', label: 'Contact', path: '/contact' },
 ];
 
-export function Nav({ setPage, openLogin }: NavProps) {
+export function Nav({ setPage, openLogin, user, onLogout }: NavProps) {
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
+  const [confirmLogout, setConfirmLogout] = useState(false);
 
   const navigate = (p: Page) => {
     setPage(p);
     setOpen(false);
   };
 
+  const handleLogout = () => {
+    onLogout();
+    setConfirmLogout(false);
+    setOpen(false);
+  };
+
   return (
+    <>
     <header className="nav">
       <div className="container nav__inner">
         <button className="nav__logo" onClick={() => navigate('home')}>
@@ -49,12 +59,25 @@ export function Nav({ setPage, openLogin }: NavProps) {
         </nav>
         <div className="nav__spacer" />
         <div className="nav__cta">
-          <button className="btn btn-ghost btn-sm" onClick={openLogin}>
-            Log in
-          </button>
-          <button className="btn btn-accent btn-sm" onClick={() => navigate('register')}>
-            Register <Icon.arrow />
-          </button>
+          {user ? (
+            <>
+              <button className="nav__avatar" onClick={() => navigate('dashboard')} title={user.name}>
+                {user.name[0].toUpperCase()}
+              </button>
+              <button className="btn btn-sm" onClick={() => setConfirmLogout(true)} style={{ background: 'color-mix(in srgb, var(--red) 12%, transparent)', color: 'var(--red)', border: '1px solid color-mix(in srgb, var(--red) 25%, transparent)' }}>
+                Log out
+              </button>
+            </>
+          ) : (
+            <>
+              <button className="btn btn-ghost btn-sm" onClick={openLogin}>
+                Log in
+              </button>
+              <button className="btn btn-accent btn-sm" onClick={() => navigate('register')}>
+                Register <Icon.arrow />
+              </button>
+            </>
+          )}
         </div>
         <button
           className="nav__hamburger btn btn-ghost btn-sm"
@@ -87,21 +110,49 @@ export function Nav({ setPage, openLogin }: NavProps) {
             </button>
           ))}
           <div className="nav__mobile-actions">
-            <button
-              className="btn btn-ghost"
-              onClick={() => {
-                openLogin();
-                setOpen(false);
-              }}
-            >
-              Log in
-            </button>
-            <button className="btn btn-accent" onClick={() => navigate('register')}>
-              Register <Icon.arrow />
-            </button>
+            {user ? (
+              <>
+                <button className="nav__avatar" onClick={() => navigate('dashboard')} title={user.name}>
+                  {user.name[0].toUpperCase()}
+                </button>
+                <button className="btn" onClick={() => setConfirmLogout(true)} style={{ background: 'color-mix(in srgb, var(--red) 12%, transparent)', color: 'var(--red)', border: '1px solid color-mix(in srgb, var(--red) 25%, transparent)' }}>
+                  Log out
+                </button>
+              </>
+            ) : (
+              <>
+                <button className="btn btn-ghost" onClick={() => { openLogin(); setOpen(false); }}>
+                  Log in
+                </button>
+                <button className="btn btn-accent" onClick={() => navigate('register')}>
+                  Register <Icon.arrow />
+                </button>
+              </>
+            )}
           </div>
         </nav>
       )}
+
     </header>
+
+    {confirmLogout && (
+      <div className="logout-modal__overlay" onClick={() => setConfirmLogout(false)}>
+        <div className="logout-modal__panel" onClick={(e) => e.stopPropagation()}>
+          <div className="logout-modal__top">
+            <div className="logout-modal__title">Logging out?</div>
+            <p className="muted logout-modal__desc">You'll need your email and password to get back in.</p>
+          </div>
+          <div className="logout-modal__actions">
+            <button className="btn btn-lg logout-modal__confirm" onClick={handleLogout}>
+              Yes, log out
+            </button>
+            <button className="btn btn-outline btn-lg" onClick={() => setConfirmLogout(false)}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+    </>
   );
 }
