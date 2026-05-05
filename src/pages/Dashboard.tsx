@@ -50,7 +50,7 @@ export function Dashboard({ setPage, user }: DashboardProps) {
           <div className="dash-mini-stats">
             <MiniStat label="Age" n={age !== null ? String(age) : '—'} sub="years old" />
             <MiniStat label="Class" n={user?.klass?.replace('Class ', '') ?? '—'} sub="current standard" />
-            <MiniStat label="Member since" n={memberSince ?? '—'} sub="registration date" />
+            {/* <MiniStat label="Member since" n={memberSince ?? '—'} sub="registration date" /> */}
           </div>
         </div>
       </section>

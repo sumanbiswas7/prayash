@@ -62,3 +62,20 @@ pnpm build
 ```
 
 Output goes to `dist/`.
+
+CREATE TABLE students (
+  id serial PRIMARY KEY,
+  registration_id text NOT NULL,
+  student_name text NOT NULL,
+  student_name_bn text,
+  klass text NOT NULL,
+  school text NOT NULL,
+  dob text NOT NULL,
+  address text NOT NULL,
+  guardian_name text,
+  phone text NOT NULL,
+  email text NOT NULL UNIQUE,
+  password_hash text NOT NULL,
+  notes text,
+  created_at timestamp DEFAULT now()
+);
