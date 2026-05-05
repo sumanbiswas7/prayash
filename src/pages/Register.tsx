@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PROYASH_DATA, Icon } from '../data';
+import { Icon } from '../data';
 import type { Page } from '../types';
 import './Register.scss';
 
@@ -8,52 +8,67 @@ interface RegisterProps {
 }
 
 interface FormData {
-  student: string;
-  guardian: string;
+  studentName: string;
+  studentNameBn: string;
   klass: string;
   school: string;
+  guardianName: string;
   phone: string;
   email: string;
-  events: string[];
-  address: string;
+  password: string;
   notes: string;
+}
+
+const STEPS = ['Student', 'Account', 'Review'] as const;
+
+function EyeIcon({ open }: { open: boolean }) {
+  return open ? (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
+  ) : (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+      <line x1="1" y1="1" x2="23" y2="23" />
+    </svg>
+  );
 }
 
 export function Register({ setPage }: RegisterProps) {
   const [step, setStep] = useState(1);
+  const [registrationId, setRegistrationId] = useState('');
   const [data, setData] = useState<FormData>({
-    student: '',
-    guardian: '',
+    studentName: '',
+    studentNameBn: '',
     klass: '',
     school: '',
+    guardianName: '',
     phone: '',
     email: '',
-    events: [],
-    address: '',
+    password: '',
     notes: '',
   });
 
   const update = (k: keyof FormData, v: string) => setData((d) => ({ ...d, [k]: v }));
-  const toggleEvent = (id: string) =>
-    setData((d) => ({
-      ...d,
-      events: d.events.includes(id) ? d.events.filter((e) => e !== id) : [...d.events, id],
-    }));
 
-  const canAdvance = {
-    1: !!(data.student && data.klass && data.school && data.guardian && data.phone),
-    2: data.events.length > 0,
+  const canAdvance = ({
+    1: !!(data.studentName && data.klass && data.school),
+    2: !!(data.phone.length >= 10 && data.email.includes('@') && data.password.length >= 6),
     3: true,
-  }[step as 1 | 2 | 3];
+  } as Record<number, boolean>)[step];
+
+  const handleSubmit = () => {
+    setRegistrationId(`PRY-2026-${Math.floor(Math.random() * 9000 + 1000)}`);
+    setStep(4);
+  };
 
   return (
     <div className="register">
       <div className="container register__container">
         <div className="register__header">
           <div>
-            <div className="eyebrow register__eyebrow">
-              Medha Pariksha 2026 · Registration
-            </div>
+            <div className="eyebrow register__eyebrow">Student · Registration</div>
             <h1 className="display register__title">
               Let's get you
               <br />
@@ -66,7 +81,7 @@ export function Register({ setPage }: RegisterProps) {
         </div>
 
         <div className="register__steps">
-          {(['Student', 'Events', 'Review', 'Done'] as const).map((label, i) => {
+          {STEPS.map((label, i) => {
             const n = i + 1;
             const done = step > n;
             const active = step === n;
@@ -95,17 +110,17 @@ export function Register({ setPage }: RegisterProps) {
         </div>
 
         {step === 4 ? (
-          <SuccessCard data={data} setPage={setPage} />
+          <SuccessCard data={data} registrationId={registrationId} setPage={setPage} />
         ) : (
           <div className="card register__form-card">
             <div className="register__form-body">
               {step === 1 && <Step1 data={data} update={update} />}
-              {step === 2 && <Step2 data={data} toggleEvent={toggleEvent} />}
+              {step === 2 && <Step2 data={data} update={update} />}
               {step === 3 && <Step3 data={data} update={update} />}
             </div>
             <div className="register__footer-bar">
               <button
-                className={`btn btn-ghost ${step === 1 ? 'register__back-btn--disabled' : ''}`}
+                className="btn btn-ghost"
                 onClick={() => setStep((s) => Math.max(1, s - 1))}
                 disabled={step === 1}
                 style={{ opacity: step === 1 ? 0.3 : 1 }}
@@ -115,7 +130,7 @@ export function Register({ setPage }: RegisterProps) {
               <div className="small muted">Step {step} of 3 · your progress is saved</div>
               <button
                 className="btn btn-primary"
-                onClick={() => setStep((s) => s + 1)}
+                onClick={step === 3 ? handleSubmit : () => setStep((s) => s + 1)}
                 disabled={!canAdvance}
                 style={{ opacity: canAdvance ? 1 : 0.4 }}
               >
@@ -135,25 +150,26 @@ function Field({
   children,
   hint,
   col = 1,
+  required = false,
 }: {
   label: string;
   bn?: string;
   children: React.ReactNode;
   hint?: string;
   col?: number;
+  required?: boolean;
 }) {
   return (
     <div style={{ gridColumn: `span ${col}` }}>
       <label className="form-field__label">
-        <span className="form-field__label-text">{label}</span>
-        {bn && (
-          <span className="bn small muted form-field__label-bn">{bn}</span>
-        )}
+        <span className="form-field__label-text">
+          {label}
+          {required && <span className="form-field__required"> *</span>}
+        </span>
+        {bn && <span className="bn small muted form-field__label-bn">{bn}</span>}
       </label>
       {children}
-      {hint && (
-        <div className="small muted form-field__hint">{hint}</div>
-      )}
+      {hint && <div className="small muted form-field__hint">{hint}</div>}
     </div>
   );
 }
@@ -169,45 +185,40 @@ function Step1({
     <div>
       <div className="display step1__title">Tell us about the student</div>
       <p className="muted step1__desc">
-        Basic details. Guardian contact so we can reach you with venue updates.
+        Basic details about the student participating in Medha Pariksha 2026.
       </p>
       <div className="form-grid">
-        <Field label="Student's full name" bn="ছাত্রের নাম" col={2}>
+        <Field label="Student's name" bn="ছাত্রের নাম" col={2} required>
           <input
             className="form-input"
-            value={data.student}
-            onChange={(e) => update('student', e.target.value)}
-            placeholder="e.g. Moynak Biswas"
+            value={data.studentName}
+            onChange={(e) => update('studentName', e.target.value)}
+            placeholder="e.g. Tiyash Biswas"
           />
         </Field>
-        <Field label="Class / Standard" bn="শ্রেণী">
-          <select
-            className="form-input"
-            value={data.klass}
-            onChange={(e) => update('klass', e.target.value)}
-          >
-            <option value="">Select class</option>
-            {[
-              'Class I',
-              'Class II',
-              'Class III',
-              'Class IV',
-              'Class V',
-              'Class VI',
-              'Class VII',
-              'Class VIII',
-              'Class IX',
-              'Class X',
-              'Class XI',
-              'Class XII',
-            ].map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
+        <Field label="Name in Bengali" bn="বাংলায় নাম" col={2}>
+          <input
+            className="form-input bn"
+            value={data.studentNameBn}
+            onChange={(e) => update('studentNameBn', e.target.value)}
+            placeholder="যেমন: তিয়াশ বিশ্বাস"
+          />
         </Field>
-        <Field label="School" bn="বিদ্যালয়">
+        <Field label="Class / Standard" bn="শ্রেণী" required>
+          <div className="class-picker">
+            {['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'].map((c) => (
+              <button
+                key={c}
+                type="button"
+                className={`class-pill${data.klass === `Class ${c}` ? ' class-pill--active' : ''}`}
+                onClick={() => update('klass', `Class ${c}`)}
+              >
+                {c}
+              </button>
+            ))}
+          </div>
+        </Field>
+        <Field label="School" bn="বিদ্যালয়" required>
           <input
             className="form-input"
             value={data.school}
@@ -215,28 +226,12 @@ function Step1({
             placeholder="Name of school"
           />
         </Field>
-        <Field label="Guardian's name" bn="অভিভাবক">
+        <Field label="Guardian's name" bn="অভিভাবক" col={2}>
           <input
             className="form-input"
-            value={data.guardian}
-            onChange={(e) => update('guardian', e.target.value)}
+            value={data.guardianName}
+            onChange={(e) => update('guardianName', e.target.value)}
             placeholder="Parent or guardian"
-          />
-        </Field>
-        <Field label="Phone (WhatsApp)" bn="মোবাইল" hint="We'll send venue details here.">
-          <input
-            className="form-input"
-            value={data.phone}
-            onChange={(e) => update('phone', e.target.value)}
-            placeholder="+91 98xxx xxxxx"
-          />
-        </Field>
-        <Field label="Email (optional)" bn="ইমেইল" col={2}>
-          <input
-            className="form-input"
-            value={data.email}
-            onChange={(e) => update('email', e.target.value)}
-            placeholder="for certificates download link"
           />
         </Field>
       </div>
@@ -244,56 +239,68 @@ function Step1({
   );
 }
 
-function Step2({ data, toggleEvent }: { data: FormData; toggleEvent: (id: string) => void }) {
+function Step2({
+  data,
+  update,
+}: {
+  data: FormData;
+  update: (k: keyof FormData, v: string) => void;
+}) {
+  const [showPw, setShowPw] = useState(false);
+
   return (
     <div>
-      <div className="display step2__title">Pick events</div>
-      <p className="muted step2__desc">
-        A student can enter up to 4 events. Appropriate age group is selected automatically based on
-        the class you chose.
+      <div className="display step1__title">Set up your account</div>
+      <p className="muted step1__desc">
+        You'll use these to log in and access your dashboard after registering.
       </p>
-      <div className="mono step2__count">{data.events.length} of 4 selected</div>
-      <div className="cols-2">
-        {PROYASH_DATA.events.map((e) => {
-          const on = data.events.includes(e.id);
-          const disabled = !on && data.events.length >= 4;
-          return (
+      <div className="form-grid">
+        <Field label="Phone" bn="মোবাইল" col={2} hint="We may contact you here." required>
+          <div className="phone-input-wrapper">
+            <div className="phone-input-prefix">🇮🇳 +91</div>
+            <input
+              className="form-input phone-input"
+              value={data.phone}
+              onChange={(e) => update('phone', e.target.value.replace(/\D/g, '').slice(0, 10))}
+              placeholder="98765 43210"
+              inputMode="numeric"
+            />
+          </div>
+        </Field>
+        <Field
+          label="Email"
+          bn="ইমেইল"
+          col={2}
+          hint="A verification link will be sent to this address after registration."
+          required
+        >
+          <input
+            className="form-input"
+            type="email"
+            value={data.email}
+            onChange={(e) => update('email', e.target.value)}
+            placeholder="your@email.com"
+          />
+        </Field>
+        <Field label="Password" bn="পাসওয়ার্ড" col={2} hint="At least 6 characters." required>
+          <div className="password-wrapper">
+            <input
+              className="form-input"
+              type={showPw ? 'text' : 'password'}
+              value={data.password}
+              onChange={(e) => update('password', e.target.value)}
+              placeholder="Create a password"
+            />
             <button
-              key={e.id}
-              disabled={disabled}
-              onClick={() => toggleEvent(e.id)}
-              className={`step2__event-btn ${disabled ? 'step2__event-btn--disabled' : ''}`}
-              style={{
-                background: on ? `var(--${e.color}-tint)` : 'var(--paper)',
-                border: `1.5px solid ${on ? `var(--${e.color})` : 'var(--rule)'}`,
-              }}
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowPw((v) => !v)}
+              tabIndex={-1}
             >
-              <div
-                className="step2__event-check"
-                style={{
-                  border: `1.5px solid ${on ? `var(--${e.color})` : 'var(--rule-2)'}`,
-                  background: on ? `var(--${e.color})` : 'transparent',
-                }}
-              >
-                {on && <Icon.check />}
-              </div>
-              <div className="step2__event-body">
-                <div className="step2__event-name">
-                  {e.en}{' '}
-                  <span
-                    className="bn small step2__event-bn"
-                    style={{ color: `var(--${e.color})` }}
-                  >
-                    {e.bn}
-                  </span>
-                </div>
-                <div className="small muted step2__event-meta">
-                  {e.format} · {e.duration}
-                </div>
-              </div>
+              <EyeIcon open={showPw} />
             </button>
-          );
-        })}
+          </div>
+        </Field>
       </div>
     </div>
   );
@@ -306,53 +313,33 @@ function Step3({
   data: FormData;
   update: (k: keyof FormData, v: string) => void;
 }) {
-  const selectedEvents = PROYASH_DATA.events.filter((e) => data.events.includes(e.id));
   return (
     <div>
       <div className="display step3__title">Review & submit</div>
       <p className="muted step3__desc">
-        Check everything below. You'll get a confirmation on WhatsApp within a day.
+        Check everything below. You'll get a confirmation within a day.
       </p>
       <div className="cols-2 step3__summary">
-        <ReviewRow label="Student" value={`${data.student || '—'} · ${data.klass || ''}`} />
+        <ReviewRow label="Student" value={`${data.studentName} · ${data.klass}`} />
+        <ReviewRow label="Bengali name" value={data.studentNameBn} />
         <ReviewRow label="School" value={data.school || '—'} />
-        <ReviewRow label="Guardian" value={data.guardian || '—'} />
-        <ReviewRow label="Phone" value={data.phone || '—'} />
-      </div>
-      <div className="eyebrow step3__events-eyebrow">Events selected</div>
-      <div className="stack step3__selected-events" style={{ '--gap': '6px' } as React.CSSProperties}>
-        {selectedEvents.length === 0 ? (
-          <div className="muted small">No events selected — go back to step 2.</div>
-        ) : (
-          selectedEvents.map((e) => (
-            <div key={e.id} className="step3__event-row">
-              <span
-                className="step3__event-dot"
-                style={{ background: `var(--${e.color})` }}
-              />
-              <div className="step3__event-en">{e.en}</div>
-              <div className="bn small muted">{e.bn}</div>
-              <div className="mono step3__event-duration">{e.duration}</div>
-            </div>
-          ))
-        )}
+        <ReviewRow label="Guardian" value={data.guardianName || '—'} />
+        <ReviewRow label="Phone" value={data.phone ? `+91 ${data.phone}` : '—'} />
+        <ReviewRow label="Email" value={data.email || '—'} />
       </div>
       <Field
-        label="Anything we should know?"
-        bn="বিশেষ তথ্য"
-        hint="Allergies, accessibility needs, language preference."
+        label="Any suggestions to improve the flow?"
+        hint="Share feedback on the registration process, accessibility needs, or language preferences."
       >
         <textarea
           className="form-input form-input--textarea"
           value={data.notes}
           onChange={(e) => update('notes', e.target.value)}
-          placeholder="Optional notes"
+          placeholder="Optional suggestions or notes"
         />
       </Field>
       <div className="step3__consent">
-        <strong>By submitting,</strong> you confirm the student is available on{' '}
-        <strong>Oct 10–11, 2026</strong> and you agree to Proyash using event photos for future
-        promotion (you can opt out in the dashboard).
+        <strong>Almost there!</strong> We're so excited to have you join us. Can't wait to see you there!
       </div>
     </div>
   );
@@ -367,8 +354,15 @@ function ReviewRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-function SuccessCard({ data, setPage }: { data: FormData; setPage: (p: Page) => void }) {
-  const [id] = useState(() => Math.floor(Math.random() * 9000 + 1000));
+function SuccessCard({
+  data,
+  registrationId,
+  setPage,
+}: {
+  data: FormData;
+  registrationId: string;
+  setPage: (p: Page) => void;
+}) {
   return (
     <div className="card success-card">
       <div className="success-card__body">
@@ -384,24 +378,24 @@ function SuccessCard({ data, setPage }: { data: FormData; setPage: (p: Page) => 
           </svg>
         </div>
         <div className="eyebrow success-card__eyebrow">Registration received</div>
-        <h2 className="display success-card__title">See you on Oct 10.</h2>
+        <h2 className="display success-card__title">See you soon.</h2>
         <div className="bn-display success-card__bn">
-          ধন্যবাদ · {data.student || 'ছাত্র'}
+          ধন্যবাদ · {data.studentNameBn || data.studentName}
         </div>
         <div className="success-card__details">
           <div className="mono">ID</div>
-          <div className="success-card__detail-value">PRY-2026-{id}</div>
-          <div className="mono">Events</div>
-          <div className="success-card__detail-value">{data.events.length} selected</div>
-          <div className="mono">Contact</div>
-          <div className="success-card__detail-value">{data.phone || '—'}</div>
+          <div className="success-card__detail-value">{registrationId}</div>
+          <div className="mono">Phone</div>
+          <div className="success-card__detail-value">+91 {data.phone}</div>
+          <div className="mono">Email</div>
+          <div className="success-card__detail-value">{data.email}</div>
         </div>
         <div className="btn-row success-card__actions">
           <button className="btn btn-primary" onClick={() => setPage('dashboard')}>
             Go to dashboard <Icon.arrow />
           </button>
           <button className="btn btn-outline" onClick={() => setPage('events')}>
-            See event schedule
+            Participate in events <Icon.arrow />
           </button>
         </div>
       </div>

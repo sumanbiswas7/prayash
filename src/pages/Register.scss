@@ -39,7 +39,7 @@ $bp-small: 480px;
 
 .register__steps {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
   margin-bottom: 32px;
 }
@@ -183,8 +183,43 @@ $bp-small: 480px;
   margin-left: 8px;
 }
 
+.form-field__required {
+  color: var(--red);
+}
+
 .form-field__hint {
   margin-top: 6px;
+}
+
+/* ===== Class pill picker ===== */
+
+.class-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.class-pill {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: all 0.12s ease;
+
+  &:hover {
+    border-color: var(--ink-3);
+    color: var(--ink);
+  }
+
+  &--active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--cream-2);
+  }
 }
 
 /* ===== Step 2 event picker ===== */
@@ -372,6 +407,122 @@ $bp-small: 480px;
 .success-card__actions {
   justify-content: center;
   margin-top: 32px;
+}
+
+/* ===== Phone input ===== */
+
+.phone-input-wrapper {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--paper);
+
+  &:focus-within {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--teal) 15%, transparent);
+  }
+}
+
+.phone-input-prefix {
+  padding: 12px 12px 12px 14px;
+  font-size: 15px;
+  color: var(--ink-2);
+  background: var(--cream-2);
+  border-right: 1px solid var(--rule);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.phone-input {
+  border: none !important;
+  border-radius: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  flex: 1;
+}
+
+/* ===== OTP flow ===== */
+
+.otp-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+
+  .form-input { flex: 1; }
+}
+
+.otp-send-btn {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.otp-verify-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.otp-input {
+  letter-spacing: 6px;
+  font-family: var(--mono, monospace);
+  font-size: 18px;
+  text-align: center;
+}
+
+.otp-verified-badge {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--green);
+  background: var(--green-tint);
+  border: 1px solid var(--green);
+  border-radius: 8px;
+  padding: 8px 14px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.otp-error {
+  font-size: 13px;
+  color: #e05252;
+  margin: 6px 0 0;
+}
+
+/* ===== Password field ===== */
+
+.password-wrapper {
+  position: relative;
+
+  .form-input { padding-right: 44px; }
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px;
+  line-height: 1;
+  color: var(--ink-3);
+
+  &:hover { color: var(--ink); }
+}
+
+.register__submit-error {
+  font-size: 13px;
+  color: #e05252;
+  padding: 0 36px 16px;
+  margin: 0;
+}
+
+.success-card__verify-note {
+  margin-top: 16px;
 }
 
 /* ===== Media queries ===== */
