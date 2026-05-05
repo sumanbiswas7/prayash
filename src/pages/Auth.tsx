@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import type { Page } from '../types';
+import type { Page, Student } from '../types';
 
 interface AuthProps {
   setPage: (p: Page) => void;
-  onLogin: (name: string, registrationId: string) => void;
+  onLogin: (student: Student) => void;
 }
 
 export function Auth({ setPage, onLogin }: AuthProps) {
@@ -28,7 +28,7 @@ export function Auth({ setPage, onLogin }: AuthProps) {
       .then((r) => r.json())
       .then((json) => {
         if (!json.ok) throw new Error(json.error || 'Verification failed');
-        onLogin(json.name, json.registrationId);
+        onLogin(json.student);
         setStatus('success');
         setTimeout(() => setPage('home'), 1500);
       })

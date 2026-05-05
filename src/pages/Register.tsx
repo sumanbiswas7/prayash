@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Icon } from '../data';
-import type { Page } from '../types';
+import type { Page, Student } from '../types';
 import './Register.scss';
 
 interface RegisterProps {
   setPage: (p: Page) => void;
-  onRegister?: (name: string, registrationId: string) => void;
+  onRegister?: (student: Student) => void;
 }
 
 interface FormData {
@@ -74,7 +74,16 @@ export function Register({ setPage, onRegister }: RegisterProps) {
       const json = await res.json();
       if (!res.ok || !json.ok) throw new Error(json.error || 'Registration failed');
       setRegistrationId(json.registrationId);
-      onRegister?.(data.studentName, json.registrationId);
+      onRegister?.({
+        registrationId: json.registrationId,
+        studentName: data.studentName,
+        studentNameBn: data.studentNameBn,
+        klass: data.klass,
+        school: data.school,
+        guardianName: data.guardianName,
+        phone: data.phone,
+        email: data.email,
+      });
       setStep(4);
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : 'Something went wrong');

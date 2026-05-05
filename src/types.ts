@@ -1,5 +1,16 @@
 export type Page = 'home' | 'events' | 'register' | 'dashboard' | 'gallery' | 'contact';
 
+export interface Student {
+  registrationId: string;
+  studentName: string;
+  studentNameBn: string;
+  klass: string;
+  school: string;
+  guardianName: string;
+  phone: string;
+  email: string;
+}
+
 export interface ProyashEvent {
   id: string;
   en: string;

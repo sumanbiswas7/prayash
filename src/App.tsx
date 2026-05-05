@@ -10,12 +10,12 @@ import { Dashboard } from './pages/Dashboard';
 import { Gallery } from './pages/Gallery';
 import { Contact } from './pages/Contact';
 import { Auth } from './pages/Auth';
-import type { Page } from './types';
+import type { Page, Student } from './types';
 
 export default function App() {
   const navigate = useNavigate();
   const [login, setLogin] = useState(false);
-  const [user, setUser] = useState<{ name: string; registrationId: string } | null>(() => {
+  const [user, setUser] = useState<Student | null>(() => {
     try {
       const stored = localStorage.getItem('proyash_user');
       return stored ? JSON.parse(stored) : null;
@@ -24,7 +24,7 @@ export default function App() {
     }
   });
 
-  const saveUser = (u: { name: string; registrationId: string } | null) => {
+  const saveUser = (u: Student | null) => {
     if (u) localStorage.setItem('proyash_user', JSON.stringify(u));
     else localStorage.removeItem('proyash_user');
     setUser(u);
@@ -46,14 +46,14 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home setPage={go} />} />
         <Route path="/events" element={<Events setPage={go} />} />
-        <Route path="/register" element={<Register setPage={go} onRegister={(name, registrationId) => saveUser({ name, registrationId })} />} />
-        <Route path="/dashboard" element={<Dashboard setPage={go} />} />
+        <Route path="/register" element={<Register setPage={go} onRegister={(student) => saveUser(student)} />} />
+        <Route path="/dashboard" element={<Dashboard setPage={go} user={user} />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/auth" element={<Auth setPage={go} onLogin={(name, registrationId) => saveUser({ name, registrationId })} />} />
+        <Route path="/auth" element={<Auth setPage={go} onLogin={(student) => saveUser(student)} />} />
       </Routes>
       <Footer setPage={go} />
-      {login && <LoginModal onClose={() => setLogin(false)} setPage={go} onLogin={(name, registrationId) => { saveUser({ name, registrationId }); }} />}
+      {login && <LoginModal onClose={() => setLogin(false)} setPage={go} onLogin={(student) => { saveUser(student); }} />}
     </div>
   );
 }

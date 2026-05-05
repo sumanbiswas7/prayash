@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Icon } from '../data';
-import type { Page } from '../types';
+import type { Page, Student } from '../types';
 import './LoginModal.scss';
 
 interface LoginModalProps {
   onClose: () => void;
   setPage: (p: Page) => void;
-  onLogin: (name: string, registrationId: string) => void;
+  onLogin: (student: Student) => void;
 }
 
 export function LoginModal({ onClose, setPage, onLogin }: LoginModalProps) {
@@ -35,7 +35,7 @@ export function LoginModal({ onClose, setPage, onLogin }: LoginModalProps) {
       });
       const json = await res.json();
       if (!res.ok || !json.ok) throw new Error(json.error || 'Login failed');
-      onLogin(json.name, json.registrationId);
+      onLogin(json.student);
       onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');

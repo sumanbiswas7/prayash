@@ -1,15 +1,18 @@
 import { useState } from 'react';
 import { PROYASH_DATA, Icon } from '../data';
-import type { Certificate, Achievement, Page } from '../types';
+import type { Certificate, Achievement, Page, Student } from '../types';
 import './Dashboard.scss';
 
 interface DashboardProps {
   setPage: (p: Page) => void;
+  user: Student | null;
 }
 
-export function Dashboard({ setPage }: DashboardProps) {
-  const [tab, setTab] = useState('medals');
+export function Dashboard({ setPage, user }: DashboardProps) {
+  const [tab, setTab] = useState('regs');
   const [activeCert, setActiveCert] = useState<Certificate | null>(null);
+
+  const firstName = user?.studentName?.split(' ')[0] ?? 'there';
 
   return (
     <div>
@@ -19,25 +22,28 @@ export function Dashboard({ setPage }: DashboardProps) {
             <div className="eyebrow dash-hero__eyebrow">Student dashboard</div>
             <h1 className="display dash-hero__title">
               Welcome back,{' '}
-              <span className="dash-hero__title-accent">Moynak.</span>
+              <span className="dash-hero__title-accent">{firstName}.</span>
             </h1>
-            <div className="bn-display dash-hero__bn">
-              মৈনাক বিশ্বাস · Class X · Tehatta Sridham Chandra Balika Vidyalaya
-            </div>
+            {user && (
+              <div className="bn-display dash-hero__bn">
+                {[user.studentNameBn || user.studentName, user.klass, user.school]
+                  .filter(Boolean)
+                  .join(' · ')}
+              </div>
+            )}
             <div className="dash-hero__chips">
-              <span className="chip dash-hero__chip--green">
-                <span className="chip-dot" /> 4 active registrations
-              </span>
-              <span className="chip dash-hero__chip--medal">
-                🏅 2 gold · 1 silver · 1 bronze
-              </span>
+              {user?.registrationId && (
+                <span className="chip dash-hero__chip--green">
+                  <span className="chip-dot" /> {user.registrationId}
+                </span>
+              )}
             </div>
           </div>
-          <div className="dash-mini-stats">
-            <MiniStat label="Events entered" n="7" sub="across 3 years" />
-            <MiniStat label="Certificates" n="5" sub="all downloadable" />
-            <MiniStat label="Books received" n="12" sub="from library" />
-          </div>
+          {/* <div className="dash-mini-stats">
+            <MiniStat label="Events entered" n="—" sub="coming soon" />
+            <MiniStat label="Certificates" n="—" sub="coming soon" />
+            <MiniStat label="Books received" n="—" sub="coming soon" />
+          </div> */}
         </div>
       </section>
 
@@ -46,8 +52,8 @@ export function Dashboard({ setPage }: DashboardProps) {
           <div className="dash-tabs__scroll">
             <div className="dash-tabs__bar">
               {[
-                { id: 'medals', label: 'Medal case' },
-                { id: 'certs', label: 'Certificates' },
+                // { id: 'medals', label: 'Medal case' },
+                // { id: 'certs', label: 'Certificates' },
                 { id: 'regs', label: 'Registrations' },
                 { id: 'profile', label: 'Profile' },
               ].map((t) => (
@@ -65,7 +71,7 @@ export function Dashboard({ setPage }: DashboardProps) {
           {tab === 'medals' && <MedalCase />}
           {tab === 'certs' && <Certificates onOpen={setActiveCert} />}
           {tab === 'regs' && <Registrations setPage={setPage} />}
-          {tab === 'profile' && <Profile />}
+          {tab === 'profile' && <Profile user={user} />}
         </div>
       </section>
 
@@ -141,18 +147,9 @@ function MedalCard({ a }: { a: Achievement }) {
   return (
     <div className="card hover-lift medal-card">
       <div className="medal-card__figure">
-        <div
-          className="medal-card__ribbon-l"
-          style={{ background: c.ribbon1 }}
-        />
-        <div
-          className="medal-card__ribbon-r"
-          style={{ background: c.ribbon2 }}
-        />
-        <div
-          className="medal-card__disc"
-          style={{ background: c.bg }}
-        >
+        <div className="medal-card__ribbon-l" style={{ background: c.ribbon1 }} />
+        <div className="medal-card__ribbon-r" style={{ background: c.ribbon2 }} />
+        <div className="medal-card__disc" style={{ background: c.bg }}>
           <div className="medal-card__disc-inner">
             <div className="display medal-card__rank">
               {a.rank === 1 ? '1st' : a.rank === 2 ? '2nd' : '3rd'}
@@ -162,9 +159,7 @@ function MedalCard({ a }: { a: Achievement }) {
       </div>
       <div className="display medal-card__event">{a.event}</div>
       <div className="bn-display muted medal-card__bn">{a.bn}</div>
-      <div className="small muted medal-card__meta">
-        {a.klass} · {a.year}
-      </div>
+      <div className="small muted medal-card__meta">{a.klass} · {a.year}</div>
       <div className="chip medal-card__chip">{a.medal} medal</div>
     </div>
   );
@@ -196,14 +191,10 @@ function Certificates({ onOpen }: { onOpen: (c: Certificate) => void }) {
             </div>
             <div className="cert-card__info">
               <div className="bn small cert-card__bn">{c.bn}</div>
-              <div className="cert-card__title">
-                {c.event} · {c.rank}
-              </div>
+              <div className="cert-card__title">{c.event} · {c.rank}</div>
               <div className="cert-card__footer">
                 <span className="mono">{c.date}</span>
-                <span className="cert-card__pdf-link">
-                  <Icon.dl /> PDF
-                </span>
+                <span className="cert-card__pdf-link"><Icon.dl /> PDF</span>
               </div>
             </div>
           </button>
@@ -230,16 +221,11 @@ function CertArt({ title, event, rank }: { title: string; event: string; rank: s
         <div className="mono cert-art__year">{title.match(/\d{4}/)?.[0]}</div>
       </div>
       <div className="cert-art__middle">
-        <div className="display cert-art__name">Moynak Biswas</div>
-        <div className="cert-art__event">
-          {event} · {rank}
-        </div>
+        <div className="display cert-art__name">—</div>
+        <div className="cert-art__event">{event} · {rank}</div>
       </div>
       {isWinner && (
-        <div
-          className="cert-art__badge"
-          style={{ background: rankColor }}
-        >
+        <div className="cert-art__badge" style={{ background: rankColor }}>
           {rank.charAt(0)}
         </div>
       )}
@@ -254,28 +240,21 @@ function CertModal({ cert, onClose }: { cert: Certificate; onClose: () => void }
       <div className="cert-modal__panel" onClick={(e) => e.stopPropagation()}>
         <div className="cert-modal__header">
           <div>
-            <div className="eyebrow">
-              {cert.event} · {cert.rank}
-            </div>
+            <div className="eyebrow">{cert.event} · {cert.rank}</div>
             <div className="bn cert-modal__bn">{cert.bn}</div>
           </div>
-          <button className="btn btn-ghost btn-sm" onClick={onClose}>
-            <Icon.close />
-          </button>
+          <button className="btn btn-ghost btn-sm" onClick={onClose}><Icon.close /></button>
         </div>
         <div className="cert-modal__preview">
           <div className="cert-modal__cert">
             <div className="cert-modal__cert-top">
               <img src="/assets/logo.png" className="cert-modal__cert-logo" alt="Proyash" />
-              <div className="bn-display cert-modal__cert-org">
-                প্রয়াস মেধা পরীক্ষা — ২০২৫
-              </div>
+              <div className="bn-display cert-modal__cert-org">প্রয়াস মেধা পরীক্ষা — ২০২৫</div>
               <div className="mono">Certificate of Merit</div>
             </div>
             <div className="cert-modal__cert-middle">
               <div className="small muted">This is to certify that</div>
-              <div className="display cert-modal__cert-name">Moynak Biswas</div>
-              <div className="small">of Class X · Tehatta Sridham Chandra Balika Vidyalaya</div>
+              <div className="display cert-modal__cert-name">—</div>
               <div className="cert-modal__cert-secured">
                 secured <strong>{cert.rank}</strong> in
               </div>
@@ -296,9 +275,7 @@ function CertModal({ cert, onClose }: { cert: Certificate; onClose: () => void }
           <div className="small muted">Verify at proyash.org.in/verify/{cert.id.toUpperCase()}</div>
           <div className="cert-modal__footer-actions">
             <button className="btn btn-outline btn-sm">Share</button>
-            <button className="btn btn-primary btn-sm">
-              <Icon.dl /> Download PDF
-            </button>
+            <button className="btn btn-primary btn-sm"><Icon.dl /> Download PDF</button>
           </div>
         </div>
       </div>
@@ -353,17 +330,13 @@ function Registrations({ setPage }: { setPage: (p: Page) => void }) {
           <div
             key={r.id}
             className="reg-row"
-            style={{
-              borderBottom: i < a.length - 1 ? '1px solid var(--rule)' : 'none',
-            }}
+            style={{ borderBottom: i < a.length - 1 ? '1px solid var(--rule)' : 'none' }}
           >
             <div className="display reg-row__year">{r.year}</div>
             <div className="mono">{r.id}</div>
             <div className="reg-row__events">
               {r.events.map((e) => (
-                <span key={e} className="chip">
-                  {e}
-                </span>
+                <span key={e} className="chip">{e}</span>
               ))}
             </div>
             <span
@@ -380,7 +353,7 @@ function Registrations({ setPage }: { setPage: (p: Page) => void }) {
   );
 }
 
-function Profile() {
+function Profile({ user }: { user: Student | null }) {
   return (
     <div>
       <div className="section-head">
@@ -395,20 +368,18 @@ function Profile() {
         <div className="card">
           <div className="eyebrow profile-card__eyebrow">Student</div>
           <div className="stack" style={{ '--gap': '12px' } as React.CSSProperties}>
-            <ProfileRow k="Full name" v="Moynak Biswas" />
-            <ProfileRow k="Bengali name" v="মৈনাক বিশ্বাস" />
-            <ProfileRow k="Date of birth" v="14 March 2011" />
-            <ProfileRow k="Class" v="Class X" />
-            <ProfileRow k="School" v="Tehatta Sridham Chandra Balika Vidyalaya" />
+            <ProfileRow k="Full name" v={user?.studentName ?? '—'} />
+            <ProfileRow k="Bengali name" v={user?.studentNameBn || '—'} />
+            <ProfileRow k="Class" v={user?.klass ?? '—'} />
+            <ProfileRow k="School" v={user?.school ?? '—'} />
           </div>
         </div>
         <div className="card">
           <div className="eyebrow profile-card__eyebrow">Contact</div>
           <div className="stack" style={{ '--gap': '12px' } as React.CSSProperties}>
-            <ProfileRow k="Guardian" v="Subhra Biswas" />
-            <ProfileRow k="Phone" v="+91 98xxx xxxxx" />
-            <ProfileRow k="Email" v="moynak@example.com" />
-            <ProfileRow k="Address" v="Village Raghunathpur, Tehatta, Nadia 741160" />
+            <ProfileRow k="Guardian" v={user?.guardianName || '—'} />
+            <ProfileRow k="Phone" v={user?.phone ? `+91 ${user.phone}` : '—'} />
+            <ProfileRow k="Email" v={user?.email ?? '—'} />
           </div>
         </div>
       </div>

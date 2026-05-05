@@ -3,7 +3,7 @@ import { scryptSync, randomBytes, createHmac } from 'crypto';
 import postgres from 'postgres';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { eq } from 'drizzle-orm';
-import { registrations } from './schema.mjs';
+import { students } from './schema.mjs';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -25,6 +25,19 @@ function hashPassword(password) {
 
 function generateRegistrationId() {
   return `PRY-2026-${Math.floor(Math.random() * 9000 + 1000)}`;
+}
+
+function studentPayload(user) {
+  return {
+    registrationId: user.registrationId,
+    studentName: user.studentName,
+    studentNameBn: user.studentNameBn ?? '',
+    klass: user.klass,
+    school: user.school,
+    guardianName: user.guardianName ?? '',
+    phone: user.phone,
+    email: user.email,
+  };
 }
 
 export const handler = async (event) => {
@@ -69,7 +82,7 @@ export const handler = async (event) => {
 
     try {
       const { db, end } = getDb();
-      const existing = await db.select({ id: registrations.id }).from(registrations).where(eq(registrations.email, email)).limit(1);
+      const existing = await db.select({ id: students.id }).from(students).where(eq(students.email, email)).limit(1);
       await end();
       if (existing.length > 0) {
         return { statusCode: 409, body: JSON.stringify({ error: 'An account with this email already exists' }) };
@@ -84,7 +97,7 @@ export const handler = async (event) => {
 
     try {
       const { db, end } = getDb();
-      await db.insert(registrations).values({
+      await db.insert(students).values({
         registrationId,
         studentName,
         studentNameBn: studentNameBn || null,
@@ -131,7 +144,7 @@ export const handler = async (event) => {
     let user;
     try {
       const { db, end } = getDb();
-      const rows = await db.select().from(registrations).where(eq(registrations.email, email)).limit(1);
+      const rows = await db.select().from(students).where(eq(students.email, email)).limit(1);
       await end();
       user = rows[0];
     } catch (err) {
@@ -146,7 +159,7 @@ export const handler = async (event) => {
     if (inputHash !== hash) {
       return { statusCode: 401, body: JSON.stringify({ error: 'Invalid email or password' }) };
     }
-    return { statusCode: 200, body: JSON.stringify({ ok: true, name: user.studentName, registrationId: user.registrationId }) };
+    return { statusCode: 200, body: JSON.stringify({ ok: true, student: studentPayload(user) }) };
   }
 
   if (body.type === 'magic-link-send') {
@@ -157,7 +170,7 @@ export const handler = async (event) => {
     let user;
     try {
       const { db, end } = getDb();
-      const rows = await db.select().from(registrations).where(eq(registrations.email, email)).limit(1);
+      const rows = await db.select().from(students).where(eq(students.email, email)).limit(1);
       await end();
       user = rows[0];
     } catch (err) {
@@ -207,7 +220,7 @@ export const handler = async (event) => {
     let user;
     try {
       const { db, end } = getDb();
-      const rows = await db.select().from(registrations).where(eq(registrations.email, email)).limit(1);
+      const rows = await db.select().from(students).where(eq(students.email, email)).limit(1);
       await end();
       user = rows[0];
     } catch (err) {
@@ -216,7 +229,7 @@ export const handler = async (event) => {
     if (!user) {
       return { statusCode: 401, body: JSON.stringify({ error: 'No account found for this email' }) };
     }
-    return { statusCode: 200, body: JSON.stringify({ ok: true, name: user.studentName, registrationId: user.registrationId }) };
+    return { statusCode: 200, body: JSON.stringify({ ok: true, student: studentPayload(user) }) };
   }
 
   // Contact form

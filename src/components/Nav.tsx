@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Icon } from '../data';
-import type { Page } from '../types';
+import type { Page, Student } from '../types';
 import './Nav.scss';
 
 interface NavProps {
   setPage: (p: Page) => void;
   openLogin: () => void;
-  user: { name: string; registrationId: string } | null;
+  user: Student | null;
   onLogout: () => void;
 }
 
@@ -61,8 +61,8 @@ export function Nav({ setPage, openLogin, user, onLogout }: NavProps) {
         <div className="nav__cta">
           {user ? (
             <>
-              <button className="nav__avatar" onClick={() => navigate('dashboard')} title={user.name}>
-                {user.name[0].toUpperCase()}
+              <button className="nav__avatar" onClick={() => navigate('dashboard')} title={user.studentName}>
+                {user.studentName[0].toUpperCase()}
               </button>
               <button className="btn btn-sm" onClick={() => setConfirmLogout(true)} style={{ background: 'color-mix(in srgb, var(--red) 12%, transparent)', color: 'var(--red)', border: '1px solid color-mix(in srgb, var(--red) 25%, transparent)' }}>
                 Log out
@@ -112,8 +112,8 @@ export function Nav({ setPage, openLogin, user, onLogout }: NavProps) {
           <div className="nav__mobile-actions">
             {user ? (
               <>
-                <button className="nav__avatar" onClick={() => navigate('dashboard')} title={user.name}>
-                  {user.name[0].toUpperCase()}
+                <button className="nav__avatar" onClick={() => navigate('dashboard')} title={user.studentName}>
+                  {user.studentName[0].toUpperCase()}
                 </button>
                 <button className="btn" onClick={() => setConfirmLogout(true)} style={{ background: 'color-mix(in srgb, var(--red) 12%, transparent)', color: 'var(--red)', border: '1px solid color-mix(in srgb, var(--red) 25%, transparent)' }}>
                   Log out
