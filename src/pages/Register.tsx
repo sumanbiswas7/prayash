@@ -79,18 +79,7 @@ export function Register({ setPage, onRegister }: RegisterProps) {
       const json = await res.json();
       if (!res.ok || !json.ok) throw new Error(json.error || 'Registration failed');
       setRegistrationId(json.registrationId);
-      onRegister?.({
-        registrationId: json.registrationId,
-        studentName: data.studentName,
-        studentNameBn: data.studentNameBn,
-        klass: data.klass,
-        school: data.school,
-        dob: data.dob,
-        address: data.address,
-        guardianName: data.guardianName,
-        phone: data.phone,
-        email: data.email,
-      });
+      onRegister?.(json.student);
       setStep(4);
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : 'Something went wrong');

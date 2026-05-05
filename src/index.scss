@@ -484,6 +484,10 @@ a {
 /* ===== Media queries ===== */
 
 @media (max-width: 768px) {
+  body {
+    padding-top: 68px;
+  }
+
   .container,
   .container-wide {
     padding: 0 16px;

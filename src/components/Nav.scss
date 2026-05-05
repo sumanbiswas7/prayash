@@ -106,7 +106,17 @@ $bp-mobile: 768px;
   justify-content: center;
 }
 
+.nav__backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(31, 27, 22, 0.3);
+  backdrop-filter: blur(4px);
+  z-index: 49;
+}
+
 .nav__mobile-menu {
+  position: relative;
+  z-index: 50;
   border-top: 1px solid var(--rule);
   padding: 12px;
   display: flex;
@@ -211,6 +221,13 @@ $bp-mobile: 768px;
 }
 
 @media (max-width: $bp-mobile) {
+  .nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+  }
+
   .nav__links {
     display: none !important;
   }
@@ -225,5 +242,14 @@ $bp-mobile: 768px;
 
   .nav__cta {
     display: none;
+  }
+
+  .nav__mobile-menu {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 68px;
+    max-height: calc(100vh - 68px);
+    overflow-y: auto;
   }
 }

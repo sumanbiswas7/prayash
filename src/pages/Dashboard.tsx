@@ -20,10 +20,6 @@ export function Dashboard({ setPage, user, onUpdate }: DashboardProps) {
     ? Math.floor((Date.now() - new Date(user.dob).getTime()) / (365.25 * 24 * 60 * 60 * 1000))
     : null;
 
-  const memberSince = user?.createdAt
-    ? new Date(user.createdAt).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })
-    : null;
-
   return (
     <div>
       <section className="dash-hero">

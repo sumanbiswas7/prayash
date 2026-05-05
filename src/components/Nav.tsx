@@ -98,42 +98,43 @@ export function Nav({ setPage, openLogin, user, onLogout }: NavProps) {
           )}
         </button>
       </div>
-      {open && (
-        <nav className="nav__mobile-menu">
-          {links.map((l) => (
-            <button
-              key={l.id}
-              className={`nav__mobile-link ${pathname === l.path ? 'active' : ''}`}
-              onClick={() => navigate(l.id)}
-            >
-              {l.label}
-            </button>
-          ))}
-          <div className="nav__mobile-actions">
-            {user ? (
-              <>
-                <button className="nav__avatar" onClick={() => navigate('dashboard')} title={user.studentName}>
-                  {user.studentName[0].toUpperCase()}
-                </button>
-                <button className="btn" onClick={() => setConfirmLogout(true)} style={{ background: 'color-mix(in srgb, var(--red) 12%, transparent)', color: 'var(--red)', border: '1px solid color-mix(in srgb, var(--red) 25%, transparent)' }}>
-                  Log out
-                </button>
-              </>
-            ) : (
-              <>
-                <button className="btn btn-ghost" onClick={() => { openLogin(); setOpen(false); }}>
-                  Log in
-                </button>
-                <button className="btn btn-accent" onClick={() => navigate('register')}>
-                  Register <Icon.arrow />
-                </button>
-              </>
-            )}
-          </div>
-        </nav>
-      )}
-
     </header>
+
+    {open && <div className="nav__backdrop" onClick={() => setOpen(false)} />}
+    {open && (
+      <nav className="nav__mobile-menu">
+        {links.map((l) => (
+          <button
+            key={l.id}
+            className={`nav__mobile-link ${pathname === l.path ? 'active' : ''}`}
+            onClick={() => navigate(l.id)}
+          >
+            {l.label}
+          </button>
+        ))}
+        <div className="nav__mobile-actions">
+          {user ? (
+            <>
+              <button className="nav__avatar" onClick={() => navigate('dashboard')} title={user.studentName}>
+                {user.studentName[0].toUpperCase()}
+              </button>
+              <button className="btn" onClick={() => setConfirmLogout(true)} style={{ background: 'color-mix(in srgb, var(--red) 12%, transparent)', color: 'var(--red)', border: '1px solid color-mix(in srgb, var(--red) 25%, transparent)' }}>
+                Log out
+              </button>
+            </>
+          ) : (
+            <>
+              <button className="btn btn-ghost" onClick={() => { openLogin(); setOpen(false); }}>
+                Log in
+              </button>
+              <button className="btn btn-accent" onClick={() => navigate('register')}>
+                Register <Icon.arrow />
+              </button>
+            </>
+          )}
+        </div>
+      </nav>
+    )}
 
     {confirmLogout && (
       <div className="logout-modal__overlay" onClick={() => setConfirmLogout(false)}>
