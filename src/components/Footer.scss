@@ -76,6 +76,27 @@ $bp-small: 480px;
   cursor: pointer;
 }
 
+.footer__social {
+  display: flex;
+  flex-direction: row;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.footer__social-link {
+  display: inline-flex;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+  opacity: 0.6;
+  transition: opacity 0.2s, color 0.2s;
+
+  &:hover {
+    opacity: 1;
+    color: var(--yellow);
+  }
+}
+
 .footer__divider {
   border: 0;
   border-top: 1px solid rgba(255, 255, 255, 0.12);

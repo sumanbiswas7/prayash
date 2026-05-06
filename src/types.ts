@@ -21,7 +21,7 @@ export interface ProyashEvent {
   color: string;
   desc: string;
   slots: string[];
-  duration: string;
+  duration: string[];
   format: string;
 }
 

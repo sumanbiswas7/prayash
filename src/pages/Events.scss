@@ -183,7 +183,7 @@ $bp-mobile: 768px;
 }
 
 .events-detail__duration {
-  font-size: 22px;
+  font-weight: 500;
 }
 
 /* ===== Prizes section ===== */
@@ -256,6 +256,15 @@ $bp-mobile: 768px;
   margin-bottom: 14px;
 }
 
+.events-schedule__venue-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
 .events-schedule__card {
   padding: 0;
   overflow: hidden;
@@ -263,7 +272,8 @@ $bp-mobile: 768px;
 
 .events-schedule__row {
   display: grid;
-  grid-template-columns: 80px 80px 1fr;
+  grid-template-columns: 100px 1fr;
+  gap: 16px;
   padding: 14px 24px;
   align-items: center;
 }
@@ -308,8 +318,12 @@ $bp-mobile: 768px;
   }
 
   .events-schedule__row {
-    grid-template-columns: 50px 64px 1fr;
+    grid-template-columns: 80px 1fr;
     padding: 12px 16px;
     font-size: 14px;
+  }
+
+  .events-schedule__time {
+    font-size: 15px;
   }
 }

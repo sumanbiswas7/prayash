@@ -26,8 +26,7 @@ export function Dashboard({ user, onUpdate }: DashboardProps) {
           <div>
             <div className="eyebrow dash-hero__eyebrow">Student dashboard</div>
             <h1 className="display dash-hero__title">
-              Welcome back,{' '}
-              <span className="dash-hero__title-accent">{firstName}.</span>
+              Welcome back, <span className="dash-hero__title-accent">{firstName}.</span>
             </h1>
             {user && (
               <div className="bn-display dash-hero__bn">
@@ -46,7 +45,11 @@ export function Dashboard({ user, onUpdate }: DashboardProps) {
           </div>
           <div className="dash-mini-stats">
             <MiniStat label="Age" n={age !== null ? String(age) : '—'} sub="years old" />
-            <MiniStat label="Class" n={user?.klass?.replace('Class ', '') ?? '—'} sub="current standard" />
+            <MiniStat
+              label="Class"
+              n={user?.klass?.replace('Class ', '') ?? '—'}
+              sub="current standard"
+            />
             {/* <MiniStat label="Member since" n={memberSince ?? '—'} sub="registration date" /> */}
           </div>
         </div>
@@ -164,7 +167,9 @@ function MedalCard({ a }: { a: Achievement }) {
       </div>
       <div className="display medal-card__event">{a.event}</div>
       <div className="bn-display muted medal-card__bn">{a.bn}</div>
-      <div className="small muted medal-card__meta">{a.klass} · {a.year}</div>
+      <div className="small muted medal-card__meta">
+        {a.klass} · {a.year}
+      </div>
       <div className="chip medal-card__chip">{a.medal} medal</div>
     </div>
   );
@@ -186,20 +191,20 @@ function Certificates({ onOpen }: { onOpen: (c: Certificate) => void }) {
       </div>
       <div className="cols-3 certs-section__grid">
         {PROYASH_DATA.certificates.map((c) => (
-          <button
-            key={c.id}
-            onClick={() => onOpen(c)}
-            className="card hover-lift cert-card"
-          >
+          <button key={c.id} onClick={() => onOpen(c)} className="card hover-lift cert-card">
             <div className="cert-card__preview">
               <CertArt title={c.title} event={c.event} rank={c.rank} />
             </div>
             <div className="cert-card__info">
               <div className="bn small cert-card__bn">{c.bn}</div>
-              <div className="cert-card__title">{c.event} · {c.rank}</div>
+              <div className="cert-card__title">
+                {c.event} · {c.rank}
+              </div>
               <div className="cert-card__footer">
                 <span className="mono">{c.date}</span>
-                <span className="cert-card__pdf-link"><Icon.dl /> PDF</span>
+                <span className="cert-card__pdf-link">
+                  <Icon.dl /> PDF
+                </span>
               </div>
             </div>
           </button>
@@ -227,7 +232,9 @@ function CertArt({ title, event, rank }: { title: string; event: string; rank: s
       </div>
       <div className="cert-art__middle">
         <div className="display cert-art__name">—</div>
-        <div className="cert-art__event">{event} · {rank}</div>
+        <div className="cert-art__event">
+          {event} · {rank}
+        </div>
       </div>
       {isWinner && (
         <div className="cert-art__badge" style={{ background: rankColor }}>
@@ -245,10 +252,14 @@ function CertModal({ cert, onClose }: { cert: Certificate; onClose: () => void }
       <div className="cert-modal__panel" onClick={(e) => e.stopPropagation()}>
         <div className="cert-modal__header">
           <div>
-            <div className="eyebrow">{cert.event} · {cert.rank}</div>
+            <div className="eyebrow">
+              {cert.event} · {cert.rank}
+            </div>
             <div className="bn cert-modal__bn">{cert.bn}</div>
           </div>
-          <button className="btn btn-ghost btn-sm" onClick={onClose}><Icon.close /></button>
+          <button className="btn btn-ghost btn-sm" onClick={onClose}>
+            <Icon.close />
+          </button>
         </div>
         <div className="cert-modal__preview">
           <div className="cert-modal__cert">
@@ -280,7 +291,9 @@ function CertModal({ cert, onClose }: { cert: Certificate; onClose: () => void }
           <div className="small muted">Verify at proyash.org.in/verify/{cert.id.toUpperCase()}</div>
           <div className="cert-modal__footer-actions">
             <button className="btn btn-outline btn-sm">Share</button>
-            <button className="btn btn-primary btn-sm"><Icon.dl /> Download PDF</button>
+            <button className="btn btn-primary btn-sm">
+              <Icon.dl /> Download PDF
+            </button>
           </div>
         </div>
       </div>
@@ -295,12 +308,12 @@ function Registrations() {
         <div>
           <h2 className="display regs-section__title">Your competitions.</h2>
           <p className="regs-section__desc">
-            All the competitions you participated in. Click Register to join the upcoming ones!
+            All the competitions you participated in. You'll be able to see your registration details here.
           </p>
         </div>
-        <button className="btn btn-primary" disabled style={{ opacity: 0.45, cursor: 'not-allowed' }}>
+        {/* <button className="btn btn-primary" disabled style={{ opacity: 0.45, cursor: 'not-allowed' }}>
           Register <Icon.plus />
-        </button>
+        </button> */}
       </div>
       <div className="card regs-table" style={{ textAlign: 'center', padding: '40px 24px' }}>
         <div className="eyebrow">Competition history</div>
@@ -350,7 +363,11 @@ function Profile({ user, onUpdate }: { user: Student | null; onUpdate: (s: Stude
       const res = await fetch(import.meta.env.VITE_LAMBDA_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'update-profile', registrationId: user?.registrationId, ...form }),
+        body: JSON.stringify({
+          type: 'update-profile',
+          registrationId: user?.registrationId,
+          ...form,
+        }),
       });
       const json = await res.json();
       if (!res.ok || !json.ok) throw new Error(json.error || 'Update failed');
@@ -388,30 +405,44 @@ function Profile({ user, onUpdate }: { user: Student | null; onUpdate: (s: Stude
               <div className="eyebrow profile-card__eyebrow">Student</div>
               <div className="stack" style={{ '--gap': '14px' } as React.CSSProperties}>
                 <ProfileField label="Full name">
-                  <input className="profile-input" value={form.studentName} onChange={(e) => set('studentName', e.target.value)} />
+                  <input
+                    className="profile-input"
+                    value={form.studentName}
+                    onChange={(e) => set('studentName', e.target.value)}
+                  />
                 </ProfileField>
                 <ProfileField label="Bengali name">
-                  <input className="profile-input bn" value={form.studentNameBn} onChange={(e) => set('studentNameBn', e.target.value)} />
+                  <input
+                    className="profile-input bn"
+                    value={form.studentNameBn}
+                    onChange={(e) => set('studentNameBn', e.target.value)}
+                  />
                 </ProfileField>
                 <ProfileField label="Date of birth">
                   <DobPicker value={form.dob} onChange={(v) => set('dob', v)} />
                 </ProfileField>
                 <ProfileField label="Class">
                   <div className="profile-class-picker">
-                    {['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'].map((c) => (
-                      <button
-                        key={c}
-                        type="button"
-                        className={`class-pill${form.klass === `Class ${c}` ? ' class-pill--active' : ''}`}
-                        onClick={() => set('klass', `Class ${c}`)}
-                      >
-                        {c}
-                      </button>
-                    ))}
+                    {['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'].map(
+                      (c) => (
+                        <button
+                          key={c}
+                          type="button"
+                          className={`class-pill${form.klass === `Class ${c}` ? ' class-pill--active' : ''}`}
+                          onClick={() => set('klass', `Class ${c}`)}
+                        >
+                          {c}
+                        </button>
+                      )
+                    )}
                   </div>
                 </ProfileField>
                 <ProfileField label="School">
-                  <input className="profile-input" value={form.school} onChange={(e) => set('school', e.target.value)} />
+                  <input
+                    className="profile-input"
+                    value={form.school}
+                    onChange={(e) => set('school', e.target.value)}
+                  />
                 </ProfileField>
               </div>
             </div>
@@ -419,16 +450,28 @@ function Profile({ user, onUpdate }: { user: Student | null; onUpdate: (s: Stude
               <div className="eyebrow profile-card__eyebrow">Contact</div>
               <div className="stack" style={{ '--gap': '14px' } as React.CSSProperties}>
                 <ProfileField label="Guardian">
-                  <input className="profile-input" value={form.guardianName} onChange={(e) => set('guardianName', e.target.value)} />
+                  <input
+                    className="profile-input"
+                    value={form.guardianName}
+                    onChange={(e) => set('guardianName', e.target.value)}
+                  />
                 </ProfileField>
                 <ProfileField label="Phone">
-                  <input className="profile-input" value={user?.phone ? `+91 ${user.phone}` : '—'} disabled />
+                  <input
+                    className="profile-input"
+                    value={user?.phone ? `+91 ${user.phone}` : '—'}
+                    disabled
+                  />
                 </ProfileField>
                 <ProfileField label="Email">
                   <input className="profile-input" value={user?.email ?? '—'} disabled />
                 </ProfileField>
                 <ProfileField label="Address">
-                  <input className="profile-input" value={form.address} onChange={(e) => set('address', e.target.value)} />
+                  <input
+                    className="profile-input"
+                    value={form.address}
+                    onChange={(e) => set('address', e.target.value)}
+                  />
                 </ProfileField>
               </div>
             </div>

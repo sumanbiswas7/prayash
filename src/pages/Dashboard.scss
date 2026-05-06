@@ -4,7 +4,8 @@ $bp-small: 480px;
 /* ===== Dashboard header section ===== */
 
 .dash-hero {
-  padding: 56px 0 36px;
+  padding-top: clamp(20px, 4vw, 64px);
+  padding-bottom: clamp(28px, 5vw, 80px);
   border-bottom: 1px solid var(--rule);
   background: var(--cream-2);
 }

@@ -18,20 +18,17 @@ export function Events({ setPage }: EventsProps) {
           <div>
             <div className="eyebrow events-hero__eyebrow">The annual festival</div>
             <h1 className="display events-hero__title">
-              Medha Pariksha{' '}
-              <span className="events-hero__title-accent">2026.</span>
+              Medha Pariksha <span className="events-hero__title-accent">2026.</span>
             </h1>
-            <div className="bn-display events-hero__bn">
-              প্রয়াস মেধা পরীক্ষা — ২০২৬
-            </div>
+            <div className="bn-display events-hero__bn">প্রয়াস বার্ষিক অনুষ্ঠান — ২০২৬</div>
           </div>
           <div className="events-hero__info-grid">
             <div className="card events-hero__info-card">
               <div className="eyebrow events-hero__info-eyebrow">
                 <Icon.cal /> When
               </div>
-              <div className="display events-hero__info-title">10–11 Oct 2026</div>
-              <div className="small muted">Saturday & Sunday</div>
+              <div className="display events-hero__info-title">To Be Announced</div>
+              <div className="small muted">Most likely in late 2026</div>
             </div>
             <div className="card events-hero__info-card">
               <div className="eyebrow events-hero__info-eyebrow">
@@ -49,7 +46,7 @@ export function Events({ setPage }: EventsProps) {
       <section className="events-body">
         <div className="container events-layout">
           <div>
-            <div className="eyebrow events-list__eyebrow">All 10 events</div>
+            <div className="eyebrow events-list__eyebrow">All events</div>
             <div className="stack" style={{ '--gap': '6px' } as React.CSSProperties}>
               {PROYASH_DATA.events.map((e) => (
                 <button
@@ -77,9 +74,7 @@ export function Events({ setPage }: EventsProps) {
           </div>
 
           <div>
-            <div
-              className="card events-detail__card"
-            >
+            <div className="card events-detail__card">
               <div
                 className="events-detail__header"
                 style={{
@@ -104,7 +99,7 @@ export function Events({ setPage }: EventsProps) {
                       border: `1px solid var(--${ev.color})`,
                     }}
                   >
-                    <span className="chip-dot" /> Registration open
+                    <span className="chip-dot" /> Register Soon
                   </div>
                 </div>
                 <p className="events-detail__desc">{ev.desc}</p>
@@ -112,7 +107,7 @@ export function Events({ setPage }: EventsProps) {
 
               <div className="events-detail__info-grid">
                 <Detail
-                  label="Age groups"
+                  label="Groups"
                   value={
                     <div className="stack" style={{ '--gap': '4px' } as React.CSSProperties}>
                       {ev.slots.map((s, i) => (
@@ -126,7 +121,13 @@ export function Events({ setPage }: EventsProps) {
                 <Detail
                   label="Duration"
                   value={
-                    <span className="display events-detail__duration">{ev.duration}</span>
+                    <div className="stack" style={{ '--gap': '4px' } as React.CSSProperties}>
+                      {ev.duration.map((d, i) => (
+                        <div key={i} className="events-detail__duration">
+                          {d}
+                        </div>
+                      ))}
+                    </div>
                   }
                 />
                 <Detail label="Format" value={<span>{ev.format}</span>} />
@@ -135,30 +136,11 @@ export function Events({ setPage }: EventsProps) {
               <hr className="hr" />
 
               <div className="events-prizes">
-                <div className="eyebrow events-prizes__eyebrow">Prizes for each age group</div>
+                <div className="eyebrow events-prizes__eyebrow">Prizes</div>
                 <div className="events-prizes__grid">
-                  <PrizeRow
-                    rank="1st"
-                    medal="Gold"
-                    color="yellow"
-                    prize="Medal + ₹1,500 book voucher + certificate"
-                  />
-                  <PrizeRow
-                    rank="2nd"
-                    medal="Silver"
-                    color="teal"
-                    prize="Medal + ₹1,000 book voucher + certificate"
-                  />
-                  <PrizeRow
-                    rank="3rd"
-                    medal="Bronze"
-                    color="orange"
-                    prize="Medal + ₹500 book voucher + certificate"
-                  />
-                </div>
-                <div className="small muted events-prizes__note">
-                  Every participant receives a certificate and a book of their choice from our
-                  library.
+                  <PrizeRow rank="1st" medal="Gold" color="yellow" prize="Books & Memento" />
+                  <PrizeRow rank="2nd" medal="Silver" color="teal" prize="Books & Memento" />
+                  <PrizeRow rank="3rd" medal="Bronze" color="orange" prize="Books & Memento" />
                 </div>
               </div>
 
@@ -166,32 +148,93 @@ export function Events({ setPage }: EventsProps) {
 
               <div className="events-reg-bar">
                 <div>
-                  <div className="mono">Registration closes 5 Oct 2026</div>
+                  <div className="mono" style={{ marginBottom: '1rem' }}>
+                    Notes
+                  </div>
                   <div className="small muted events-reg-bar__note">
-                    Free for students from partner schools. ₹50 for others — waived on request.
+                    * প্রত্যেক প্রতিযোগিতা শুরুর আধ ঘন্টা আগে প্রত্যেক প্রতিযোগীকে এসে উপস্থিত হয়ে
+                    এন্ট্রি ফি জমা দিতে হবে, তবেই প্রতিযোগিতায় তাদের নাম নিশ্চিত হবে। আমাদের বাছাই
+                    করা দুঃস্থ-মেধাবীদের কোনো এন্ট্রি ফি লাগবে না।
+                    <br />
+                    <br />
+                    * অনেক ক্ষেত্রেই বহু প্রতিযোগী সকাল থেকে সন্ধ্যা পর্যন্ত আমাদের অনুষ্ঠানে থেকে
+                    প্রতিযোগিতায় অংশগ্রহণ করে তাদের কথা ভেবে দুপুরে ভাতের ব্যবস্থা করা হয়েছে।
+                    এরজন্য তাদের এন্ট্রি ফি ব্যতীত কোনো অতিরিক্ত টাকা দিতে হবে না।
+                    <br />
+                    <br />
+                    * প্রতিযোগিতায় অংশগ্রহণকারি ছাড়া অন্যরা দুপুরের আহার গ্রহণ করতে চাইলে তাদের
+                    7363850993 নম্বরে ফোন করে একদিন আগে জানাতে হবে এবং অনুদান হিসাবে ওই নম্বরের
+                    অন্তত 30 টাকা দিয়ে সাহায্য করতে হবে।
+                    <br />
+                    <br />* অনিবার্য কারণ ছাড়া সময় সূচি মেনেই প্রতিটা অনুষ্ঠান অনুষ্ঠিত হবে।
                   </div>
                 </div>
+              </div>
+
+              {/* <div style={{ display: 'flex', justifyContent: 'center', margin: '24px 0' }}>
                 <button className="btn btn-primary" onClick={() => setPage('register')}>
                   Register for {ev.en} <Icon.arrow />
                 </button>
-              </div>
+              </div> */}
             </div>
 
             <div className="events-schedule">
-              <div className="eyebrow events-schedule__eyebrow">Weekend schedule · Oct 10–11</div>
+              <div className="eyebrow events-schedule__eyebrow">Day schedule</div>
+
+              <div className="events-schedule__venue-label">ঘর · Room</div>
               <div className="card events-schedule__card">
                 {[
-                  { time: '08:00', title: 'Gates open · registration desk', day: 'Sat' },
-                  { time: '09:30', title: 'Opening ceremony · Bengali anthem', day: 'Sat' },
-                  { time: '10:00', title: 'Quiz, Handwriting, Drawing (Group A)', day: 'Sat' },
-                  { time: '12:30', title: 'Lunch · rice & dal for all participants', day: 'Sat' },
-                  { time: '14:00', title: 'Essay, Abriti preliminaries', day: 'Sat' },
-                  { time: '09:00', title: 'Singing, Spelling Bee, Mental Math', day: 'Sun' },
-                  { time: '13:00', title: 'Debate finals, Craft showcase', day: 'Sun' },
+                  { time: '10:00 AM', title: 'Drawing contest — Group A · বসে আঁকো (ক)' },
+                  { time: '11:00 AM', title: 'Drawing contest — Group B & C · বসে আঁকো (খ, গ)' },
+                  { time: '12:30 PM', title: 'Essay writing — Group A · গল্প লেখা (ক)' },
+                  { time: '1:30 PM', title: 'Essay writing — Group B & C · গল্প লেখা (খ, গ)' },
                   {
-                    time: '16:00',
-                    title: 'Prize distribution · certificates & medals',
-                    day: 'Sun',
+                    time: '3:00 PM',
+                    title: 'Quiz prelims — Children Group A · বাচ্চাদের কুইজ (ক)',
+                  },
+                  { time: '4:00 PM', title: 'Quiz prelims — Open · কুইজ (সর্ব সাধারণ)' },
+                ].map((r, i, a) => (
+                  <div
+                    key={i}
+                    className="events-schedule__row"
+                    style={{
+                      borderBottom: i < a.length - 1 ? '1px solid var(--rule)' : 'none',
+                      background: i % 2 ? 'var(--cream-2)' : 'transparent',
+                    }}
+                  >
+                    <div className="display events-schedule__time">{r.time}</div>
+                    <div>{r.title}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="events-schedule__venue-label" style={{ marginTop: '16px' }}>
+                মূল মঞ্চ · Main Stage
+              </div>
+              <div className="card events-schedule__card">
+                {[
+                  {
+                    time: '10:00 AM',
+                    title: 'Opening ceremony · Guest reception · গুণীজন সংবর্ধনা',
+                  },
+                  {
+                    time: '11:00 AM',
+                    title: 'Book & notebook distribution · Prize giving (Class II–VI)',
+                  },
+                  { time: '11:30 AM', title: 'Poetry recitation — Group A · কবিতা পাঠ (ক)' },
+                  { time: '12:30 PM', title: 'Poetry recitation — Group B · কবিতা পাঠ (খ)' },
+                  { time: '1:30 PM', title: 'News reading — Group A · খবর পাঠ (ক)' },
+                  { time: '2:30 PM', title: 'News reading — Group B · খবর পাঠ (খ)' },
+                  { time: '3:00 PM', title: 'Debate — Open · বিতর্ক (সর্ব সাধারণ)' },
+                  { time: '3:30 PM', title: 'Poetry recitation — Group C · কবিতা পাঠ (গ)' },
+                  {
+                    time: '4:00 PM',
+                    title: 'Quiz finals — Children Group A · বাচ্চাদের কুইজ মূল পর্ব',
+                  },
+                  { time: '5:00 PM', title: 'Quiz finals — Open · কুইজ মূল পর্ব (সর্ব সাধারণ)' },
+                  {
+                    time: '6:00 PM',
+                    title: 'Art exhibition (Soumitra Mondal) · Prize distribution',
                   },
                 ].map((r, i, a) => (
                   <div
@@ -202,7 +245,6 @@ export function Events({ setPage }: EventsProps) {
                       background: i % 2 ? 'var(--cream-2)' : 'transparent',
                     }}
                   >
-                    <div className="mono">{r.day}</div>
                     <div className="display events-schedule__time">{r.time}</div>
                     <div>{r.title}</div>
                   </div>
@@ -238,10 +280,7 @@ function PrizeRow({
 }) {
   return (
     <div className="events-prize-row">
-      <div
-        className="events-prize-row__medal"
-        style={{ background: `var(--${color})` }}
-      >
+      <div className="events-prize-row__medal" style={{ background: `var(--${color})` }}>
         {rank}
       </div>
       <div>

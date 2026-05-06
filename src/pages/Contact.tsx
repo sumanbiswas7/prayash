@@ -52,7 +52,7 @@ export function Contact() {
             >
               <ContactItem label="Location" value="Tehatta, Nadia · West Bengal 741160" />
               <ContactItem label="Email" value="proyaastehatta@gmail.com" />
-              <ContactItem label="Phone" value="+91 98xxx xxxxx" />
+              <ContactItem label="Phone" value="+91 73848 57878" />
             </div>
           </div>
 

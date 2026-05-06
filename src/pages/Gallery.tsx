@@ -78,7 +78,7 @@ export function Gallery() {
                 Years of <span className="gallery-header__title-accent">showing up.</span>
               </h1>
               <p className="gallery-header__desc">
-                Here's a collection of moments captured at our 2025 Annual Event.
+                Here's a collection of moments captured at our Annual Events.
               </p>
             </div>
             <div className="gallery-year-picker">
