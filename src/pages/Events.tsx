@@ -1,13 +1,8 @@
 import { useState } from 'react';
 import { PROYASH_DATA, Icon } from '../data';
-import type { Page } from '../types';
 import './Events.scss';
 
-interface EventsProps {
-  setPage: (p: Page) => void;
-}
-
-export function Events({ setPage }: EventsProps) {
+export function Events() {
   const [selected, setSelected] = useState('quiz');
   const ev = PROYASH_DATA.events.find((e) => e.id === selected)!;
 
