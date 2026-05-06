@@ -10,7 +10,7 @@ interface DashboardProps {
 }
 
 export function Dashboard({ user, onUpdate }: DashboardProps) {
-  const [tab, setTab] = useState('regs');
+  const [tab, setTab] = useState('profile');
   const [activeCert, setActiveCert] = useState<Certificate | null>(null);
 
   const firstName = user?.studentName?.split(' ')[0] ?? 'there';
@@ -60,10 +60,10 @@ export function Dashboard({ user, onUpdate }: DashboardProps) {
           <div className="dash-tabs__scroll">
             <div className="dash-tabs__bar">
               {[
+                { id: 'profile', label: 'Profile' },
+                { id: 'regs', label: 'Registrations' },
                 // { id: 'medals', label: 'Medal case' },
                 // { id: 'certs', label: 'Certificates' },
-                { id: 'regs', label: 'Registrations' },
-                { id: 'profile', label: 'Profile' },
               ].map((t) => (
                 <button
                   key={t.id}
@@ -308,7 +308,8 @@ function Registrations() {
         <div>
           <h2 className="display regs-section__title">Your competitions.</h2>
           <p className="regs-section__desc">
-            All the competitions you participated in. You'll be able to see your registration details here.
+            All the competitions you participated in. You'll be able to see your registration
+            details here.
           </p>
         </div>
         {/* <button className="btn btn-primary" disabled style={{ opacity: 0.45, cursor: 'not-allowed' }}>

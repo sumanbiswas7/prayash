@@ -3,7 +3,8 @@ $bp-mobile: 768px;
 /* ===== Events header ===== */
 
 .events-hero {
-  padding: 72px 0 40px;
+  padding-top: clamp(20px, 4vw, 64px);
+  padding-bottom: clamp(28px, 5vw, 80px);
   background: var(--cream-2);
   border-bottom: 1px solid var(--rule);
 }
@@ -155,6 +156,10 @@ $bp-mobile: 768px;
 
 .events-detail__chip {
   background: white;
+}
+
+.events-detail__chip--mobile {
+  display: none;
 }
 
 .events-detail__desc {
@@ -325,5 +330,19 @@ $bp-mobile: 768px;
 
   .events-schedule__time {
     font-size: 15px;
+  }
+
+  .events-detail__header-inner {
+    flex-direction: column;
+  }
+
+  .events-detail__chip--desktop {
+    display: none;
+  }
+
+  .events-detail__chip--mobile {
+    display: inline-flex;
+    margin-top: 14px;
+    align-self: flex-start;
   }
 }

@@ -16,9 +16,9 @@ export function Events({ setPage }: EventsProps) {
       <section className="events-hero">
         <div className="container events-hero__grid">
           <div>
-            <div className="eyebrow events-hero__eyebrow">The annual festival</div>
+            <div className="eyebrow events-hero__eyebrow">Upcoming events</div>
             <h1 className="display events-hero__title">
-              Medha Pariksha <span className="events-hero__title-accent">2026.</span>
+              Annual Festival <span className="events-hero__title-accent">2026.</span>
             </h1>
             <div className="bn-display events-hero__bn">প্রয়াস বার্ষিক অনুষ্ঠান — ২০২৬</div>
           </div>
@@ -93,16 +93,25 @@ export function Events({ setPage }: EventsProps) {
                     <h2 className="display events-detail__title">{ev.en}</h2>
                   </div>
                   <div
-                    className="chip events-detail__chip"
+                    className="chip events-detail__chip events-detail__chip--desktop"
                     style={{
                       color: `var(--${ev.color})`,
                       border: `1px solid var(--${ev.color})`,
                     }}
                   >
-                    <span className="chip-dot" /> Register Soon
+                    <span className="chip-dot" /> Opening Soon
                   </div>
                 </div>
                 <p className="events-detail__desc">{ev.desc}</p>
+                <div
+                  className="chip events-detail__chip events-detail__chip--mobile"
+                  style={{
+                    color: `var(--${ev.color})`,
+                    border: `1px solid var(--${ev.color})`,
+                  }}
+                >
+                  <span className="chip-dot" /> Opening Soon
+                </div>
               </div>
 
               <div className="events-detail__info-grid">
@@ -179,7 +188,7 @@ export function Events({ setPage }: EventsProps) {
             </div>
 
             <div className="events-schedule">
-              <div className="eyebrow events-schedule__eyebrow">Day schedule</div>
+              <div className="eyebrow events-schedule__eyebrow">Most likely schedule</div>
 
               <div className="events-schedule__venue-label">ঘর · Room</div>
               <div className="card events-schedule__card">
