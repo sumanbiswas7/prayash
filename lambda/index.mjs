@@ -433,6 +433,51 @@ export const handler = async (event) => {
     }
   }
 
+  if (body.type === 'mark-fee-paid') {
+    const { registrationId, adminSecret } = body;
+    if (!registrationId || !adminSecret) {
+      return { statusCode: 400, body: JSON.stringify({ error: 'Missing fields' }) };
+    }
+    if (adminSecret !== process.env.ADMIN_SECRET) {
+      return { statusCode: 403, body: JSON.stringify({ error: 'Unauthorized' }) };
+    }
+    try {
+      const { db, end } = getDb();
+      const rows = await db.select().from(eventRegistrations)
+        .where(eq(eventRegistrations.registrationId, registrationId))
+        .limit(1);
+      if (!rows.length) {
+        await end();
+        return { statusCode: 404, body: JSON.stringify({ error: 'Registration not found' }) };
+      }
+      const reg = rows[0];
+      if (!reg.applicationFee) {
+        await db.update(eventRegistrations)
+          .set({ applicationFee: true })
+          .where(eq(eventRegistrations.registrationId, registrationId));
+      }
+      await end();
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          ok: true,
+          alreadyPaid: reg.applicationFee,
+          registration: {
+            id: reg.registrationId,
+            studentName: reg.studentName,
+            eventId: reg.eventId,
+            eventName: reg.eventName,
+            group: reg.group,
+            year: reg.year,
+          },
+        }),
+      };
+    } catch (err) {
+      console.error('mark-fee-paid failed:', err);
+      return { statusCode: 500, body: JSON.stringify({ error: 'Failed to update' }) };
+    }
+  }
+
   // Contact form
   const { name, contact, message } = body;
   if (!name || !contact || !message) {

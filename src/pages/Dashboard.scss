@@ -695,6 +695,10 @@ $bp-small: 480px;
 
 .reg-detail__header {
   padding: 28px 28px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
 }
 
 .reg-detail__event-bn {
@@ -770,11 +774,13 @@ $bp-small: 480px;
   font-size: 14px;
 }
 
-.reg-detail__footer-mono {
-  margin-top: 18px;
-  text-align: center;
-  font-size: 11px;
-  color: var(--ink-4);
+
+.reg-detail__qr {
+  border: 1px solid var(--rule-2);
+  border-radius: 6px;
+  padding: 6px;
+  padding-bottom: 0;
+  background: white;
 }
 
 .reg-detail__actions {

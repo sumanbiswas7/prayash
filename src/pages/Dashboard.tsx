@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { QRCodeSVG } from 'qrcode.react';
 import { PROYASH_DATA, Icon } from '../data';
 import { DobPicker } from '../components/DobPicker';
 import type { Certificate, Achievement, Student, EventRegistration } from '../types';
@@ -463,10 +464,15 @@ function RegDetailModal({
             className="reg-detail__header"
             style={{ background: tintVar, borderBottom: `1px solid ${colorVar}` }}
           >
-            <div className="bn-display reg-detail__event-bn" style={{ color: colorVar }}>
-              {ev?.bn ?? reg.eventName}
+            <div>
+              <div className="bn-display reg-detail__event-bn" style={{ color: colorVar }}>
+                {ev?.bn ?? reg.eventName}
+              </div>
+              <div className="display reg-detail__event-en">{ev?.en ?? reg.eventId}</div>
             </div>
-            <div className="display reg-detail__event-en">{ev?.en ?? reg.eventId}</div>
+            <div className="reg-detail__qr">
+              <QRCodeSVG value={reg.id} size={72} />
+            </div>
           </div>
           <div className="reg-detail__body">
             <div className="reg-detail__id-box" style={{ borderColor: colorVar }}>
@@ -487,9 +493,6 @@ function RegDetailModal({
               />
               {registeredOn && <RegDetailRow label="Registered on" value={registeredOn} />}
             </div>
-            {/* <div className="reg-detail__footer-mono">
-              <span className="mono">proyash.org.in</span>
-            </div> */}
           </div>
         </div>
         <div className="reg-detail__actions no-print">

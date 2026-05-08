@@ -10,6 +10,7 @@ import { Dashboard } from './pages/Dashboard';
 import { Gallery } from './pages/Gallery';
 import { Contact } from './pages/Contact';
 import { Auth } from './pages/Auth';
+import { Admin } from './pages/Admin';
 import type { Page, Student } from './types';
 
 export default function App() {
@@ -51,6 +52,7 @@ export default function App() {
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/auth" element={<Auth setPage={go} onLogin={(student) => saveUser(student)} />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
       <Footer setPage={go} />
       {login && <LoginModal onClose={() => setLogin(false)} setPage={go} onLogin={(student) => { saveUser(student); }} />}

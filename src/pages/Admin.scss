@@ -1,0 +1,252 @@
+/* ===== Login ===== */
+
+.admin-login {
+  min-height: 80vh;
+  display: grid;
+  place-items: center;
+  padding: 40px 20px;
+}
+
+.admin-login__box {
+  width: 100%;
+  max-width: 340px;
+}
+
+.admin-login__brand {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.admin-login__brand-bn {
+  font-size: 36px;
+  color: var(--ink);
+}
+
+.admin-login__brand-label {
+  color: var(--ink-3);
+  margin-top: 6px;
+  letter-spacing: 0.12em;
+}
+
+.admin-login__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.admin-login__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.admin-login__label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.admin-login__input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  font-size: 16px;
+  background: var(--paper);
+  color: var(--ink);
+  letter-spacing: 0.15em;
+
+  &::placeholder { color: var(--ink-4); letter-spacing: 0.05em; }
+
+  &:focus {
+    outline: none;
+    border-color: var(--ink-3);
+  }
+}
+
+.admin-login__error {
+  font-size: 13px;
+  color: var(--red);
+}
+
+.admin-login__btn {
+  width: 100%;
+}
+
+/* ===== Panel layout ===== */
+
+.admin-panel {
+  min-height: 100vh;
+  background: var(--cream-2);
+}
+
+.admin-panel__topbar {
+  background: var(--ink);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 14px 0;
+}
+
+.admin-panel__topbar-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-panel__topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-panel__topbar-bn {
+  font-size: 20px;
+  color: var(--cream);
+}
+
+.admin-panel__topbar-chip {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--ink-3);
+  font-size: 11px;
+}
+
+.admin-panel__topbar .btn-ghost {
+  color: var(--ink-3);
+  &:hover { color: var(--cream); }
+}
+
+.admin-panel__body {
+  padding: 40px 0 80px;
+}
+
+.admin-panel__section-head {
+  margin-bottom: 20px;
+}
+
+.admin-panel__section-title {
+  font-size: 32px;
+}
+
+.admin-panel__section-desc {
+  margin-top: 4px;
+  font-size: 14px;
+}
+
+/* ===== Scanner card ===== */
+
+.admin-scanner-card {
+  max-width: 520px;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Idle state */
+
+.admin-scanner-idle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 48px 32px;
+  text-align: center;
+}
+
+.admin-scanner-idle__icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--cream-2);
+  display: grid;
+  place-items: center;
+  color: var(--ink-3);
+}
+
+.admin-scanner-idle__text {
+  font-size: 14px;
+  color: var(--ink-3);
+}
+
+/* Active state */
+
+.admin-scanner-active__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--rule);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.admin-scanner-active__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.admin-scanner-active__stop {
+  margin-left: auto;
+}
+
+.admin-scanner-active__reader {
+  padding: 20px;
+}
+
+/* Result */
+
+.admin-scan-result {
+  padding: 28px 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.admin-scan-result--ok { background: var(--green-tint); }
+.admin-scan-result--warn { background: var(--yellow-tint); }
+.admin-scan-result--err { background: #fff5f5; }
+
+.admin-scan-result__badge {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+
+  .admin-scan-result--ok & { background: var(--green); color: white; }
+  .admin-scan-result--warn & { background: var(--orange); color: white; }
+  .admin-scan-result--err & { background: var(--red); color: white; }
+}
+
+.admin-scan-result__name {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.admin-scan-result__meta {
+  font-size: 14px;
+  margin-top: 2px;
+}
+
+.admin-scan-result__id {
+  font-size: 11px;
+  color: var(--ink-4);
+  margin-top: 10px;
+}
+
+.admin-scan-result__next {
+  align-self: flex-start;
+  margin-top: 16px;
+}
