@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { PROYASH_DATA, Icon } from '../data';
 import { DobPicker } from '../components/DobPicker';
 import type { Certificate, Achievement, Student, EventRegistration } from '../types';
@@ -305,6 +305,7 @@ function Registrations({ user }: { user: Student | null }) {
   const [regs, setRegs] = useState<EventRegistration[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [viewReg, setViewReg] = useState<EventRegistration | null>(null);
 
   useEffect(() => {
     if (!user) { setLoading(false); return; }
@@ -355,39 +356,38 @@ function Registrations({ user }: { user: Student | null }) {
         </div>
       )}
 
+      {viewReg && <RegDetailModal reg={viewReg} user={user} onClose={() => setViewReg(null)} />}
+
       {!loading && !error && regs.length > 0 && (
         <div className="card regs-table">
-          {Object.entries(
-            regs.reduce<Record<string, EventRegistration[]>>((acc, r) => {
-              (acc[r.year] ??= []).push(r);
-              return acc;
-            }, {})
-          )
-            .sort(([a], [b]) => Number(b) - Number(a))
-            .map(([year, group], i) => {
-              const confirmed = year === String(new Date().getFullYear()) || Number(year) > new Date().getFullYear();
-              const earliest = group
-                .map((r) => r.createdAt)
-                .filter(Boolean)
-                .sort()[0];
-              const registeredOn = earliest
-                ? new Date(earliest).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+          {[...regs]
+            .sort((a, b) => Number(b.year) - Number(a.year))
+            .map((reg, i) => {
+              const confirmed = Number(reg.year) >= new Date().getFullYear();
+              const registeredOn = reg.createdAt
+                ? new Date(reg.createdAt).toLocaleDateString('en-IN', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                  })
                 : null;
               return (
                 <div
-                  key={year}
-                  className="reg-year-row"
+                  key={reg.id}
+                  className="reg-row"
                   style={{ borderTop: i > 0 ? '1px solid var(--rule)' : 'none' }}
                 >
-                  <div className="display reg-year-row__year">{year}</div>
-                  <div className="reg-year-row__events">
-                    {group.map((reg) => (
-                      <span key={reg.id} className="chip reg-event-chip">
-                        {reg.eventName}
-                      </span>
-                    ))}
+                  <div className="display reg-row__year">{reg.year}</div>
+
+                  <div className="reg-row__chips">
+                    <span className="chip reg-event-chip">{reg.eventName}</span>
+                    <span className="chip reg-group-chip bn">{reg.group}</span>
+                    {reg.partnerName && (
+                      <span className="chip reg-group-chip">Partner: {reg.partnerName}</span>
+                    )}
                   </div>
-                  <div className="reg-year-row__right">
+
+                  <div className="reg-row__actions">
                     <span
                       className="chip"
                       style={
@@ -399,17 +399,129 @@ function Registrations({ user }: { user: Student | null }) {
                       <span className="chip-dot" />
                       {confirmed ? 'Confirmed' : 'Completed'}
                     </span>
-                    {registeredOn && (
-                      <div className="small muted reg-year-row__date">
-                        Registered {registeredOn}
-                      </div>
+                    {!reg.applicationFee && (
+                      <span className="chip reg-row__fee-chip">
+                        <span className="chip-dot" /> Pay at venue
+                      </span>
                     )}
+                    {registeredOn && (
+                      <span className="reg-row__date tiny muted">{registeredOn}</span>
+                    )}
+                    <button className="btn btn-ghost btn-sm reg-row__view" onClick={() => setViewReg(reg)}>
+                      View <Icon.arrow />
+                    </button>
                   </div>
                 </div>
               );
             })}
         </div>
       )}
+    </div>
+  );
+}
+
+function RegDetailModal({
+  reg,
+  user,
+  onClose,
+}: {
+  reg: EventRegistration;
+  user: Student | null;
+  onClose: () => void;
+}) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const ev = PROYASH_DATA.events.find((e) => e.id === reg.eventId);
+  const colorVar = `var(--${ev?.color ?? 'blue'})`;
+  const tintVar = `var(--${ev?.color ?? 'blue'}-tint)`;
+  const registeredOn = reg.createdAt
+    ? new Date(reg.createdAt).toLocaleDateString('en-IN', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      })
+    : null;
+
+  const handleDownloadImage = async () => {
+    if (!cardRef.current) return;
+    const { toPng } = await import('html-to-image');
+    const dataUrl = await toPng(cardRef.current, {
+      pixelRatio: 2,
+      backgroundColor: '#ffffff',
+      style: { borderRadius: '0' },
+    });
+    const a = document.createElement('a');
+    a.download = `${reg.id}-${reg.eventId}.png`;
+    a.href = dataUrl;
+    a.click();
+  };
+
+  return (
+    <div className="reg-detail__overlay" onClick={onClose}>
+      <div className="reg-detail__panel" onClick={(e) => e.stopPropagation()}>
+        <div className="reg-detail__card" ref={cardRef}>
+          <div
+            className="reg-detail__header"
+            style={{ background: tintVar, borderBottom: `1px solid ${colorVar}` }}
+          >
+            <div className="bn-display reg-detail__event-bn" style={{ color: colorVar }}>
+              {ev?.bn ?? reg.eventName}
+            </div>
+            <div className="display reg-detail__event-en">{ev?.en ?? reg.eventId}</div>
+          </div>
+          <div className="reg-detail__body">
+            <div className="reg-detail__id-box" style={{ borderColor: colorVar }}>
+              <div className="mono reg-detail__id-label">Registration ID</div>
+              <div className="display reg-detail__id">{reg.id}</div>
+            </div>
+            <div className="reg-detail__rows">
+              <RegDetailRow label="Participant" value={user?.studentName ?? reg.studentName} />
+              {user?.klass && <RegDetailRow label="Class" value={user.klass} />}
+              {user?.school && <RegDetailRow label="School" value={user.school} />}
+              <RegDetailRow label="Group" value={reg.group} isBn />
+              {reg.partnerName && <RegDetailRow label="Partner" value={reg.partnerName} />}
+              <RegDetailRow label="Year" value={reg.year} />
+              <RegDetailRow
+                label="Application fee"
+                value={reg.applicationFee ? 'Paid' : 'Pay at venue'}
+                accent={reg.applicationFee ? 'var(--green)' : 'var(--orange)'}
+              />
+              {registeredOn && <RegDetailRow label="Registered on" value={registeredOn} />}
+            </div>
+            {/* <div className="reg-detail__footer-mono">
+              <span className="mono">proyash.org.in</span>
+            </div> */}
+          </div>
+        </div>
+        <div className="reg-detail__actions no-print">
+          <button className="btn btn-primary btn-sm" onClick={handleDownloadImage}>
+            <Icon.dl /> Download image
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function RegDetailRow({
+  label,
+  value,
+  isBn,
+  accent,
+}: {
+  label: string;
+  value: string;
+  isBn?: boolean;
+  accent?: string;
+}) {
+  return (
+    <div className="reg-detail__row">
+      <div className="mono reg-detail__row-label">{label}</div>
+      <div
+        className={`reg-detail__row-value${isBn ? ' bn' : ''}`}
+        style={accent ? { color: accent, fontWeight: 600 } : undefined}
+      >
+        {value}
+      </div>
     </div>
   );
 }
