@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { PROYASH_DATA, Icon } from '../data';
 import { DobPicker } from '../components/DobPicker';
-import type { Certificate, Achievement, Student } from '../types';
+import type { Certificate, Achievement, Student, EventRegistration } from '../types';
 import './Dashboard.scss';
 
 interface DashboardProps {
@@ -78,7 +78,7 @@ export function Dashboard({ user, onUpdate }: DashboardProps) {
 
           {tab === 'medals' && <MedalCase />}
           {tab === 'certs' && <Certificates onOpen={setActiveCert} />}
-          {tab === 'regs' && <Registrations />}
+          {tab === 'regs' && <Registrations user={user} />}
           {tab === 'profile' && <Profile user={user} onUpdate={onUpdate} />}
         </div>
       </section>
@@ -301,30 +301,115 @@ function CertModal({ cert, onClose }: { cert: Certificate; onClose: () => void }
   );
 }
 
-function Registrations() {
+function Registrations({ user }: { user: Student | null }) {
+  const [regs, setRegs] = useState<EventRegistration[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!user) { setLoading(false); return; }
+    fetch(import.meta.env.VITE_LAMBDA_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'get-my-registrations', studentRegistrationId: user.registrationId }),
+    })
+      .then((r) => r.json())
+      .then((json) => {
+        if (json.ok) setRegs(json.registrations);
+        else setError(json.error || 'Failed to load');
+      })
+      .catch(() => setError('Failed to load registrations'))
+      .finally(() => setLoading(false));
+  }, [user?.registrationId]);
+
   return (
     <div>
       <div className="section-head">
         <div>
           <h2 className="display regs-section__title">Your competitions.</h2>
           <p className="regs-section__desc">
-            All the competitions you participated in. You'll be able to see your registration
-            details here.
+            All the competitions you've participated in across every year.
           </p>
         </div>
-        {/* <button className="btn btn-primary" disabled style={{ opacity: 0.45, cursor: 'not-allowed' }}>
-          Register <Icon.plus />
-        </button> */}
       </div>
-      <div className="card regs-table" style={{ textAlign: 'center', padding: '40px 24px' }}>
-        <div className="eyebrow">Competition history</div>
-        <div className="display" style={{ fontSize: '28px', marginTop: '8px' }}>
-          Opening Soon
+
+      {loading && (
+        <div className="card" style={{ padding: '40px 24px', textAlign: 'center' }}>
+          <p className="muted">Loading…</p>
         </div>
-        <p className="muted" style={{ margin: '10px 0 0' }}>
-          We’ll add the participation list and status details here.
-        </p>
-      </div>
+      )}
+
+      {!loading && error && (
+        <div className="card" style={{ padding: '40px 24px', textAlign: 'center' }}>
+          <p style={{ color: 'var(--red)', margin: 0 }}>{error}</p>
+        </div>
+      )}
+
+      {!loading && !error && regs.length === 0 && (
+        <div className="card" style={{ padding: '48px 24px', textAlign: 'center' }}>
+          <div className="eyebrow" style={{ marginBottom: '8px' }}>No registrations yet</div>
+          <div className="display" style={{ fontSize: '26px' }}>Nothing here yet.</div>
+          <p className="muted" style={{ margin: '10px 0 0' }}>
+            Head to the Events page to register for a competition.
+          </p>
+        </div>
+      )}
+
+      {!loading && !error && regs.length > 0 && (
+        <div className="card regs-table">
+          {Object.entries(
+            regs.reduce<Record<string, EventRegistration[]>>((acc, r) => {
+              (acc[r.year] ??= []).push(r);
+              return acc;
+            }, {})
+          )
+            .sort(([a], [b]) => Number(b) - Number(a))
+            .map(([year, group], i) => {
+              const confirmed = year === String(new Date().getFullYear()) || Number(year) > new Date().getFullYear();
+              const earliest = group
+                .map((r) => r.createdAt)
+                .filter(Boolean)
+                .sort()[0];
+              const registeredOn = earliest
+                ? new Date(earliest).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+                : null;
+              return (
+                <div
+                  key={year}
+                  className="reg-year-row"
+                  style={{ borderTop: i > 0 ? '1px solid var(--rule)' : 'none' }}
+                >
+                  <div className="display reg-year-row__year">{year}</div>
+                  <div className="reg-year-row__events">
+                    {group.map((reg) => (
+                      <span key={reg.id} className="chip reg-event-chip">
+                        {reg.eventName}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="reg-year-row__right">
+                    <span
+                      className="chip"
+                      style={
+                        confirmed
+                          ? { background: 'var(--green-tint)', color: 'var(--green)' }
+                          : { background: 'var(--blue-tint)', color: 'var(--blue)' }
+                      }
+                    >
+                      <span className="chip-dot" />
+                      {confirmed ? 'Confirmed' : 'Completed'}
+                    </span>
+                    {registeredOn && (
+                      <div className="small muted reg-year-row__date">
+                        Registered {registeredOn}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+        </div>
+      )}
     </div>
   );
 }

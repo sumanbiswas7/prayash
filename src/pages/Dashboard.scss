@@ -513,22 +513,44 @@ $bp-small: 480px;
   overflow: hidden;
 }
 
-.reg-row {
+.reg-year-row {
   display: grid;
-  grid-template-columns: 80px 130px 1fr auto auto;
-  gap: 16px;
-  padding: 20px 24px;
+  grid-template-columns: 90px 1fr auto;
+  gap: 20px;
+  padding: 22px 28px;
   align-items: center;
 }
 
-.reg-row__year {
-  font-size: 28px;
+.reg-year-row__year {
+  font-size: 40px;
+  line-height: 1;
+  color: var(--ink);
 }
 
-.reg-row__events {
+.reg-year-row__events {
   display: flex;
-  gap: 6px;
   flex-wrap: wrap;
+  gap: 8px;
+}
+
+.reg-event-chip {
+  background: var(--cream-3);
+  color: var(--ink-2);
+  border: 1px solid var(--rule);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.reg-year-row__right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.reg-year-row__date {
+  white-space: nowrap;
 }
 
 /* ===== Profile tab ===== */
@@ -646,12 +668,32 @@ $bp-small: 480px;
     overflow-wrap: anywhere;
   }
 
-  .reg-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+  .reg-year-row {
+    grid-template-columns: 60px 1fr;
+    grid-template-rows: auto auto;
+    gap: 10px 16px;
     padding: 16px 20px;
+  }
+
+  .reg-year-row__year {
+    font-size: 32px;
+    grid-row: 1;
+    align-self: start;
+    padding-top: 2px;
+  }
+
+  .reg-year-row__events {
+    grid-row: 1;
+    align-self: start;
+  }
+
+  .reg-year-row__right {
+    grid-column: 2;
+    grid-row: 2;
+    flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
+    gap: 8px;
   }
 }
 

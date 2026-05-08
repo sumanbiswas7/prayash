@@ -63,3 +63,16 @@ export interface GalleryItem {
   caption: string;
   label: string;
 }
+
+export interface EventRegistration {
+  id: string;
+  studentRegistrationId: string;
+  studentName: string;
+  eventId: string;
+  eventName: string;
+  group: string;
+  partnerName?: string | null;
+  applicationFee: boolean;
+  year: string;
+  createdAt: string | null;
+}

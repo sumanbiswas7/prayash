@@ -1,10 +1,108 @@
 import { useState } from 'react';
 import { PROYASH_DATA, Icon } from '../data';
+import type { Student, EventRegistration } from '../types';
 import './Events.scss';
 
-export function Events() {
+interface EventsProps {
+  user: Student | null;
+  openLogin: () => void;
+}
+
+function parseClassNum(klass: string): number {
+  const map: Record<string, number> = {
+    I: 1, II: 2, III: 3, IV: 4, V: 5,
+    VI: 6, VII: 7, VIII: 8, IX: 9, X: 10,
+    XI: 11, XII: 12,
+  };
+  const m = klass.match(/\b([IVXLC]+)\b/i);
+  if (m) return map[m[1].toUpperCase()] ?? 0;
+  const n = klass.match(/\d+/);
+  return n ? parseInt(n[0]) : 0;
+}
+
+function getGroup(eventId: string, klass: string): string {
+  const n = parseClassNum(klass);
+  switch (eventId) {
+    case 'quiz':
+      return n <= 5 ? 'বাচ্চাদের কুইজ (বিভাগ- ক)' : 'সর্ব সাধারণ (বিভাগ- খ)';
+    case 'drawing':
+    case 'abriti':
+    case 'golpo':
+      if (n <= 4) return 'বিভাগ- ক';
+      if (n <= 7) return 'বিভাগ- খ';
+      return 'বিভাগ- গ';
+    case 'khobor':
+      if (n <= 5) return 'Class I–V';
+      if (n <= 8) return 'Class VI–VIII';
+      return 'Class IX–XII';
+    case 'debate':
+      return 'Everyone';
+    default:
+      return '';
+  }
+}
+
+export function Events({ user, openLogin }: EventsProps) {
   const [selected, setSelected] = useState('quiz');
+  const [modal, setModal] = useState(false);
+  const [partnerName, setPartnerName] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [registered, setRegistered] = useState<EventRegistration | null>(null);
+
   const ev = PROYASH_DATA.events.find((e) => e.id === selected)!;
+  const group = user ? getGroup(selected, user.klass) : '';
+
+  const openModal = () => {
+    if (!user) {
+      openLogin();
+      return;
+    }
+    setPartnerName('');
+    setError('');
+    setRegistered(null);
+    setModal(true);
+  };
+
+  const closeModal = () => {
+    setModal(false);
+    setPartnerName('');
+    setError('');
+    setRegistered(null);
+  };
+
+  const handleRegister = async () => {
+    if (!user) return;
+    if (selected === 'quiz' && !partnerName.trim()) {
+      setError("Please enter your partner's name");
+      return;
+    }
+    setLoading(true);
+    setError('');
+    try {
+      const res = await fetch(import.meta.env.VITE_LAMBDA_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'register-event',
+          studentRegistrationId: user.registrationId,
+          studentName: user.studentName,
+          eventId: selected,
+          eventName: ev.en,
+          group,
+          partnerName: selected === 'quiz' ? partnerName.trim() : null,
+          year: '2026',
+        }),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.ok) throw new Error(json.error || 'Registration failed');
+      setRegistered(json.registration);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div>
@@ -173,13 +271,16 @@ export function Events() {
                     <br />* অনিবার্য কারণ ছাড়া সময় সূচি মেনেই প্রতিটা অনুষ্ঠান অনুষ্ঠিত হবে।
                   </div>
                 </div>
+                <div className="events-reg-bar__action">
+                  <button
+                    className="btn btn-primary"
+                    onClick={openModal}
+                    style={{ whiteSpace: 'nowrap' }}
+                  >
+                    {user ? `Register for ${ev.en}` : 'Login to Register'} <Icon.arrow />
+                  </button>
+                </div>
               </div>
-
-              {/* <div style={{ display: 'flex', justifyContent: 'center', margin: '24px 0' }}>
-                <button className="btn btn-primary" onClick={() => setPage('register')}>
-                  Register for {ev.en} <Icon.arrow />
-                </button>
-              </div> */}
             </div>
 
             <div className="events-schedule">
@@ -258,6 +359,116 @@ export function Events() {
           </div>
         </div>
       </section>
+
+      {modal && (
+        <div className="reg-modal__overlay" onClick={closeModal}>
+          <div className="reg-modal__panel" onClick={(e) => e.stopPropagation()}>
+            {!registered ? (
+              <>
+                <div
+                  className="reg-modal__header"
+                  style={{ borderBottom: `2px solid var(--${ev.color})` }}
+                >
+                  <div>
+                    <div
+                      className="bn-display reg-modal__bn"
+                      style={{ color: `var(--${ev.color})` }}
+                    >
+                      {ev.bn}
+                    </div>
+                    <h2 className="display reg-modal__title">Register for {ev.en}</h2>
+                  </div>
+                  <button className="reg-modal__close" onClick={closeModal}>
+                    <Icon.close />
+                  </button>
+                </div>
+
+                <div className="reg-modal__body">
+                  <div>
+                    <div className="reg-modal__field-label">Participant</div>
+                    <div className="reg-modal__field-value">{user?.studentName}</div>
+                    {user?.studentNameBn && (
+                      <div className="bn small muted" style={{ marginTop: '2px' }}>
+                        {user.studentNameBn}
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <div className="reg-modal__field-label">Group (auto-selected)</div>
+                    <div className="bn reg-modal__field-value" style={{ fontSize: '17px' }}>
+                      {group}
+                    </div>
+                    <div className="small muted" style={{ marginTop: '3px' }}>
+                      Based on {user?.klass}
+                    </div>
+                  </div>
+
+                  {selected === 'quiz' && (
+                    <div>
+                      <label className="reg-modal__field-label" htmlFor="partner-name">
+                        Partner's Name
+                      </label>
+                      <input
+                        id="partner-name"
+                        type="text"
+                        className="reg-modal__input"
+                        value={partnerName}
+                        onChange={(e) => setPartnerName(e.target.value)}
+                        placeholder="Your partner's full name"
+                        autoFocus
+                      />
+                    </div>
+                  )}
+
+                  <div className="reg-modal__fee-note">
+                    <div className="reg-modal__fee-dot" />
+                    <div className="small">
+                      <strong>Application fee:</strong> Paid at the venue on the day of the event. No online payment required.
+                    </div>
+                  </div>
+                </div>
+
+                <div className="reg-modal__footer">
+                  {error && <p className="reg-modal__error">{error}</p>}
+                  <button
+                    className="btn btn-primary btn-lg"
+                    onClick={handleRegister}
+                    disabled={loading}
+                    style={{ opacity: loading ? 0.6 : 1, justifyContent: 'center' }}
+                  >
+                    {loading ? 'Registering…' : 'Confirm Registration'} <Icon.arrow />
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="reg-modal__success">
+                <div className="reg-modal__success-icon">
+                  <Icon.check style={{ width: 26, height: 26 }} />
+                </div>
+                <h2 className="display" style={{ fontSize: '34px', margin: '0' }}>
+                  You're in!
+                </h2>
+                <p className="muted" style={{ margin: '0' }}>
+                  {ev.en} · <span className="bn">{group}</span>
+                </p>
+                <div className="reg-modal__success-id">
+                  <div className="eyebrow" style={{ marginBottom: '6px' }}>Registration ID</div>
+                  <div style={{ fontFamily: 'var(--mono)', fontSize: '15px', letterSpacing: '0.06em', color: 'var(--ink)' }}>
+                    {registered.id}
+                  </div>
+                </div>
+                <p className="small muted" style={{ margin: '4px 0 0', textAlign: 'center', maxWidth: '300px' }}>
+                  Arrive 30 minutes early and pay your entry fee at the venue.
+                </p>
+                <button className="btn btn-outline" style={{ marginTop: '16px' }} onClick={closeModal}>
+                  Close
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

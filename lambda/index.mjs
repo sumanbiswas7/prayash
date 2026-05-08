@@ -2,8 +2,8 @@ import { Resend } from 'resend';
 import { createHmac } from 'crypto';
 import postgres from 'postgres';
 import { drizzle } from 'drizzle-orm/postgres-js';
-import { eq } from 'drizzle-orm';
-import { students } from './schema.mjs';
+import { eq, and } from 'drizzle-orm';
+import { students, eventRegistrations } from './schema.mjs';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -333,6 +333,103 @@ export const handler = async (event) => {
     } catch (err) {
       console.error('Password reset failed:', err);
       return { statusCode: 500, body: JSON.stringify({ error: 'Password reset failed' }) };
+    }
+  }
+
+  if (body.type === 'register-event') {
+    const { studentRegistrationId, studentName, eventId, eventName, group, partnerName, year } = body;
+    if (!studentRegistrationId || !studentName || !eventId || !eventName || !group || !year) {
+      return { statusCode: 400, body: JSON.stringify({ error: 'Missing required fields' }) };
+    }
+    try {
+      const { db, end } = getDb();
+      const existing = await db.select({ id: eventRegistrations.id })
+        .from(eventRegistrations)
+        .where(and(
+          eq(eventRegistrations.studentRegistrationId, studentRegistrationId),
+          eq(eventRegistrations.eventId, eventId),
+          eq(eventRegistrations.year, year),
+        ))
+        .limit(1);
+      await end();
+      if (existing.length > 0) {
+        return { statusCode: 409, body: JSON.stringify({ error: 'You are already registered for this event' }) };
+      }
+    } catch (err) {
+      console.error('DB check failed:', err);
+      return { statusCode: 500, body: JSON.stringify({ error: 'Registration failed' }) };
+    }
+    const regId = `PRYREG-2026-${Math.floor(Math.random() * 9000 + 1000)}`;
+    try {
+      const { db, end } = getDb();
+      const [reg] = await db.insert(eventRegistrations).values({
+        registrationId: regId,
+        studentRegistrationId,
+        studentName,
+        eventId,
+        eventName,
+        group,
+        partnerName: partnerName || null,
+        applicationFee: false,
+        year,
+      }).returning();
+      await end();
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          ok: true,
+          registration: {
+            id: reg.registrationId,
+            studentRegistrationId: reg.studentRegistrationId,
+            studentName: reg.studentName,
+            eventId: reg.eventId,
+            eventName: reg.eventName,
+            group: reg.group,
+            partnerName: reg.partnerName,
+            applicationFee: reg.applicationFee,
+            year: reg.year,
+            createdAt: reg.createdAt ? reg.createdAt.toISOString() : null,
+          },
+        }),
+      };
+    } catch (err) {
+      console.error('DB insert failed:', err);
+      return { statusCode: 500, body: JSON.stringify({ error: 'Registration failed' }) };
+    }
+  }
+
+  if (body.type === 'get-my-registrations') {
+    const { studentRegistrationId } = body;
+    if (!studentRegistrationId) {
+      return { statusCode: 400, body: JSON.stringify({ error: 'Missing studentRegistrationId' }) };
+    }
+    try {
+      const { db, end } = getDb();
+      const regs = await db.select()
+        .from(eventRegistrations)
+        .where(eq(eventRegistrations.studentRegistrationId, studentRegistrationId));
+      await end();
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          ok: true,
+          registrations: regs.map((r) => ({
+            id: r.registrationId,
+            studentRegistrationId: r.studentRegistrationId,
+            studentName: r.studentName,
+            eventId: r.eventId,
+            eventName: r.eventName,
+            group: r.group,
+            partnerName: r.partnerName,
+            applicationFee: r.applicationFee,
+            year: r.year,
+            createdAt: r.createdAt ? r.createdAt.toISOString() : null,
+          })),
+        }),
+      };
+    } catch (err) {
+      console.error('DB query failed:', err);
+      return { statusCode: 500, body: JSON.stringify({ error: 'Failed to fetch registrations' }) };
     }
   }
 
