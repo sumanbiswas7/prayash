@@ -486,6 +486,10 @@ a {
 @media (max-width: 768px) {
   body {
     padding-top: 68px;
+
+    &.has-register-banner {
+      padding-top: 108px;
+    }
   }
 
   .container,

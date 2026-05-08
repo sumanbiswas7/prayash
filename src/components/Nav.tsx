@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Icon } from '../data';
 import type { Page, Student } from '../types';
@@ -37,6 +37,15 @@ export function Nav({ setPage, openLogin, user, onLogout }: NavProps) {
   };
 
   const visibleLinks = user ? [...links, dashboardLink] : links;
+
+  useEffect(() => {
+    if (!user && pathname === '/') {
+      document.body.classList.add('has-register-banner');
+    } else {
+      document.body.classList.remove('has-register-banner');
+    }
+    return () => document.body.classList.remove('has-register-banner');
+  }, [user, pathname]);
 
   return (
     <>
@@ -114,6 +123,13 @@ export function Nav({ setPage, openLogin, user, onLogout }: NavProps) {
           </button>
         </div>
       </header>
+
+      {!user && pathname === '/' && (
+        <div className="nav__register-banner" onClick={() => navigate('register')}>
+          <span>Registrations are open</span>
+          <span className="nav__register-banner-cta">Register now <Icon.arrow /></span>
+        </div>
+      )}
 
       {open && <div className="nav__backdrop" onClick={() => setOpen(false)} />}
       {open && (

@@ -221,6 +221,39 @@ $bp-mobile: 768px;
   }
 }
 
+.nav__register-banner {
+  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 68px;
+  z-index: 48;
+  height: 40px;
+  background: var(--red);
+  color: white;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:hover {
+    background: color-mix(in srgb, var(--red) 88%, black);
+  }
+}
+
+.nav__register-banner-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+
+  svg { width: 14px; height: 14px; }
+}
+
 @media (max-width: $bp-mobile) {
   .nav {
     position: fixed;
@@ -243,6 +276,10 @@ $bp-mobile: 768px;
 
   .nav__cta {
     display: none;
+  }
+
+  .nav__register-banner {
+    display: flex;
   }
 
   .nav__mobile-menu {
