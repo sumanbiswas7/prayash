@@ -1,5 +1,5 @@
 import { Resend } from 'resend';
-import { scryptSync, randomBytes, createHmac } from 'crypto';
+import { createHmac } from 'crypto';
 import postgres from 'postgres';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { eq } from 'drizzle-orm';
@@ -15,12 +15,6 @@ function getDb() {
   });
   const db = drizzle(client);
   return { db, end: () => client.end() };
-}
-
-function hashPassword(password) {
-  const salt = randomBytes(16).toString('hex');
-  const hash = scryptSync(password, salt, 64).toString('hex');
-  return `${salt}:${hash}`;
 }
 
 function generateRegistrationId() {
@@ -96,7 +90,7 @@ export const handler = async (event) => {
     }
 
     const registrationId = generateRegistrationId();
-    const passwordHash = hashPassword(password);
+    const passwordHash = password;
 
     try {
       const { db, end } = getDb();
@@ -161,9 +155,7 @@ export const handler = async (event) => {
     if (!user) {
       return { statusCode: 401, body: JSON.stringify({ error: 'Invalid email or password' }) };
     }
-    const [salt, hash] = user.passwordHash.split(':');
-    const inputHash = scryptSync(password, salt, 64).toString('hex');
-    if (inputHash !== hash) {
+    if (password !== user.passwordHash) {
       return { statusCode: 401, body: JSON.stringify({ error: 'Invalid email or password' }) };
     }
     return { statusCode: 200, body: JSON.stringify({ ok: true, student: studentPayload(user) }) };
@@ -266,6 +258,81 @@ export const handler = async (event) => {
     } catch (err) {
       console.error('Update failed:', err);
       return { statusCode: 500, body: JSON.stringify({ error: 'Update failed' }) };
+    }
+  }
+
+  if (body.type === 'forgot-password') {
+    const { email, origin } = body;
+    if (!email) {
+      return { statusCode: 400, body: JSON.stringify({ error: 'Missing email' }) };
+    }
+    let user;
+    try {
+      const { db, end } = getDb();
+      const rows = await db.select().from(students).where(eq(students.email, email)).limit(1);
+      await end();
+      user = rows[0];
+    } catch (err) {
+      console.error('DB query failed:', err);
+      return { statusCode: 500, body: JSON.stringify({ error: 'Failed to send reset email' }) };
+    }
+    if (user) {
+      const expires = Date.now() + 15 * 60 * 1000;
+      const payload = `reset:${email}|${expires}`;
+      const sig = createHmac('sha256', process.env.MAGIC_SECRET || 'dev-secret').update(payload).digest('hex');
+      const token = Buffer.from(JSON.stringify({ email, expires, mode: 'reset', sig })).toString('base64url');
+      const link = `${origin}/auth?mode=reset&token=${token}`;
+      await resend.emails.send({
+        from: 'Proyash <proyash@sumanx.com>',
+        to: email,
+        subject: 'Reset your Proyash password',
+        text: `Hi ${user.studentName},\n\nClick this link to reset your password:\n\n${link}\n\nExpires in 15 minutes.\n\n— Proyash Team`,
+        html: `
+          <div style="font-family:sans-serif;max-width:480px;margin:auto;padding:32px;">
+            <p>Hi <strong>${user.studentName}</strong>,</p>
+            <p>Click below to set a new password for your Proyash account.</p>
+            <a href="${link}" style="display:inline-block;background:#1f1b16;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;margin:12px 0;">Reset password</a>
+            <p style="color:#888;font-size:14px;margin-top:20px;">Expires in 15 minutes. If you didn't request this, ignore this email.</p>
+            <p style="color:#888;font-size:14px;">— Proyash Team</p>
+          </div>
+        `,
+      });
+    }
+    return { statusCode: 200, body: JSON.stringify({ ok: true }) };
+  }
+
+  if (body.type === 'reset-password') {
+    const { token, newPassword } = body;
+    if (!token || !newPassword) {
+      return { statusCode: 400, body: JSON.stringify({ error: 'Missing fields' }) };
+    }
+    let email, expires, mode, sig;
+    try {
+      ({ email, expires, mode, sig } = JSON.parse(Buffer.from(token, 'base64url').toString()));
+    } catch {
+      return { statusCode: 401, body: JSON.stringify({ error: 'Invalid token' }) };
+    }
+    if (mode !== 'reset') {
+      return { statusCode: 401, body: JSON.stringify({ error: 'Invalid token' }) };
+    }
+    const expectedSig = createHmac('sha256', process.env.MAGIC_SECRET || 'dev-secret').update(`reset:${email}|${expires}`).digest('hex');
+    if (sig !== expectedSig || Date.now() > expires) {
+      return { statusCode: 401, body: JSON.stringify({ error: 'Link expired or invalid' }) };
+    }
+    try {
+      const { db, end } = getDb();
+      const rows = await db.update(students)
+        .set({ passwordHash: newPassword })
+        .where(eq(students.email, email))
+        .returning();
+      await end();
+      if (!rows.length) {
+        return { statusCode: 404, body: JSON.stringify({ error: 'No account found for this email' }) };
+      }
+      return { statusCode: 200, body: JSON.stringify({ ok: true }) };
+    } catch (err) {
+      console.error('Password reset failed:', err);
+      return { statusCode: 500, body: JSON.stringify({ error: 'Password reset failed' }) };
     }
   }
 

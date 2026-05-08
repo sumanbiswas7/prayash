@@ -16,10 +16,14 @@ export function LoginModal({ onClose, setPage, onLogin }: LoginModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [magicSent, setMagicSent] = useState(false);
+  const [forgotMode, setForgotMode] = useState(false);
+  const [forgotSent, setForgotSent] = useState(false);
 
   const switchTab = (t: 'password' | 'magic') => {
     setTab(t);
     setMagicSent(false);
+    setForgotMode(false);
+    setForgotSent(false);
     setError('');
   };
 
@@ -37,6 +41,25 @@ export function LoginModal({ onClose, setPage, onLogin }: LoginModalProps) {
       if (!res.ok || !json.ok) throw new Error(json.error || 'Login failed');
       onLogin(json.student);
       onClose();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const res = await fetch(import.meta.env.VITE_LAMBDA_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'forgot-password', email, origin: window.location.origin }),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.ok) throw new Error(json.error || 'Failed to send reset email');
+      setForgotSent(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
@@ -88,7 +111,7 @@ export function LoginModal({ onClose, setPage, onLogin }: LoginModalProps) {
         </div>
 
         <div className="login-modal__body">
-          {tab === 'password' ? (
+          {tab === 'password' && !forgotMode ? (
             <form className="stack" style={{ '--gap': '14px' } as React.CSSProperties} onSubmit={handlePasswordLogin}>
               <div>
                 <label className="login-modal__label">Email</label>
@@ -104,6 +127,12 @@ export function LoginModal({ onClose, setPage, onLogin }: LoginModalProps) {
               <div>
                 <label className="login-modal__label-row">
                   <span>Password</span>
+                  <span
+                    className="login-modal__forgot"
+                    onClick={() => { setForgotMode(true); setError(''); }}
+                  >
+                    Forgot password?
+                  </span>
                 </label>
                 <input
                   type="password"
@@ -124,6 +153,44 @@ export function LoginModal({ onClose, setPage, onLogin }: LoginModalProps) {
                 {loading ? 'Logging in…' : 'Log in'} <Icon.arrow />
               </button>
             </form>
+          ) : tab === 'password' && forgotMode && !forgotSent ? (
+            <div className="stack" style={{ '--gap': '14px' } as React.CSSProperties}>
+              <div>
+                <label className="login-modal__label">Email</label>
+                <input
+                  type="email"
+                  className="login-modal__input"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="your@email.com"
+                />
+              </div>
+              {error && <p className="login-modal__error">{error}</p>}
+              <button
+                type="button"
+                className="btn btn-primary btn-lg login-modal__submit"
+                onClick={handleForgotPassword}
+                disabled={!email.includes('@') || loading}
+                style={{ opacity: !email.includes('@') || loading ? 0.6 : 1 }}
+              >
+                {loading ? 'Sending…' : 'Send reset link'} <Icon.arrow />
+              </button>
+              <button
+                type="button"
+                className="btn btn-ghost login-modal__submit"
+                onClick={() => { setForgotMode(false); setError(''); }}
+              >
+                Back to login
+              </button>
+            </div>
+          ) : tab === 'password' && forgotSent ? (
+            <div className="login-modal__magic-sent">
+              <div className="login-modal__magic-icon">✉️</div>
+              <p>Check your inbox.</p>
+              <p className="small muted">
+                We sent a password reset link to <strong>{email}</strong>. It expires in 15 minutes.
+              </p>
+            </div>
           ) : magicSent ? (
             <div className="login-modal__magic-sent">
               <div className="login-modal__magic-icon">✉️</div>
@@ -164,7 +231,7 @@ export function LoginModal({ onClose, setPage, onLogin }: LoginModalProps) {
               className="login-modal__register-link"
               onClick={() => { onClose(); setPage('register'); }}
             >
-              Register for the festival
+              Register as a student
             </a>
           </div>
         </div>

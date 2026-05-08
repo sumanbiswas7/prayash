@@ -2,6 +2,9 @@
   "name": "proyash-contact-lambda",
   "version": "1.0.0",
   "type": "module",
+  "scripts": {
+    "build:": "zip -r lambda.zip index.mjs schema.mjs package.json node_modules"
+  },
   "dependencies": {
     "drizzle-orm": "^0.45.2",
     "postgres": "^3.4.9",
