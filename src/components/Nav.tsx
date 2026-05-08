@@ -134,16 +134,17 @@ export function Nav({ setPage, openLogin, user, onLogout }: NavProps) {
       {open && <div className="nav__backdrop" onClick={() => setOpen(false)} />}
       {open && (
         <nav className="nav__mobile-menu">
-          {visibleLinks.map((l) => (
+          {visibleLinks.map((l, i) => (
             <button
               key={l.id}
               className={`nav__mobile-link ${pathname === l.path ? 'active' : ''}`}
+              style={{ '--i': i } as React.CSSProperties}
               onClick={() => navigate(l.id)}
             >
               {l.label}
             </button>
           ))}
-          <div className="nav__mobile-actions">
+          <div className="nav__mobile-actions" style={{ '--i': visibleLinks.length } as React.CSSProperties}>
             {user ? (
               <>
                 <button
