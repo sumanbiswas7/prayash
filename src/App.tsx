@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { Nav } from './components/Nav';
 import { Footer } from './components/Footer';
@@ -11,11 +11,16 @@ import { Gallery } from './pages/Gallery';
 import { Contact } from './pages/Contact';
 import { Auth } from './pages/Auth';
 import { Admin } from './pages/Admin';
+import { AdminRegistrations } from './pages/AdminRegistrations';
+import { AdminScan } from './pages/AdminScan';
+import { AdminManual } from './pages/AdminManual';
 import type { Page, Student } from './types';
 
 export default function App() {
   const navigate = useNavigate();
   const [login, setLogin] = useState(false);
+  const [adminAuthed, setAdminAuthed] = useState(false);
+  const adminSignOutRef = useRef<() => void>(() => {});
   const [user, setUser] = useState<Student | null>(() => {
     try {
       const stored = localStorage.getItem('proyash_user');
@@ -43,6 +48,8 @@ export default function App() {
         openLogin={() => setLogin(true)}
         user={user}
         onLogout={() => saveUser(null)}
+        adminAuthed={adminAuthed}
+        onAdminSignOut={() => adminSignOutRef.current()}
       />
       <Routes>
         <Route path="/" element={<Home setPage={go} />} />
@@ -52,7 +59,34 @@ export default function App() {
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/auth" element={<Auth setPage={go} onLogin={(student) => saveUser(student)} />} />
-        <Route path="/admin" element={<Admin />} />
+        <Route path="/admin" element={
+          <Admin
+            authed={adminAuthed}
+            setAuthed={setAdminAuthed}
+            onSignOutReady={(fn) => { adminSignOutRef.current = fn; }}
+          />
+        } />
+        <Route path="/admin/registrations" element={
+          <AdminRegistrations
+            authed={adminAuthed}
+            setAuthed={setAdminAuthed}
+            onSignOutReady={(fn) => { adminSignOutRef.current = fn; }}
+          />
+        } />
+        <Route path="/admin/scan" element={
+          <AdminScan
+            authed={adminAuthed}
+            setAuthed={setAdminAuthed}
+            onSignOutReady={(fn) => { adminSignOutRef.current = fn; }}
+          />
+        } />
+        <Route path="/admin/manual" element={
+          <AdminManual
+            authed={adminAuthed}
+            setAuthed={setAdminAuthed}
+            onSignOutReady={(fn) => { adminSignOutRef.current = fn; }}
+          />
+        } />
       </Routes>
       <Footer setPage={go} />
       {login && <LoginModal onClose={() => setLogin(false)} setPage={go} onLogin={(student) => { saveUser(student); }} />}

@@ -9,6 +9,8 @@ interface NavProps {
   openLogin: () => void;
   user: Student | null;
   onLogout: () => void;
+  adminAuthed?: boolean;
+  onAdminSignOut?: () => void;
 }
 
 const links: { id: Page; label: string; path: string }[] = [
@@ -20,7 +22,7 @@ const links: { id: Page; label: string; path: string }[] = [
 
 const dashboardLink = { id: 'dashboard', label: 'Dashboard', path: '/dashboard' } as const;
 
-export function Nav({ setPage, openLogin, user, onLogout }: NavProps) {
+export function Nav({ setPage, openLogin, user, onLogout, adminAuthed, onAdminSignOut }: NavProps) {
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
   const [confirmLogout, setConfirmLogout] = useState(false);
@@ -58,20 +60,35 @@ export function Nav({ setPage, openLogin, user, onLogout }: NavProps) {
               <div className="bn">মানবকল্যাণ সংগঠন</div>
             </div>
           </button>
-          <nav className="nav__links">
-            {visibleLinks.map((l) => (
-              <button
-                key={l.id}
-                className={`nav__link ${pathname === l.path ? 'active' : ''}`}
-                onClick={() => navigate(l.id)}
-              >
-                {l.label}
-              </button>
-            ))}
-          </nav>
+          {adminAuthed && <span className="chip nav__admin-chip">Admin</span>}
+          {!adminAuthed && (
+            <nav className="nav__links">
+              {visibleLinks.map((l) => (
+                <button
+                  key={l.id}
+                  className={`nav__link ${pathname === l.path ? 'active' : ''}`}
+                  onClick={() => navigate(l.id)}
+                >
+                  {l.label}
+                </button>
+              ))}
+            </nav>
+          )}
           <div className="nav__spacer" />
           <div className="nav__cta">
-            {user ? (
+            {adminAuthed ? (
+              <button
+                className="btn btn-sm"
+                onClick={onAdminSignOut}
+                style={{
+                  background: 'color-mix(in srgb, var(--red) 12%, transparent)',
+                  color: 'var(--red)',
+                  border: '1px solid color-mix(in srgb, var(--red) 25%, transparent)',
+                }}
+              >
+                Sign out
+              </button>
+            ) : user ? (
               <>
                 <button
                   className="nav__avatar"
@@ -134,7 +151,7 @@ export function Nav({ setPage, openLogin, user, onLogout }: NavProps) {
       {open && <div className="nav__backdrop" onClick={() => setOpen(false)} />}
       {open && (
         <nav className="nav__mobile-menu">
-          {visibleLinks.map((l, i) => (
+          {!adminAuthed && visibleLinks.map((l, i) => (
             <button
               key={l.id}
               className={`nav__mobile-link ${pathname === l.path ? 'active' : ''}`}
@@ -144,8 +161,20 @@ export function Nav({ setPage, openLogin, user, onLogout }: NavProps) {
               {l.label}
             </button>
           ))}
-          <div className="nav__mobile-actions" style={{ '--i': visibleLinks.length } as React.CSSProperties}>
-            {user ? (
+          <div className="nav__mobile-actions" style={{ '--i': adminAuthed ? 0 : visibleLinks.length } as React.CSSProperties}>
+            {adminAuthed ? (
+              <button
+                className="btn"
+                onClick={() => { onAdminSignOut?.(); setOpen(false); }}
+                style={{
+                  background: 'color-mix(in srgb, var(--red) 12%, transparent)',
+                  color: 'var(--red)',
+                  border: '1px solid color-mix(in srgb, var(--red) 25%, transparent)',
+                }}
+              >
+                Sign out
+              </button>
+            ) : user ? (
               <>
                 <button
                   className="nav__avatar"

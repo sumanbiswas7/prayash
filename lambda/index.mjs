@@ -478,6 +478,37 @@ export const handler = async (event) => {
     }
   }
 
+  if (body.type === 'list-registrations') {
+    const { adminSecret } = body;
+    if (!adminSecret) {
+      return { statusCode: 400, body: JSON.stringify({ error: 'Missing fields' }) };
+    }
+    if (adminSecret !== process.env.ADMIN_SECRET) {
+      return { statusCode: 403, body: JSON.stringify({ error: 'Unauthorized' }) };
+    }
+    try {
+      const { db, end } = getDb();
+      const regs = await db.select().from(eventRegistrations).orderBy(eventRegistrations.createdAt);
+      await end();
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          ok: true,
+          registrations: regs.map(r => ({
+            registrationId: r.registrationId,
+            studentName: r.studentName,
+            eventName: r.eventName,
+            group: r.group,
+            feePaid: r.applicationFee,
+          })),
+        }),
+      };
+    } catch (err) {
+      console.error('list-registrations failed:', err);
+      return { statusCode: 500, body: JSON.stringify({ error: 'Failed to fetch registrations' }) };
+    }
+  }
+
   // Contact form
   const { name, contact, message } = body;
   if (!name || !contact || !message) {
